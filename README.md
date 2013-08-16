@@ -4,11 +4,11 @@
 
 ### To install
 * clone down repo 
-* npm install in root dir
-* If you don't have bower installed do: code(npm install -g yo grunt-cli bower)
-* Run the server on Port 9000 code(grunt server)
+* ```npm install``` in root dir
+* If you don't have bower installed do: ```npm install -g yo grunt-cli bower```
+* Run the server on Port 9000 ```grunt server```
 
 If you have port conflicts running grunt try the following: 
-* lsof -iTCP:35729
-* kill -9 PID#
+* ```lsof -iTCP:35729```
+* ```kill -9``` PID#
 * Run again
