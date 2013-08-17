@@ -1,4 +1,7 @@
 <div class="hero-unit">
-  <h1>Create Room</h1>
-
+  <h2>Create a Room</h2>
+  <form novalidate class="createForm">
+    Room: <input id="room" type='text' ng-model='room'><br>
+    <a class="btn btn-large btn-success" ng-click="update(room)" href='#/admin/'>Create Room</a>
+  </form>
 </div>
