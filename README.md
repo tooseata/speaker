@@ -11,5 +11,8 @@
 
 If you have port conflicts running grunt try the following: 
 * ```lsof -iTCP:35729```
-* ```kill -9``` PID#
+* ```kill -9 PID#```
 * Run again
+
+## Run Server
+* On root level type ```npm start```
