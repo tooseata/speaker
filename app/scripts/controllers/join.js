@@ -2,10 +2,9 @@
 
 angular.module('speakerApp')
   .controller('JoinCtrl', function ($scope) {
-    $scope.user = {};
-
-    $scope.update = function(user) {
+    $scope.update = function(user, room) {
       $scope.user= angular.copy(user);
+      $scope.room= angular.copy(room);
     };
 
   });
