@@ -1,10 +1,12 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('JoinCtrl', function ($scope) {
-    $scope.update = function(user, room) {
-      $scope.user= angular.copy(user);
-      $scope.room= angular.copy(room);
+  .controller('JoinCtrl', function ($scope, User) {
+    $scope.user = User;
+    $scope.update = function(userName, room) {
+      console.log('updated');
+      $scope.user.setType('talker');
+      $scope.user.setName(userName);
+      $scope.user.setRoom(room);
     };
-
   });
