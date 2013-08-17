@@ -3,6 +3,7 @@ var staticServer = require('node-static');
 var http = require('http');
 var file = new staticServer.Server();
 var app = http.createServer(function (request, response) {
+  console.log(file);
   file.serve(request, response);
 }).listen(1337);
 
