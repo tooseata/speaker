@@ -15,6 +15,10 @@ angular.module('speakerApp', [])
         templateUrl: 'views/create.html',
         controller: 'CreateCtrl'
       })
+      .when('/talk', {
+        templateUrl: 'views/talk.html',
+        controller: 'TalkCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
