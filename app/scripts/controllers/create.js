@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('CreateCtrl', function ($scope) {
-    $scope.update = function(user, room) {
-      $scope.room= angular.copy(room);
+  .controller('CreateCtrl', function ($scope, User) {
+    $scope.user = User.get();
+    $scope.update = function(room) {
+      $scope.user.setRoom(room);
+      $scope.user.setType('admin');
     };
   });
