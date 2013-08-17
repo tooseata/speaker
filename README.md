@@ -8,13 +8,11 @@
 ## Installation
 * Clone the repository.
 * If you don't have Bower/Grunt command line tool installed, on the command line do: ```npm install -g yo grunt-cli bower```
-* ```npm install``` in root dir.
-* ```npm start``` starts server, browse to app at http://localhost:3000
+* Then, ```npm install``` in root dir.
+* ```npm start``` starts server. You can then view the app at http://localhost:3000
 * ```grunt server``` runs testing on port 9000.
 * LiveReload should automatically update the app as changes are made.
-* On root level type ```npm start```
-
-* If you have port conflicts when running grunt try the following *
+* * If you have port conflicts when running grunt try the following *
 * ```lsof -iTCP:35729```
 * ```kill -9 PID#```
 * Run grunt again.
@@ -40,9 +38,6 @@ The default grunt task will build (checks the javascript (lint), runs the unit t
 ### Continuous Building
 The watch grunt task will monitor the source files and run the default build task every time a file changes: `grunt watch`.
 
-### Build without tests
-If for some reason you don't want to run the test but just generate the files - not a good idea(!!) - you can simply run the build task: `grunt build`.
-
 ### Building release code
 You can build a release version of the app, with minified files.  This task will also run the "end to end" (e2e) tests.
 The e2e tests require the server to be started and also one or more browsers open to run the tests.  (You can use the same browsers as for the unit tests.)
@@ -59,7 +54,7 @@ You can have grunt (karma) continuously watch for file changes and automatically
 * Open one or more browsers and point them to [http://localhost:8080/__test/].
 * Each time a file changes the tests will be run against each browser.
 
-### Initial Seed for Speaker
+### Initial Seeding
 * Yeoman used to scaffold out seed Angular app with Bower, NPM, and Grunt.
 
 
