@@ -1,5 +1,7 @@
 # speaker.
 
+## Purpose
+
 ## Stack
 * WebRTC
 * Angular
