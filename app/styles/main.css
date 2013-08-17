@@ -36,12 +36,9 @@ body {
     -moz-box-shadow: inset 0px 2px 0px #585858, 1px 1px 0px #000, 2px 2px 5px #000;
     box-shadow: inset 0px 2px 0px #585858, 1px 1px 0px #000, 2px 2px 5px #000;
 }
-#request_button {
-    background-color: cyan;
-    width: 230px;
-    height: 150px;
-    margin-right: auto;
-    margin-left: auto;
+#request_button_container {
+    position: relative;
+    bottom: -50px;
 }
 #hole {
     background-color: #151515;
