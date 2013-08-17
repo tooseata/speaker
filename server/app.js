@@ -6,20 +6,19 @@ var express = require('express'),
   
   var app = express();
 
-// require('./config/middleware.js')(app);
 
 
 var config = module.exports = {};
-config.server = {'distFolder': path.resolve(__dirname, '../client/dist')};
+config.server = {'distFolder': path.resolve(__dirname, '../dist')};
 config.server = {'staticUrl': __dirname +'/static'};
 
 app.configure(function(){
-  app.set( 'views', path.join( __dirname, './../client/app' ) );
+  app.set( 'views', path.join( __dirname, './../app' ) );
   app.set( 'view engine', 'html' );
   app.set('port', process.env.PORT || 3000);
   app.use(express.bodyParser());
-  app.use(express.favicon(path.join( __dirname, './../client/app/favicon.ico')));
-  app.use( express.static( path.join( __dirname, './../client/app' ) ) );
+  app.use(express.favicon(path.join( __dirname, './../app/favicon.ico')));
+  app.use( express.static( path.join( __dirname, './../app' ) ) );
   app.use(app.router);
 
 });
@@ -37,5 +36,11 @@ app.configure( 'production', function() {
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
     console.log( 'Express server listening on ' + app.get( 'port' ) );
 }));
+
+app.io.sockets.on('connection', function(socket){
+  socket.on('broadcast:talkRequest', function(data){
+    socket.broadcast.emit('new:talkRequest', data.user);
+  });
+});
 
 
