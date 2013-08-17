@@ -12,7 +12,7 @@
 * ```npm start``` starts server. You can then view the app at http://localhost:3000
 * ```grunt server``` runs testing on port 9000.
 * LiveReload should automatically update the app as changes are made.
-* * If you have port conflicts when running grunt try the following *
+* _If you have port conflicts when running grunt try the following_
 * ```lsof -iTCP:35729```
 * ```kill -9 PID#```
 * Run grunt again.
