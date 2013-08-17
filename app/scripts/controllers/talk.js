@@ -5,6 +5,6 @@ angular.module('speakerApp')
     console.log(User);
     $scope.sendTalkRequest = function(){
       $scope.user = User;
-      // Hook up server shit here.
+      console.log('woo');
     };
   });
