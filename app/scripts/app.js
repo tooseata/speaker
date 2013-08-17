@@ -15,8 +15,8 @@ angular.module('speakerApp', [])
         templateUrl: 'views/create.html',
         controller: 'CreateCtrl'
       })
-      .when('/user/', {
-        templateUrl: 'views/user.html'
+      .when('/talk/', {
+        templateUrl: 'views/talk.html'
         // add controller here.
       })
       .when('/admin/', {
