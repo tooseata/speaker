@@ -1,3 +1,6 @@
+// Adapter.js is a shim that abstracts away browser differences
+// and spec changes
+
 var RTCPeerConnection = null;
 var getUserMedia = null;
 var attachMediaStream = null;
