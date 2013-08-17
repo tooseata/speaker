@@ -1,0 +1,20 @@
+{
+    "info" : {
+        "name"          :   "Speaker",
+        "description"   :   "WebRTC presentation app for mobile devices",
+        "version"       :   "0.1.0",
+        "author"        :   {
+            "name"    :   "CKTMZ",
+            "email"   :   "",
+            "url"     :   "",
+            "twitter" :   ""
+        }
+    },
+    "appPath"   :   "app",
+    "serverPath":   "server",
+    "distPath"  :   "dist",
+    "server" : {
+        "port"      :   3000
+    },
+  "installed" :   false
+}

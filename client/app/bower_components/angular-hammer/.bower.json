@@ -1,0 +1,23 @@
+{
+  "name": "angular-hammer",
+  "version": "1.0.1",
+  "main": "angular-hammer.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "angular": "~1.0.6",
+    "hammerjs": "~1.0.5"
+  },
+  "homepage": "https://github.com/monospaced/angular-hammer",
+  "_release": "1.0.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.1",
+    "commit": "0ddbc02ae0feef9444b7299ce5472cfea238eb04"
+  },
+  "_source": "git://github.com/monospaced/angular-hammer.git",
+  "_target": "~1.0.1"
+}
