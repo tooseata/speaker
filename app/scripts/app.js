@@ -15,8 +15,15 @@ angular.module('speakerApp', [])
         templateUrl: 'views/create.html',
         controller: 'CreateCtrl'
       })
-      .when('/room/user/:roomName', {
+      .when('/user/', {
         templateUrl: 'views/user.html'
         // add controller here.
+      })
+      .when('/admin/', {
+        templateUrl: 'views/admin.html'
+        // add controller here.
+      })
+      .otherwise({
+        redirectTo: '/'
       });
   });
