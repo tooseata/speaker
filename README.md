@@ -12,7 +12,7 @@
 * If you don't have Bower/Grunt command line tool installed, on the command line do: ```npm install -g yo grunt-cli bower```
 * Then, ```npm install``` in root dir.
 * ```npm start``` starts server. You can then view the app at http://localhost:3000
-* ```grunt server``` runs testing on port 9000.
+* ```grunt watch``` runs testing on port 9000.
 * LiveReload should automatically update the app as changes are made.
 
 _If you have port conflicts when running grunt try the following:_
