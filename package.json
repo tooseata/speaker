@@ -2,6 +2,8 @@
   "name": "speaker",
   "version": "0.0.0",
   "dependencies": {
+    "express": "3.3.5",
+    "socket.io": "~0.9.14",
     "karma-script-launcher": "~0.1.0",
     "karma-chrome-launcher": "~0.1.0",
     "karma-firefox-launcher": "~0.1.0",
@@ -42,6 +44,7 @@
     "node": ">=0.8.0"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "start": "node server/app.js"
   }
 }
