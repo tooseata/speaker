@@ -8,7 +8,6 @@ var express = require('express'),
 
 // require('./config/middleware.js')(app);
 
-
 var config = module.exports = {};
 config.server = {'distFolder': path.resolve(__dirname, '../dist')};
 config.server = {'staticUrl': __dirname +'/static'};
@@ -26,16 +25,18 @@ app.configure(function(){
 
 app.configure( 'development', function() {
     app.use( express.errorHandler( { dumpExceptions: true, showStack: true } ) );
-} );
+});
 
 app.configure( 'production', function() {
     app.use( express.errorHandler() );
-} );
+});
 
+// require( './sockets/roomConnection.js');
 
 // Start server - hook in sockets instance
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
-    console.log( 'Express server listening on ' + app.get( 'port' ) );
+  console.log( 'Express server listening on ' + app.get( 'port' ) );
 }));
+
 
 
