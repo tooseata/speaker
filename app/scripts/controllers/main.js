@@ -5,7 +5,9 @@ angular.module('speakerApp')
     $scope.awesomeThings = [
       'HTML5 Boilerplate',
       'AngularJS',
-      'Karma', 
+      'Karma',
       'Another'
     ];
   });
+
+

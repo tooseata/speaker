@@ -57,7 +57,7 @@ You can have grunt (karma) continuously watch for file changes and automatically
 * Open one or more browsers and point them to [http://localhost:8080/__test/].
 * Each time a file changes the tests will be run against each browser.
 
-### Initial Seeding
+### Initial Seed
 * Yeoman used to scaffold out seed Angular app with Bower, NPM, and Grunt.
 
 
