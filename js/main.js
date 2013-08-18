@@ -147,6 +147,7 @@ var requestTurn = function (turn_url) {
 requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
 var maybeStart = function() {
+  console.log(isAdmin);
   if (!isStarted && localStream && isChannelReady) {
     createPeerConnection();
     pc.addStream(localStream);
