@@ -90,6 +90,18 @@ socket.on('message', function(message) {
   }
 });
 
+var maybeStart = function() {
+  console.log(isAdmin);
+  if (!isStarted && localStream && isChannelReady) {
+    createPeerConnection();
+    pc.addStream(localStream);
+    isStarted = true;
+    if (isAdmin) {
+      doCall();
+    }
+  }
+};
+
 ////////////////////////////////////////////////////
 setTimeout(function() {
 var localVideo = document.getElementById('localVideo');
@@ -144,18 +156,6 @@ var requestTurn = function (turn_url) {
 };
 
 requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
-
-var maybeStart = function() {
-  console.log(isAdmin);
-  if (!isStarted && localStream && isChannelReady) {
-    createPeerConnection();
-    pc.addStream(localStream);
-    isStarted = true;
-    if (isAdmin) {
-      doCall();
-    }
-  }
-};
 
 window.onbeforeunload = function(e) {
   sendMessage('bye');
