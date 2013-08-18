@@ -63,12 +63,15 @@
         <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
+        <script src="scripts/app/app.js"></script>
+        <script src="scripts/app/services.js"></script>
+        <script src="scripts/app/factories.js"></script>
         <script src="scripts/controllers/main.js"></script>
         <script src="scripts/controllers/join.js"></script>
         <script src="scripts/controllers/create.js"></script>
         <script src="scripts/controllers/talk.js"></script>
         <script src="scripts/controllers/admin.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
         <!-- endbuild -->
 </body>
 </html>

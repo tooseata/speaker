@@ -20,7 +20,9 @@ body {
     line-height: 1;
     letter-spacing: -1px;
 }
-
+#request_list_header{
+    text-align: center;
+}
 #container_button {
     background-color: #252525;
     width: 230px;

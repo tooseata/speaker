@@ -1,10 +1,9 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('TalkCtrl', function ($scope, User) {
-    console.log(User);
+  .controller('TalkCtrl', function ($scope, User, socket) {
+    $scope.user = User;
     $scope.sendTalkRequest = function(){
-      $scope.user = User;
-      console.log('woo');
+      socket.emit('broadcast:talkRequest', {user : $scope.user.get()});
     };
   });

@@ -1,6 +1,7 @@
 <div id="admin_header">
-  <button id="preferences">Preferences</button>
+  <a class="btn btn-medium btn-success">Preferences</a>
 </div>
 <div id="talk_requests">
-  <h3>Talk Requests</h3>
+  <h3 id="request_list_header">Talk Requests</h3>
+  <button ng-repeat='user in talkRequests' class="btn btn-large btn-block btn-primary" type="button">{{user.name}}</button>
 </div>

@@ -3,10 +3,9 @@ var express = require('express'),
   path = require('path'),
   io = require('socket.io'),
   appConfig = require( './../app-config.json' );
-
+  
   var app = express();
 
-// require('./config/middleware.js')(app);
 
 
 var config = module.exports = {};
@@ -37,5 +36,11 @@ app.configure( 'production', function() {
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
     console.log( 'Express server listening on ' + app.get( 'port' ) );
 }));
+
+app.io.sockets.on('connection', function(socket){
+  socket.on('broadcast:talkRequest', function(data){
+    socket.broadcast.emit('new:talkRequest', data.user);
+  });
+});
 
 

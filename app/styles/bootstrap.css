@@ -3340,7 +3340,7 @@ button.close {
 }
 
 .btn-block + .btn-block {
-  margin-top: 5px;
+  margin-top: 1px;
 }
 
 input[type="submit"].btn-block,
