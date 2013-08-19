@@ -31,7 +31,7 @@ app.configure( 'production', function() {
     app.use( express.errorHandler() );
 } );
 
-
+var rooms = {};
 // Start server - hook in sockets instance
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
     console.log( 'Express server listening on ' + app.get( 'port' ) );
@@ -39,10 +39,15 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 
 app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:talkRequest', function(data){
-    socket.broadcast.emit('new:talkRequest', data.user);
+    socket.broadcast.to(data.user.room).emit('new:talkRequest', data.user);
   });
   socket.on('broadcast:cancelTalkRequest', function(data){
-    socket.broadcast.emit('new:cancelTalkRequest', data.user);
+    socket.broadcast.to(data.user.room).emit('new:cancelTalkRequest', data.user);
+  });
+  socket.on('broadcast:joinRoom', function(data){
+    console.log(data.user);
+    socket.join(data.user.room);
+    socket.broadcast.to(data.user.room).emit('new:joinRoom', data.user);
   });
 });
 
