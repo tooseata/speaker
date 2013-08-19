@@ -10,3 +10,4 @@ angular.module('speakerApp')
       $scope.user.setRoom(room);
     };
   });
+
