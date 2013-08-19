@@ -3,6 +3,7 @@
 angular.module('speakerApp')
   .controller('AdminCtrl', function ($scope, User, socket) {
     $scope.user = User.get();
+    $scope.members = '100';
     $scope.talkRequests = {};
     socket.on('new:talkRequest', function (user) {
       $scope.talkRequests[user.name] = user;

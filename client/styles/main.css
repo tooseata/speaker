@@ -42,6 +42,11 @@ body {
     position: relative;
     bottom: -50px;
 }
+#user-count {
+    display: inline-block;
+    position: relative;
+    left:200px;
+}
 #hole {
     background-color: #151515;
     width: 210px;
