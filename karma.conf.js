@@ -23,7 +23,11 @@ module.exports = function (config) {
 
     // test results reporter to use
     // possible values: dots || progress || growl
-    reporters: ['progress'],
+    reporters: ['progress', 'junit'],
+
+    junitReporter: {
+      outputFile: 'test-results.xml',
+    },
 
     // web server port
     port: 8080,
@@ -56,6 +60,13 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false
+    singleRun: false,
+
+    plugins: [
+      'karma-jasmine',
+      'karma-chrome-launcher',
+      'karma-junit-reporter'
+      // 'karma-firefox-launcher',
+    ]
   });
 };
