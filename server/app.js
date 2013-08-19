@@ -45,9 +45,12 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(data.user.room).emit('new:cancelTalkRequest', data.user);
   });
   socket.on('broadcast:joinRoom', function(data){
-    console.log(data.user);
     socket.join(data.user.room);
     socket.broadcast.to(data.user.room).emit('new:joinRoom', data.user);
+  });
+  socket.on('broadcast:leaveRoom', function(data){
+    socket.leave(data.user.room);
+    socket.broadcast.to(data.user.room).emit('new:leaveRoom', data.user);
   });
 });
 

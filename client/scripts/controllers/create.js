@@ -6,6 +6,7 @@ angular.module('speakerApp')
     $scope.update = function(room) {
       $scope.user.setRoom(room);
       $scope.user.setType('admin');
+      socket.emit('broadcast:leaveRoom', {user : $scope.user.get()});
       socket.emit('broadcast:joinRoom', {user : $scope.user.get()});
     };
   });

@@ -8,6 +8,7 @@ angular.module('speakerApp')
       $scope.user.setType('talker');
       $scope.user.setName(userName);
       $scope.user.setRoom(room);
+      socket.emit('broadcast:leaveRoom', {user : $scope.user.get()});
       socket.emit('broadcast:joinRoom', {user : $scope.user.get()});
     };
   });
