@@ -10,9 +10,9 @@
             "twitter" :   ""
         }
     },
-    "appPath"   :   "app",
-    "serverPath":   "server",
-    "distPath"  :   "dist",
+    "appPath"   :   "./client",
+    "serverPath":   "./server",
+    "distPath"  :   "./dist",
     "server" : {
         "port"      :   3000
     },

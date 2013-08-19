@@ -1,4 +1,5 @@
 # speaker.
+presentations and media on your mobile device via WebRTC
 
 ## Purpose
 
