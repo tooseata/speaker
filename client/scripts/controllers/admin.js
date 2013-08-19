@@ -19,4 +19,7 @@ angular.module('speakerApp')
     socket.on('new:joinRoom', function () {
       $scope.members++;
     });
+    $scope.fillRequest = function(name){
+      console.log(name);
+    };
   });
