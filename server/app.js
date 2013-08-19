@@ -41,6 +41,9 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:talkRequest', function(data){
     socket.broadcast.emit('new:talkRequest', data.user);
   });
+  socket.on('broadcast:cancelTalkRequest', function(data){
+    socket.broadcast.emit('new:cancelTalkRequest', data.user);
+  });
 });
 
 
