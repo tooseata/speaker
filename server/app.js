@@ -39,6 +39,7 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 
 app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:talkRequest', function(data){
+    console.log('Start Talk Request');
     socket.broadcast.to(data.user.room).emit('new:talkRequest', data.user);
   });
   socket.on('broadcast:cancelTalkRequest', function(data){
