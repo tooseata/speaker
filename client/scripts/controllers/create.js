@@ -10,7 +10,14 @@ angular.module('speakerApp')
       console.log('error on create http req.');
     });
     $scope.user = User;
-    $scope.update = function(room) {
+    $scope.mediaType = {audio: true};
+    $scope.audio = function() {
+      $scope.mediaType = {audio: true};
+    };
+    $scope.audioVideo = function() {
+      $scope.mediaType = {audio: true, video: true};
+    };
+    $scope.update = function(room, type) {
       $scope.user.setType('admin');
       socket.emit('broadcast:leaveRoom', {user : $scope.user.get()});
       $scope.user.setRoom(room);
