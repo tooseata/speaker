@@ -12,6 +12,67 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', {user : $scope.user.get()});
       $scope.sentRequest = false;
     };
+    $scope.requestAudio = function(){
+      var sample = new MicrophoneSample();
+      var context = new webkitAudioContext();
+      var analyser = context.createAnalyser();
+      // shim layer with setTimeout fallback
+      var requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                window.oRequestAnimationFrame      ||
+                window.msRequestAnimationFrame     ||
+          function( callback ){
+          window.setTimeout(callback, 1000 / 60);
+          };
+      })();
+      function MicrophoneSample() {
+        this._width = 640;
+        this._height = 480;
+        this.canvas = document.querySelector('canvas');
+      }
+      var getMicrophoneInput = function (source) {
+        getUserMedia({audio: true},onStream.bind(source),onStreamError.bind(source));
+      };
+     var onStream = function(stream) {
+        var input = context.createMediaStreamSource(stream);
+        var filter = context.createBiquadFilter();
+        filter.frequency.value = 60.0;
+        filter.type = filter.NOTCH;
+        filter.Q = 10.0;
+        // Connect graph.
+        input.connect(filter);
+        filter.connect(analyser);
+        requestAnimFrame(visualize.bind(analyser));
+      };
+
+      var onStreamError = function(e) {
+        console.error('Error getting microphone', e);
+      };
+
+      var visualize = function() {
+        sample.canvas.width = sample._width;
+        sample.canvas.height = sample._height;
+        var drawContext = sample.canvas.getContext('2d');
+
+        var times = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteTimeDomainData(times);
+        for (var i = 0; i < times.length; i++) {
+          var value = times[i];
+          var percent = value / 256;
+          var height = sample._height * percent;
+          var offset = sample._height - height - 1;
+          var barWidth = sample._width/times.length;
+          drawContext.fillStyle = 'black';
+          drawContext.fillRect(i * barWidth, offset, 1, 1);
+        }
+        requestAnimFrame(visualize.bind(analyser));
+      };
+
+      getMicrophoneInput(sample);
+    };
+
     $scope.connectRequest = function(name){
       console.log("name", name);
 
@@ -137,9 +198,9 @@ angular.module('speakerApp')
           console.log('navigator.getUserMedia error: ', error);
         }
 
-        var constraints = {audio: true};
-        getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-        console.log('Getting user audio');
+        // var constraints = {audio: true};
+        // getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+        // console.log('Getting user audio');
 
 
         var requestTurn = function (turn_url) {
