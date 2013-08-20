@@ -1,7 +1,7 @@
 'use strict';
 
 app.factory('socket', function ($rootScope) {
-  var socket = io.connect('http://localhost:3000');
+  var socket = io.connect(window.location.origin);
   return {
     on: function (eventName, callback) {
       socket.on(eventName, function () {

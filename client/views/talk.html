@@ -1,5 +1,5 @@
 <div class="hero-unit">
-  <div id="container_button">
+  <div id="container_button" ng-show="joined">
     <div id="hole">
       <div id="button">
         <div id="mic"></div>
@@ -7,7 +7,20 @@
     </div>
   </div>
     <div id="request_button_container" ng-switch on="sentRequest">
-      <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="sendTalkRequest()">Request Stream</a>
+      <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="sendTalkRequest();connectRequest()">Request Stream</a>
       <a class="btn btn-large btn-success" ng-switch-when="true" ng-click="cancelTalkRequest()">Cancel Request</a>
     </div>
 </div>
+<!-- Testing DIV -->
+
+<div id='container'>
+
+  <div id='videos'>
+    <video id='localVideo' autoplay muted></video>
+    <video id='remoteVideo' autoplay></video>
+  </div>
+
+</div>
+
+
+<!-- Testing DIV -->
