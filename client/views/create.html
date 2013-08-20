@@ -1,8 +1,12 @@
 <div class="hero-unit">
   <h2>Create a Room</h2>
+  <div class="btn-group" data-toggle="buttons-radio">
+    <button type="button" ng-click="audio()" class="btn btn-primary active">Audio Only</button>
+    <button type="button" ng-click="audioVideo()" class="btn btn-primary">Audio+Video</button>
+  </div>
   <form name="createForm" novalidate class="createForm" ng-controller="CreateCtrl">
     Room: <input name="room" type="text" required ng-model="room" ui-validate="{occupied : 'validateRoom($value)' }"><br>
     <span ng-show="createForm.room.$error.occupied">This room is occupied!</span><br>
-    <a ng-show="!createForm.room.$error.occupied" class="btn btn-large btn-success" ng-click="update(room)" href='#/admin/'>Create Room</a>
+    <a ng-show="!createForm.room.$error.occupied" class="btn btn-large btn-success" ng-click="update(room)" href='/admin/'>Create Room</a>
   </form>
 </div>
