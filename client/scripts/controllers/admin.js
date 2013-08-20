@@ -59,8 +59,7 @@ angular.module('speakerApp')
 
         // Set up audio and video regardless of what devices are present.
         var sdpConstraints = {'mandatory': {
-          'OfferToReceiveAudio':true,
-          'OfferToReceiveVideo':true
+          'OfferToReceiveAudio':true
         }};
 
         ////////////////////////////////////
@@ -120,49 +119,52 @@ angular.module('speakerApp')
           } else if (message.type === 'candidate' && socketService.isStarted) {
             var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
               candidate:message.candidate});
+            console.log('candidate: ', candidate);
+            console.log('sdpMLineIndex: ', sdpMLineIndex);
+            console.log('CANDIDATE MESSAGE', message);
             socketService.pc.addIceCandidate(candidate);
           } else if (message === 'bye' && socketService.isStarted) {
             handleRemoteHangup();
           }
         });
 
+        ////////////////////////////////////////////////////
+        // var localVideo = document.getElementById('localVideo');
+        var remoteAudio = document.getElementById('remoteAudio');
+        console.log('line 134 called!');
+        // var handleUserMedia = function(stream) {
+        //   socketService.localStream = stream;
+        //   attachMediaStream(localVideo, stream);
+        //   console.log('Adding local stream.');
+        //   sendMessage('got user media');
+        //   console.log(socketService.isAdmin);
+        //   if (socketService.isAdmin) {
+        //     maybeStart();
+        //   }
+        // };
+
+        // function handleUserMediaError(error){
+        //   console.log('navigator.getUserMedia error: ', error);
+        // }
+
+        // var constraints = {audio: true};
+        // getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+        // console.log('Getting user audio');
+
         var maybeStart = function() {
-          console.log('maybe start is running');
-          console.log(socketService.isAdmin);
+          console.log('maybe start is running on admin side');
+          console.log('i am admin: ', socketService.isAdmin);
           console.log('isStarted: ', socketService, 'localStream: ', socketService.localStream, 'isChannelready: ', socketService.isChannelReady);
-          if (!socketService.isStarted && socketService.localStream && socketService.isChannelReady) {
+          if (!socketService.isStarted && socketService.isAdmin && socketService.isChannelReady) {
             createPeerConnection();
-            socketService.pc.addStream(socketService.localStream);
+            // socketService.pc.addStream(socketService.localStream);
             socketService.isStarted = true;
             if (socketService.isAdmin) {
               doCall();
             }
           }
         };
-
-        ////////////////////////////////////////////////////
-        var localVideo = document.getElementById('localVideo');
-        var remoteVideo = document.getElementById('remoteVideo');
-
-        var handleUserMedia = function(stream) {
-          socketService.localStream = stream;
-          attachMediaStream(localVideo, stream);
-          console.log('Adding local stream.');
-          sendMessage('got user media');
-          console.log(socketService.isAdmin);
-          if (socketService.isAdmin) {
-            maybeStart();
-          }
-        };
-
-        function handleUserMediaError(error){
-          console.log('navigator.getUserMedia error: ', error);
-        }
-
-        var constraints = {audio: true, video: true};
-        getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-        console.log('Getting user audio');
-
+        console.log('am i admin?', socketService.isAdmin);
 
         var requestTurn = function (turn_url) {
           var turnExists = false;
@@ -377,6 +379,9 @@ angular.module('speakerApp')
 
           sdpLines[mLineIndex] = mLineElements.join(' ');
           return sdpLines;
+        }
+        if (socketService.isAdmin) {
+          maybeStart();
         }
     };
   });

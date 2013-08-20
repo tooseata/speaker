@@ -137,7 +137,7 @@ angular.module('speakerApp')
           console.log('navigator.getUserMedia error: ', error);
         }
 
-        var constraints = {audio: true, video: true};
+        var constraints = {audio: true};
         getUserMedia(constraints, handleUserMedia, handleUserMediaError);
         console.log('Getting user audio');
 
