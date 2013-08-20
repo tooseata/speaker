@@ -18,18 +18,29 @@ angular.module('speakerApp')
     return socketService;
   })
   .controller('AdminCtrl', function ($scope, User, socketService, socket) {
-    console.log('socket', socket);
+    console.log('socket Admin', socket);
     $scope.user = User.get();
+    if ($scope.user.type === 'admin') {
+      socketService.isAdmin = true;
+    } else {
+      socketService.isAdmin = false;
+    }
     $scope.members = 0;
     $scope.talkRequests = {};
     socket.on('new:talkRequest', function (user) {
+      console.log('user', user);
       $scope.talkRequests[user.name] = user;
+      console.log('talk request called on admin side');
+      socket.emit('clientIsChannelReady');
+      socketService.isChannelReady = true;
+
     });
     socket.on('new:cancelTalkRequest', function (user) {
       delete $scope.talkRequests[user.name];
     });
     socket.on('new:leaveRoom', function (user) {
       console.log('a user left the room');
+      console.log('for real this time');
       delete $scope.talkRequests[user.name];
       $scope.members--;
     });
@@ -56,33 +67,31 @@ angular.module('speakerApp')
 
         var room = name;
         
-        socketService.socket = io.connect();
         if (room !== '') {
           console.log('Create or join room ', room);
-          socketService.socket.emit('create or join', room);
+          socket.emit('create or join', room);
         }
 
-        socketService.socket.on('created', function(room) {
+        socket.on('created', function(room) {
           console.log('Created room ' + room);
-          socketService.isAdmin = true;
         });
 
-        socketService.socket.on('full', function(room) {
+        socket.on('full', function(room) {
           console.log('Room ' + room + ' is full');
         });
 
-        socketService.socket.on('join', function(room) {
+        socket.on('join', function(room) {
           console.log('Another peer made a request to join room', room);
           console.log('This peer is the admin of room', room);
           socketService.isChannelReady = true;
         });
 
-        socketService.socket.on('joined', function(room) {
+        socket.on('joined', function(room) {
           console.log('Another peer has joined the room', room);
           socketService.isChannelReady = true;
         });
 
-        socketService.socket.on('log', function(array) {
+        socket.on('log', function(array) {
           console.log.apply(console, array);
         });
 
@@ -92,12 +101,13 @@ angular.module('speakerApp')
 
         var sendMessage = function(message){
           console.log('Sending message: ', message);
-          socketService.socket.emit('message', message);
+          socket.emit('message', message);
         };
 
-        socketService.socket.on('message', function(message) {
+        socket.on('message', function(message) {
           console.log('Received message: ', message);
           if (message === 'got user media') {
+
             maybeStart();
           } else if (message.type === 'offer') {
             if (!socketService.isAdmin && !socketService.isStarted) {
@@ -117,7 +127,9 @@ angular.module('speakerApp')
         });
 
         var maybeStart = function() {
+          console.log('maybe start is running');
           console.log(socketService.isAdmin);
+          console.log('isStarted: ', socketService, 'localStream: ', socketService.localStream, 'isChannelready: ', socketService.isChannelReady);
           if (!socketService.isStarted && socketService.localStream && socketService.isChannelReady) {
             createPeerConnection();
             socketService.pc.addStream(socketService.localStream);
@@ -137,6 +149,7 @@ angular.module('speakerApp')
           attachMediaStream(localVideo, stream);
           console.log('Adding local stream.');
           sendMessage('got user media');
+          console.log(socketService.isAdmin);
           if (socketService.isAdmin) {
             maybeStart();
           }

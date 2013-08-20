@@ -39,7 +39,7 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 
 app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:talkRequest', function(data){
-    console.log('Start Talk Request');
+    console.log('______________________Start Talk Request___________________');
     socket.broadcast.to(data.user.room).emit('new:talkRequest', data.user);
   });
   socket.on('broadcast:cancelTalkRequest', function(data){
@@ -53,6 +53,14 @@ app.io.sockets.on('connection', function(socket){
     console.log(data.user);
     socket.leave(data.user.room);
     socket.broadcast.to(data.user.room).emit('new:leaveRoom', data.user);
+  });
+  socket.on('message', function(message) {
+    console.log('Received message: ', message);
+    socket.broadcast.emit('message', message);
+  });
+  socket.on('clientIsChannelReady', function(){
+    console.log('*****RECEIVED CHANNEL READY EVENT FROM ADMIN*****');
+    socket.broadcast.emit('clientIsChannelReady-client');
   });
 });
 
