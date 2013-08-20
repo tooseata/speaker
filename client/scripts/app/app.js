@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('speakerApp', []);
+var app = angular.module('speakerApp', ['ui.validate']);
 app.config(function ($routeProvider) {
     $routeProvider
       .when('/', {

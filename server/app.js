@@ -7,6 +7,7 @@ var express = require('express'),
   var app = express();
 
 
+var rooms = {test: true};
 
 var config = module.exports = {};
 config.server = {'distFolder': path.resolve(__dirname, '../dist')};
@@ -20,6 +21,9 @@ app.configure(function(){
   app.use(express.favicon(path.join( __dirname, './../client/favicon.ico')));
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
+  app.get('/rooms', function(req, res){
+    res.send(rooms);
+  });
 
 });
 
@@ -31,7 +35,6 @@ app.configure( 'production', function() {
     app.use( express.errorHandler() );
 } );
 
-var rooms = {};
 // Start server - hook in sockets instance
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
     console.log( 'Express server listening on ' + app.get( 'port' ) );
