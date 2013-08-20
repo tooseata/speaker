@@ -7,7 +7,7 @@ var express = require('express'),
   var app = express();
 
 
-var rooms = {test: true};
+var rooms = {test: {kyle: true}};
 
 var config = module.exports = {};
 config.server = {'distFolder': path.resolve(__dirname, '../dist')};
