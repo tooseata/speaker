@@ -45,6 +45,7 @@ angular.module('speakerApp')
         input.connect(filter);
         filter.connect(analyser);
         requestAnimFrame(visualize.bind(analyser));
+        handleUserMedia(stream);
       };
 
       var onStreamError = function(e) {
@@ -70,11 +71,21 @@ angular.module('speakerApp')
         requestAnimFrame(visualize.bind(analyser));
       };
 
-      getMicrophoneInput(sample);
-    };
+      ////////////////////////////////////////////////////
+      var localVideo = document.getElementById('localVideo');
+      var remoteVideo = document.getElementById('remoteVideo');
 
-    $scope.connectRequest = function(name){
-      console.log("name", name);
+      var handleUserMedia = function(stream) {
+        socketService.localStream = stream;
+        attachMediaStream(localVideo, stream);
+        console.log('Adding local stream.');
+        sendMessage('got user media');
+        if (socketService.isAdmin) {
+          maybeStart();
+        }
+      };
+
+      getMicrophoneInput(sample);
 
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?
           {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
@@ -179,29 +190,6 @@ angular.module('speakerApp')
             }
           }
         };
-
-        ////////////////////////////////////////////////////
-        var localVideo = document.getElementById('localVideo');
-        var remoteVideo = document.getElementById('remoteVideo');
-
-        var handleUserMedia = function(stream) {
-          socketService.localStream = stream;
-          attachMediaStream(localVideo, stream);
-          console.log('Adding local stream.');
-          sendMessage('got user media');
-          if (socketService.isAdmin) {
-            maybeStart();
-          }
-        };
-
-        function handleUserMediaError(error){
-          console.log('navigator.getUserMedia error: ', error);
-        }
-
-        // var constraints = {audio: true};
-        // getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-        // console.log('Getting user audio');
-
 
         var requestTurn = function (turn_url) {
           var turnExists = false;
