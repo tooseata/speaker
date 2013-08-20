@@ -7,7 +7,7 @@ var express = require('express'),
   var app = express();
 
 
-var rooms = {test: {kyle: true}};
+var rooms = {};
 
 var config = module.exports = {};
 config.server = {'distFolder': path.resolve(__dirname, '../dist')};
@@ -48,10 +48,20 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(data.user.room).emit('new:cancelTalkRequest', data.user);
   });
   socket.on('broadcast:joinRoom', function(data){
+    if (data.user.type === 'admin'){
+      rooms[data.user.room] = {admin: true};
+    } else {
+      rooms[data.user.room][data.user.name] = true;
+    }
     socket.join(data.user.room);
     socket.broadcast.to(data.user.room).emit('new:joinRoom', data.user);
   });
   socket.on('broadcast:leaveRoom', function(data){
+    if (data.user.type === 'admin'){
+      delete rooms[data.user.room];
+    } else {
+      rooms[data.user.room] && delete rooms[data.user.room][data.user.name];
+    }
     console.log(data.user);
     socket.leave(data.user.room);
     socket.broadcast.to(data.user.room).emit('new:leaveRoom', data.user);
