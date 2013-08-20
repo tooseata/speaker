@@ -5,6 +5,20 @@ angular.module('speakerApp')
     $scope.user = User;
     $scope.sentRequest = false;
     $scope.joined = false;
+    socket.on('new:establishClientConnection', function() {
+      console.log('establishClientConnection request received on client side');
+          $scope.connectRequest();
+      });
+    socket.on('new:queueIsOpen', function() {
+        $scope.sendTalkRequest();
+      });
+    socket.on('new:queueIsClosed', function() {
+      //TODO :: dynamically re-render HTML to display a message that the queue is closed
+      alert('queue is closed!');
+    });
+    $scope.maybeSendTalkRequest = function() {
+      socket.emit('broadcast:checkQueueStatus');
+    };
     $scope.sendTalkRequest = function(){
       socket.emit('broadcast:talkRequest', {user : $scope.user.get()});
       $scope.sentRequest = true;

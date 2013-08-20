@@ -54,8 +54,17 @@ angular.module('speakerApp')
     socket.on('new:joinRoom', function () {
       $scope.members++;
     });
+    socket.on('new:checkQueueStatus', function() {
+      if ($scope.queueStatus) {
+        socket.emit('broadcast:queueIsOpen');
+      } else {
+        socket.emit('broadcast:queueIsClosed');
+      }
+    });
 
     $scope.fillRequest = function(name){
+      console.log('emitting establishClientConnection from admin side');
+      socket.emit('broadcast:establishClientConnection');
 
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?
           {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
