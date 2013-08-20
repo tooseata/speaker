@@ -7,6 +7,7 @@ var express = require('express'),
   var app = express();
 
 
+var rooms = {};
 
 var config = module.exports = {};
 config.server = {'distFolder': path.resolve(__dirname, '../dist')};
@@ -20,6 +21,9 @@ app.configure(function(){
   app.use(express.favicon(path.join( __dirname, './../client/favicon.ico')));
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
+  app.get('/rooms', function(req, res){
+    res.send(rooms);
+  });
 
 });
 
@@ -31,7 +35,6 @@ app.configure( 'production', function() {
     app.use( express.errorHandler() );
 } );
 
-var rooms = {};
 // Start server - hook in sockets instance
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
     console.log( 'Express server listening on ' + app.get( 'port' ) );
@@ -46,10 +49,20 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(data.user.room).emit('new:cancelTalkRequest', data.user);
   });
   socket.on('broadcast:joinRoom', function(data){
+    if (data.user.type === 'admin'){
+      rooms[data.user.room] = {admin: true};
+    } else {
+      rooms[data.user.room][data.user.name] = true;
+    }
     socket.join(data.user.room);
     socket.broadcast.to(data.user.room).emit('new:joinRoom', data.user);
   });
   socket.on('broadcast:leaveRoom', function(data){
+    if (data.user.type === 'admin'){
+      delete rooms[data.user.room];
+    } else {
+      rooms[data.user.room] && delete rooms[data.user.room][data.user.name];
+    }
     console.log(data.user);
     socket.leave(data.user.room);
     socket.broadcast.to(data.user.room).emit('new:leaveRoom', data.user);
@@ -61,6 +74,22 @@ app.io.sockets.on('connection', function(socket){
   socket.on('clientIsChannelReady', function(){
     console.log('*****RECEIVED CHANNEL READY EVENT FROM ADMIN*****');
     socket.broadcast.emit('clientIsChannelReady-client');
+  });
+  socket.on('broadcast:establishClientConnection', function() {
+    console.log('trigger for establishClientConnection received on server side');
+    socket.broadcast.emit('new:establishClientConnection');
+  });
+  socket.on('broadcast:checkQueueStatus', function() {
+    console.log('User is checking the status of the queue');
+    socket.broadcast.emit('new:checkQueueStatus');
+  });
+  socket.on('broadcast:queueIsOpen', function() {
+    console.log('Server telling client queue is open');
+    socket.broadcast.emit('new:queueIsOpen');
+  });
+  socket.on('broadcast:queueIsClosed', function() {
+    console.log('Server telling client queue is closed');
+    socket.broadcast.emit('new:queueIsClosed');
   });
 });
 

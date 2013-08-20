@@ -4,6 +4,21 @@ angular.module('speakerApp')
   .controller('TalkCtrl', function ($scope, User, socketService, socket) {
     $scope.user = User;
     $scope.sentRequest = false;
+    $scope.joined = false;
+    socket.on('new:establishClientConnection', function() {
+      console.log('establishClientConnection request received on client side');
+          $scope.connectRequest();
+      });
+    socket.on('new:queueIsOpen', function() {
+        $scope.sendTalkRequest();
+      });
+    socket.on('new:queueIsClosed', function() {
+      //TODO :: dynamically re-render HTML to display a message that the queue is closed
+      alert('queue is closed!');
+    });
+    $scope.maybeSendTalkRequest = function() {
+      socket.emit('broadcast:checkQueueStatus');
+    };
     $scope.sendTalkRequest = function(){
       socket.emit('broadcast:talkRequest', {user : $scope.user.get()});
       $scope.sentRequest = true;
@@ -106,7 +121,7 @@ angular.module('speakerApp')
         var room = $scope.user.get();
 
         console.log('room', room);
-        
+
         console.log('socket Client: ', socket);
         // if (room !== '') {
         //   console.log('Create or join room ', room);
@@ -181,6 +196,7 @@ angular.module('speakerApp')
           console.log('isStarted ', socketService.isStarted);
           console.log('localStream', socketService.localStream);
           console.log('isChannelReady', socketService.isChannelReady);
+          $scope.joined = true;
           if (!socketService.isStarted && socketService.localStream && socketService.isChannelReady) {
             createPeerConnection();
             socketService.pc.addStream(socketService.localStream);
@@ -408,5 +424,5 @@ angular.module('speakerApp')
           return sdpLines;
         }
     };
-    
+
   });

@@ -4,7 +4,13 @@
 </div>
 <div id="talk_requests">
   <h3 id="request_list_header">Talk Requests</h3>
-  <button ng-repeat='user in talkRequests' ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}}</button>
+
+  <div id="queue_button_container" ng-switch on="queueStatus">
+    <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="openQueue()">Open Queue</a>
+    <a class="btn btn-large btn-danger" ng-switch-when="true" ng-click="closeQueue()">Close Queue</a>
+  </div>
+  <button ng-repeat="user in talkRequests" ng-show="queueStatus" ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}}</button>
+
 </div>
 
 <!-- Testing DIV -->
