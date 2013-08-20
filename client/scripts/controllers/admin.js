@@ -37,6 +37,7 @@ angular.module('speakerApp')
       $scope.members++;
     });
     $scope.fillRequest = function(name){
+
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?
           {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
           {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
@@ -52,8 +53,6 @@ angular.module('speakerApp')
         }};
 
         ////////////////////////////////////
-
-        // var room = location.pathname.substring(1);
 
         var room = name;
         
@@ -75,12 +74,12 @@ angular.module('speakerApp')
         socketService.socket.on('join', function(room) {
           console.log('Another peer made a request to join room', room);
           console.log('This peer is the admin of room', room);
-          isChannelReady = true;
+          socketService.isChannelReady = true;
         });
 
         socketService.socket.on('joined', function(room) {
           console.log('Another peer has joined the room', room);
-          isChannelReady = true;
+          socketService.isChannelReady = true;
         });
 
         socketService.socket.on('log', function(array) {

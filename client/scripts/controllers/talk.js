@@ -12,4 +12,5 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', {user : $scope.user.get()});
       $scope.sentRequest = false;
     };
+    
   });
