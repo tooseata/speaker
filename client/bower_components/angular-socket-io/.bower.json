@@ -1,0 +1,18 @@
+{
+  "name": "angular-socket-io",
+  "version": "0.2.0",
+  "main": "socket.js",
+  "dependencies": {
+    "angular": "~1.0.5"
+  },
+  "homepage": "https://github.com/btford/angular-socket-io",
+  "_release": "0.2.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.0",
+    "commit": "f8d623ea13248765467cddbe40bee58320811eb6"
+  },
+  "_source": "git://github.com/btford/angular-socket-io.git",
+  "_target": "~0.2.0",
+  "_direct": true
+}

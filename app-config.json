@@ -10,7 +10,7 @@
             "twitter" :   ""
         }
     },
-    "appPath"   :   "app",
+    "appPath"   :   "client",
     "serverPath":   "server",
     "distPath"  :   "dist",
     "server" : {

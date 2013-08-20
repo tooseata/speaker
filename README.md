@@ -1,4 +1,5 @@
 # speaker.
+presentations and media on your mobile device via WebRTC
 
 ## Purpose
 
@@ -13,7 +14,7 @@
 * Then, ```npm install``` in root dir.
 * ```npm start``` starts server. You can then view the app at http://localhost:3000
 * ```grunt watch``` runs testing on port 9000.
-* LiveReload should automatically update the app as changes are made.
+* If you want live reloading of the app as front end changes are made, run ```grunt server``` (this doesn't start the node server -- so the actual app may not work...?)
 
 _If you have port conflicts when running grunt try the following:_
 * ```lsof -iTCP:35729``` lists all processes using port 35729 (the default LiveReload port)
