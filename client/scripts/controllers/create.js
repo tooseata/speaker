@@ -2,9 +2,11 @@
 
 angular.module('speakerApp')
   .controller('CreateCtrl', function ($scope, User, socket, $http) {
+    $http.get('/session').success(function(data){
+      User.set(data);
+    });
     $scope.existingRooms = {};
     $http.get('/rooms').success(function(data){
-      console.log(data);
       $scope.existingRooms = data;
     }).error(function(){
       console.log('error on create http req.');
@@ -15,6 +17,7 @@ angular.module('speakerApp')
       socket.emit('broadcast:leaveRoom', {user : $scope.user.get()});
       $scope.user.setRoom(room);
       socket.emit('broadcast:joinRoom', {user : $scope.user.get()});
+      $http.post('/session', JSON.stringify($scope.user.get()));
     };
     $scope.validateRoom = function(room){
       return !$scope.existingRooms[room];

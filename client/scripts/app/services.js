@@ -18,6 +18,9 @@ app.service('User', function(){
     },
     setType: function(type){
       user.type = type;
+    },
+    set: function(userObj){
+      user = userObj;
     }
   };
 });

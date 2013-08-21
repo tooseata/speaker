@@ -17,6 +17,7 @@ angular.module('speakerApp')
       $scope.user.setName(userName);
       $scope.user.setRoom(room);
       socket.emit('broadcast:joinRoom', {user : $scope.user.get()});
+      $http.post('/session', JSON.stringify($scope.user.get()));
     };
     $scope.validateRoom = function(room){
       return $scope.existingRooms[room];

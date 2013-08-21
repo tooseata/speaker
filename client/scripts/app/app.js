@@ -1,7 +1,7 @@
 'use strict';
 
-var app = angular.module('speakerApp', ['btford.socket-io', 'ui.validate']);
-app.config(function ($routeProvider) {
+var app = angular.module('speakerApp', ['btford.socket-io', 'ui.validate', 'ngCookies']);
+app.config(function ($routeProvider, $httpProvider) {
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -26,4 +26,5 @@ app.config(function ($routeProvider) {
       .otherwise({
         redirectTo: '/'
       });
+    $httpProvider.defaults.withCredentials = true;
   });
