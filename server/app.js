@@ -8,6 +8,10 @@ var express = require('express'),
 
 
 var rooms = {};
+var sessions = {};
+var getCookieId = function(string){
+  return string.slice(string.indexOf('=') + 1);
+};
 
 var config = module.exports = {};
 config.server = {'distFolder': path.resolve(__dirname, '../dist')};
@@ -24,7 +28,13 @@ app.configure(function(){
   app.get('/rooms', function(req, res){
     res.send(rooms);
   });
-
+  app.get('/session', function(req, res){
+    res.send(sessions[getCookieId(req.headers.cookie)]);
+  });
+  app.post('/session', function(req, res){
+    sessions[getCookieId(req.headers.cookie)] = req.body;
+    res.send(200);
+  });
 });
 
 app.configure( 'development', function() {

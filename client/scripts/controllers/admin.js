@@ -19,7 +19,6 @@ angular.module('speakerApp')
     return socketService;
   })
   .controller('AdminCtrl', function ($scope, User, socketService, socket) {
-    console.log('socket Admin', socket);
     $scope.user = User.get();
     if ($scope.user.type === 'admin') {
       socketService.isAdmin = true;
