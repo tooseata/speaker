@@ -26,6 +26,7 @@ module.exports = function (config) {
 
     junitReporter: {
       outputFile: 'test-results.xml',
+      suite: 'unit'
     },
 
     // web server port
