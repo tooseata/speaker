@@ -2,7 +2,7 @@
 
 
 var app = angular.module('speakerApp', ['ui.validate', 'ngCookies']);
-app.config(function ($routeProvider, $httpProvider, $locationProvider) {
+app.config(function ($routeProvider, $httpProvider) {
 
     $routeProvider
       .when('/', {
@@ -28,6 +28,5 @@ app.config(function ($routeProvider, $httpProvider, $locationProvider) {
       .otherwise({
         redirectTo: '/'
       });
-    $locationProvider.html5Mode(true);
     $httpProvider.defaults.withCredentials = true;
   });
