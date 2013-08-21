@@ -17,7 +17,7 @@ angular.module('speakerApp')
       alert('queue is closed!');
     });
     $scope.maybeSendTalkRequest = function() {
-      socket.emit('broadcast:checkQueueStatus');
+      socket.emit('broadcast:checkQueueStatus', {user : $scope.user.get()});
     };
     $scope.sendTalkRequest = function(){
       socket.emit('broadcast:talkRequest', {user : $scope.user.get()});

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('CreateCtrl', function ($scope, User, socket, $http) {
+  .controller('CreateCtrl', function ($scope, $location, User, socket, $http) {
     $scope.existingRooms = {};
     $http.get('/rooms').success(function(data){
       console.log(data);
@@ -22,6 +22,7 @@ angular.module('speakerApp')
       socket.emit('broadcast:leaveRoom', {user : $scope.user.get()});
       $scope.user.setRoom(room);
       socket.emit('broadcast:joinRoom', {user : $scope.user.get()});
+      $location.path('/admin/');
     };
     $scope.validateRoom = function(room){
       return !$scope.existingRooms[room];
