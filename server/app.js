@@ -28,6 +28,9 @@ app.configure(function(){
   app.get('/rooms', function(req, res){
     res.send(rooms);
   });
+  app.get('/room/:room', function(req, res){
+    res.send(rooms[req.params.room]);
+  });
   app.get('/session', function(req, res){
     res.send(sessions[getCookieId(req.headers.cookie)]);
   });
@@ -52,39 +55,56 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 
 app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:talkRequest', function(data){
-    console.log('______________________Start Talk Request___________________');
-    socket.broadcast.to(data.user.room).emit('new:talkRequest', data.user);
+    var room = data.user.room;
+    var user = data.user;
+    rooms[room].talkRequests[user.name] = user;
+    socket.broadcast.to(room).emit('new:talkRequest', user);
   });
   socket.on('broadcast:cancelTalkRequest', function(data){
-    socket.broadcast.to(data.user.room).emit('new:cancelTalkRequest', data.user);
+    var room = data.user.room;
+    var user = data.user;
+    delete rooms[room].talkRequests[user.name];
+    socket.broadcast.to(room).emit('new:cancelTalkRequest', user);
   });
+
   socket.on('broadcast:joinRoom', function(data){
-    if (data.user.type === 'admin'){
-      rooms[data.user.room] = {admin: true};
+    console.log(data, data.user, data.user.room, 'data from admin');
+    var room = data.user.room;
+    var user = data.user;
+    if (user.type === 'admin'){
+      if (!rooms[user.room]){
+        rooms[room] = {
+          members: {admin: true},
+          talkRequests: {}
+        };
+      }
     } else {
-      rooms[data.user.room][data.user.name] = true;
+      rooms[room].members[user.name] = true;
+      socket.broadcast.to(room).emit('new:joinRoom', user);
     }
-    socket.join(data.user.room);
-    socket.broadcast.to(data.user.room).emit('new:joinRoom', data.user);
+    socket.join(room);
   });
+
   socket.on('broadcast:leaveRoom', function(data){
-    if (data.user.type === 'admin'){
-      delete rooms[data.user.room];
-    } else {
-      rooms[data.user.room] && delete rooms[data.user.room][data.user.name];
+    var room = data.user.room;
+    var user = data.user;
+    if (user.type === 'admin'){
+      delete rooms[room];
+    } else if (rooms[room]) {
+      delete rooms[room].members[user.name];
     }
-    console.log(data.user);
-    socket.leave(data.user.room);
-    socket.broadcast.to(data.user.room).emit('new:leaveRoom', data.user);
+    socket.leave(room);
+    socket.broadcast.to(room).emit('new:leaveRoom', user);
   });
+
   socket.on('message', function(message) {
-    console.log('Received message: ', message);
     socket.broadcast.emit('message', message);
   });
+
   socket.on('clientIsChannelReady', function(){
-    console.log('*****RECEIVED CHANNEL READY EVENT FROM ADMIN*****');
     socket.broadcast.emit('clientIsChannelReady-client');
   });
+
 });
 
 

@@ -7,12 +7,14 @@ angular.module('speakerApp')
       console.log(data);
       $scope.existingRooms = data;
     }).error(function(){
-      console.log('error on create http req.');
+      console.log('error on room collection.');
     });
     $scope.user = User;
     $scope.update = function(userName, room) {
       console.log($scope.user.get(), 'updated');
-      socket.emit('broadcast:leaveRoom', {user : $scope.user.get()});
+      if ($scope.user.get().room !== ''){
+        socket.emit('broadcast:leaveRoom', {user : $scope.user.get()});
+      }
       $scope.user.setType('talker');
       $scope.user.setName(userName);
       $scope.user.setRoom(room);
@@ -23,6 +25,6 @@ angular.module('speakerApp')
       return $scope.existingRooms[room];
     };
     $scope.validateName = function(name){
-      return !$scope.existingRooms[$scope.room][name];
+      return !$scope.existingRooms[$scope.room].members[name];
     };
   });

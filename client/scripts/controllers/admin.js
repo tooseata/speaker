@@ -17,35 +17,50 @@ angular.module('speakerApp')
     }
     return socketService;
   })
-  .controller('AdminCtrl', function ($scope, User, socketService, socket) {
-    $scope.user = User.get();
-    if ($scope.user.type === 'admin') {
-      socketService.isAdmin = true;
-    } else {
-      socketService.isAdmin = false;
-    }
-    $scope.members = 0;
+  .controller('AdminCtrl', function ($scope, User, socketService, socket, $http) {
+    $scope.members = {};
     $scope.talkRequests = {};
+    $scope.memberCount = 0;
+    if (User.get().type !== 'admin'){
+      $http.get('/session').success(function(data){ // async
+        User.set(data);
+        $scope.user = User.get();
+        socket.emit('broadcast:joinRoom', {user: $scope.user});
+        $http.get('/room/' + $scope.user.room + '').success(function(room){
+          console.log(room, 'room');
+          $scope.members = room.members;
+          $scope.talkRequests = room.talkRequests;
+          $scope.memberCount = $scope.countMembers();
+        });
+      });
+    }
+
     socket.on('new:talkRequest', function (user) {
-      console.log('user', user);
       $scope.talkRequests[user.name] = user;
-      console.log('talk request called on admin side');
       socket.emit('clientIsChannelReady');
       socketService.isChannelReady = true;
-
     });
     socket.on('new:cancelTalkRequest', function (user) {
       delete $scope.talkRequests[user.name];
     });
     socket.on('new:leaveRoom', function (user) {
-      console.log('a user left the room');
-      console.log('for real this time');
       delete $scope.talkRequests[user.name];
-      $scope.members--;
+      delete $scope.members[user.name];
+      $scope.memberCount--;
     });
-    socket.on('new:joinRoom', function () {
-      $scope.members++;
+    socket.on('new:joinRoom', function (user) {
+      console.log('room was joined by ' + user.name);
+      $scope.members[user.name] = user;
+      $scope.memberCount++;
     });
+
+    $scope.countMembers = function(){
+      var count = -1;
+      for (var i in $scope.members){
+        count++;
+      }
+      return count;
+    };
     $scope.fillRequest = function(name){
 
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?

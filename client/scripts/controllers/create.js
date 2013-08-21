@@ -2,9 +2,6 @@
 
 angular.module('speakerApp')
   .controller('CreateCtrl', function ($scope, User, socket, $http) {
-    $http.get('/session').success(function(data){
-      User.set(data);
-    });
     $scope.existingRooms = {};
     $http.get('/rooms').success(function(data){
       $scope.existingRooms = data;
