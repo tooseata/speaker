@@ -11,6 +11,7 @@ angular.module('speakerApp')
       pc: null,
       remoteStream: null,
       turnReady: null,
+      ready: null,
       setSocket: function(s) {
         this.socket = s;
       }
@@ -36,9 +37,8 @@ angular.module('speakerApp')
       $scope.queueStatus = false;
     };
     socket.on('new:talkRequest', function (user) {
-      console.log('user', user);
+      console.log('talk request was called on admin side -- about to send event to client side');
       $scope.talkRequests[user.name] = user;
-      console.log('talk request called on admin side');
       socket.emit('clientIsChannelReady');
       socketService.isChannelReady = true;
     });
@@ -61,10 +61,13 @@ angular.module('speakerApp')
         socket.emit('broadcast:queueIsClosed');
       }
     });
+    socket.on('new:microphoneClickedOnClientSide', function() {
+      socketService.ready = true;
+    });
 
     $scope.fillRequest = function(name){
       console.log('emitting establishClientConnection from admin side');
-      socket.emit('broadcast:establishClientConnection');
+      // socket.emit('broadcast:establishClientConnection');
 
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?
           {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
@@ -171,8 +174,8 @@ angular.module('speakerApp')
       var maybeStart = function() {
         console.log('maybe start is running on admin side');
         console.log('i am admin: ', socketService.isAdmin);
-        console.log('isStarted: ', socketService, 'localStream: ', socketService.localStream, 'isChannelready: ', socketService.isChannelReady);
-        if (!socketService.isStarted && socketService.isAdmin && socketService.isChannelReady) {
+        console.log('isStarted: ', socketService, 'isAdmin: ', socketService.isAdmin, 'isChannelready: ', socketService.isChannelReady);
+        if (!socketService.isStarted && socketService.isAdmin && socketService.ready && socketService.isChannelReady) {
           createPeerConnection();
           // socketService.pc.addStream(socketService.localStream);
           socketService.isStarted = true;

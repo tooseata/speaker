@@ -91,6 +91,10 @@ app.io.sockets.on('connection', function(socket){
     console.log('Server telling client queue is closed');
     socket.broadcast.emit('new:queueIsClosed');
   });
+  socket.on('broadcast:microphoneClickedOnClientSide', function() {
+    console.log('server received notification from client that microphone is allowed');
+    socket.broadcast.emit('new:microphoneClickedOnClientSide');
+  });
 });
 
 

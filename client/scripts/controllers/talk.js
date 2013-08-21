@@ -7,7 +7,7 @@ angular.module('speakerApp')
     $scope.joined = false;
     socket.on('new:establishClientConnection', function() {
       console.log('establishClientConnection request received on client side');
-          $scope.connectRequest();
+          $scope.requestAudio();
       });
     socket.on('new:queueIsOpen', function() {
         $scope.sendTalkRequest();
@@ -16,10 +16,17 @@ angular.module('speakerApp')
       //TODO :: dynamically re-render HTML to display a message that the queue is closed
       alert('queue is closed!');
     });
+    socket.on('clientIsChannelReady-client', function(){
+      console.log('clientIsChannelReady CALLED ON CLIENT SIDE');
+      socketService.isChannelReady = true;
+      console.log('setting isChannelReady on Client');
+    });
     $scope.maybeSendTalkRequest = function() {
+      console.log('maybeSendTalkRequest was called')
       socket.emit('broadcast:checkQueueStatus');
     };
     $scope.sendTalkRequest = function(){
+      console.log('sendTalkRequest was called');
       socket.emit('broadcast:talkRequest', {user : $scope.user.get()});
       $scope.sentRequest = true;
     };
@@ -47,10 +54,13 @@ angular.module('speakerApp')
         this._height = 480;
         this.canvas = document.querySelector('canvas');
       }
+      // getUserMedia(constraints, handleUserMedia, )
       var getMicrophoneInput = function (source) {
-        getUserMedia({audio: true},onStream.bind(source),onStreamError.bind(source));
+        getUserMedia({audio: true}, onStream, onStreamError);
       };
      var onStream = function(stream) {
+        console.log('onStream was called and passed : ', stream);
+        socket.emit('broadcast:microphoneClickedOnClientSide');
         var input = context.createMediaStreamSource(stream);
         var filter = context.createBiquadFilter();
         filter.frequency.value = 60.0;
@@ -91,13 +101,9 @@ angular.module('speakerApp')
       var remoteVideo = document.getElementById('remoteVideo');
 
       var handleUserMedia = function(stream) {
+        console.log('handleUserMedia was called and passed', stream);
         socketService.localStream = stream;
-        attachMediaStream(localVideo, stream);
-        console.log('Adding local stream.');
         sendMessage('got user media');
-        if (socketService.isAdmin) {
-          maybeStart();
-        }
       };
 
       getMicrophoneInput(sample);
@@ -152,12 +158,6 @@ angular.module('speakerApp')
           console.log.apply(console, array);
         });
 
-        socket.on('clientIsChannelReady-client', function(){
-          console.log('EVENT CALLED ON CLIENT SIDE');
-          socketService.isChannelReady = true;
-          console.log('setting isChannelReady on Client');
-        });
-
         // MOVE TO ADMIN
 
                 ///////////////////////////////////////////////////////
@@ -184,6 +184,7 @@ angular.module('speakerApp')
           } else if (message.type === 'candidate' && socketService.isStarted) {
             var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
               candidate:message.candidate});
+            console.log('***candidate***: ', candidate);
             socketService.pc.addIceCandidate(candidate);
           } else if (message === 'bye' && socketService.isStarted) {
             handleRemoteHangup();
