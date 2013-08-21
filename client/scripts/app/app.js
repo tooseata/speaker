@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('speakerApp', ['btford.socket-io', 'ui.validate']);
+var app = angular.module('speakerApp', ['ui.validate']);
 app.config(function ($routeProvider, $locationProvider) {
     $routeProvider
       .when('/', {
