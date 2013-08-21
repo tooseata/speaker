@@ -79,9 +79,9 @@ app.io.sockets.on('connection', function(socket){
     console.log('trigger for establishClientConnection received on server side');
     socket.broadcast.emit('new:establishClientConnection');
   });
-  socket.on('broadcast:checkQueueStatus', function() {
+  socket.on('broadcast:checkQueueStatus', function(data) {
     console.log('User is checking the status of the queue');
-    socket.broadcast.emit('new:checkQueueStatus');
+    socket.broadcast.emit('new:checkQueueStatus', data.user.room);
   });
   socket.on('broadcast:queueIsOpen', function() {
     console.log('Server telling client queue is open');

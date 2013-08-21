@@ -23,8 +23,7 @@ angular.module('speakerApp')
       $scope.requestAudio();
     });
     $scope.maybeSendTalkRequest = function() {
-      console.log('maybeSendTalkRequest was called')
-      socket.emit('broadcast:checkQueueStatus');
+      socket.emit('broadcast:checkQueueStatus', {user : $scope.user.get()});
     };
     $scope.sendTalkRequest = function(){
       console.log('sendTalkRequest was called');

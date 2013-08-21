@@ -54,11 +54,13 @@ angular.module('speakerApp')
     socket.on('new:joinRoom', function () {
       $scope.members++;
     });
-    socket.on('new:checkQueueStatus', function() {
-      if ($scope.queueStatus) {
-        socket.emit('broadcast:queueIsOpen');
-      } else {
-        socket.emit('broadcast:queueIsClosed');
+    socket.on('new:checkQueueStatus', function (room) {
+      if (room === $scope.user.room) {
+        if ($scope.queueStatus) {
+          socket.emit('broadcast:queueIsOpen');
+        } else {
+          socket.emit('broadcast:queueIsClosed');
+        }
       }
     });
     socket.on('new:microphoneClickedOnClientSide', function() {

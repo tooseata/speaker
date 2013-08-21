@@ -7,6 +7,6 @@
   <form name="createForm" novalidate class="createForm" ng-controller="CreateCtrl">
     Room: <input name="room" type="text" required ng-model="room" ui-validate="{occupied : 'validateRoom($value)' }"><br>
     <span ng-show="createForm.room.$error.occupied">This room is occupied!</span><br>
-    <a ng-show="!createForm.room.$error.occupied" class="btn btn-large btn-success" ng-click="update(room)" href='/admin/'>Create Room</a>
+    <button ng-disabled="createForm.room.$error.occupied" class="btn btn-large btn-success" ng-click="update(room)">Create Room</button>
   </form>
 </div>
