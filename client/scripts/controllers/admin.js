@@ -22,6 +22,7 @@ angular.module('speakerApp')
     $scope.members = {};
     $scope.talkRequests = {};
     $scope.memberCount = 0;
+    $scope.user = User.get();
     if (User.get().type !== 'admin'){
       $http.get('/session').success(function(data){ // async
         User.set(data);

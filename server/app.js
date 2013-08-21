@@ -68,9 +68,9 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:joinRoom', function(data){
-    console.log(data, data.user, data.user.room, 'data from admin');
+    console.log(data, 'data from admin');
     var room = data.user.room;
-    var user = data.user;
+    var user = data.user; 
     if (user.type === 'admin'){
       if (!rooms[user.room]){
         rooms[room] = {
