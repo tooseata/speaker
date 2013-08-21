@@ -5,7 +5,28 @@ angular.module('speakerApp')
     $scope.user = User;
     $scope.sentRequest = false;
     $scope.joined = false;
+    socket.on('new:establishClientConnection', function() {
+      console.log('establishClientConnection request received on client side');
+          $scope.requestAudio();
+      });
+    socket.on('new:queueIsOpen', function() {
+        $scope.sendTalkRequest();
+      });
+    socket.on('new:queueIsClosed', function() {
+      //TODO :: dynamically re-render HTML to display a message that the queue is closed
+      alert('queue is closed!');
+    });
+    socket.on('clientIsChannelReady-client', function(){
+      console.log('clientIsChannelReady CALLED ON CLIENT SIDE');
+      socketService.isChannelReady = true;
+      console.log('setting isChannelReady on Client');
+      $scope.requestAudio();
+    });
+    $scope.maybeSendTalkRequest = function() {
+      socket.emit('broadcast:checkQueueStatus', {user : $scope.user.get()});
+    };
     $scope.sendTalkRequest = function(){
+      console.log('sendTalkRequest was called');
       socket.emit('broadcast:talkRequest', {user : $scope.user.get()});
       $scope.sentRequest = true;
     };
@@ -13,8 +34,79 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', {user : $scope.user.get()});
       $scope.sentRequest = false;
     };
-    $scope.connectRequest = function(name){
-      console.log("name", name);
+    $scope.requestAudio = function(){
+      var sample = new MicrophoneSample();
+      var context = new webkitAudioContext();
+      var analyser = context.createAnalyser();
+      // shim layer with setTimeout fallback
+      var requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                window.oRequestAnimationFrame      ||
+                window.msRequestAnimationFrame     ||
+          function( callback ){
+          window.setTimeout(callback, 1000 / 60);
+          };
+      })();
+      function MicrophoneSample() {
+        this._width = 640;
+        this._height = 480;
+        this.canvas = document.querySelector('canvas');
+      }
+      // getUserMedia(constraints, handleUserMedia, )
+      var getMicrophoneInput = function (source) {
+        getUserMedia({audio: true}, onStream, onStreamError);
+      };
+     var onStream = function(stream) {
+        console.log('onStream was called and passed : ', stream);
+        socket.emit('broadcast:microphoneClickedOnClientSide');
+        var input = context.createMediaStreamSource(stream);
+        var filter = context.createBiquadFilter();
+        filter.frequency.value = 60.0;
+        filter.type = filter.NOTCH;
+        filter.Q = 10.0;
+        // Connect graph.
+        input.connect(filter);
+        filter.connect(analyser);
+        requestAnimFrame(visualize.bind(analyser));
+        handleUserMedia(stream);
+      };
+
+      var onStreamError = function(e) {
+        console.error('Error getting microphone', e);
+      };
+
+      var visualize = function() {
+        sample.canvas.width = sample._width;
+        sample.canvas.height = sample._height;
+        var drawContext = sample.canvas.getContext('2d');
+
+        var times = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteTimeDomainData(times);
+        for (var i = 0; i < times.length; i++) {
+          var value = times[i];
+          var percent = value / 256;
+          var height = sample._height * percent;
+          var offset = sample._height - height - 1;
+          var barWidth = sample._width/times.length;
+          drawContext.fillStyle = 'black';
+          drawContext.fillRect(i * barWidth, offset, 1, 1);
+        }
+        requestAnimFrame(visualize.bind(analyser));
+      };
+
+      ////////////////////////////////////////////////////
+      var localVideo = document.getElementById('localVideo');
+      var remoteVideo = document.getElementById('remoteVideo');
+
+      var handleUserMedia = function(stream) {
+        console.log('handleUserMedia was called and passed', stream);
+        socketService.localStream = stream;
+        sendMessage('got user media');
+      };
+
+      getMicrophoneInput(sample);
 
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?
           {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
@@ -66,12 +158,6 @@ angular.module('speakerApp')
           console.log.apply(console, array);
         });
 
-        socket.on('clientIsChannelReady-client', function(){
-          console.log('EVENT CALLED ON CLIENT SIDE');
-          socketService.isChannelReady = true;
-          console.log('setting isChannelReady on Client');
-        });
-
         // MOVE TO ADMIN
 
                 ///////////////////////////////////////////////////////
@@ -98,6 +184,7 @@ angular.module('speakerApp')
           } else if (message.type === 'candidate' && socketService.isStarted) {
             var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
               candidate:message.candidate});
+            console.log('***candidate***: ', candidate);
             socketService.pc.addIceCandidate(candidate);
           } else if (message === 'bye' && socketService.isStarted) {
             handleRemoteHangup();
@@ -120,29 +207,6 @@ angular.module('speakerApp')
             }
           }
         };
-
-        ////////////////////////////////////////////////////
-        var localVideo = document.getElementById('localVideo');
-        var remoteVideo = document.getElementById('remoteVideo');
-
-        var handleUserMedia = function(stream) {
-          socketService.localStream = stream;
-          attachMediaStream(localVideo, stream);
-          console.log('Adding local stream.');
-          sendMessage('got user media');
-          if (socketService.isAdmin) {
-            maybeStart();
-          }
-        };
-
-        function handleUserMediaError(error){
-          console.log('navigator.getUserMedia error: ', error);
-        }
-
-        var constraints = {audio: true, video: true};
-        getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-        console.log('Getting user audio');
-
 
         var requestTurn = function (turn_url) {
           var turnExists = false;

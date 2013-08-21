@@ -11,31 +11,22 @@ angular.module('speakerApp')
       pc: null,
       remoteStream: null,
       turnReady: null,
-      ready: null,
       setSocket: function(s) {
         this.socket = s;
       }
-    };
+    }
     return socketService;
   })
-  .controller('AdminCtrl', function ($scope, User, socketService, socket, $http) {
-    $scope.members = {};
-    $scope.talkRequests = {};
-    $scope.memberCount = 0;
-    if (User.get().type !== 'admin'){
-      $http.get('/session').success(function(data){ // async
-        User.set(data);
-        $scope.user = User.get();
-        socket.emit('broadcast:joinRoom', {user: $scope.user});
-        $http.get('/room/' + $scope.user.room + '').success(function(room){
-          console.log(room, 'room');
-          $scope.members = room.members;
-          $scope.talkRequests = room.talkRequests;
-          $scope.memberCount = $scope.countMembers();
-        });
-      });
+  .controller('AdminCtrl', function ($scope, User, socketService, socket) {
+    console.log('socket Admin', socket);
+    $scope.user = User.get();
+    if ($scope.user.type === 'admin') {
+      socketService.isAdmin = true;
+    } else {
+      socketService.isAdmin = false;
     }
-
+    $scope.members = 0;
+    $scope.talkRequests = {};
     $scope.queueStatus = false;
     $scope.openQueue = function(){
       $scope.queueStatus = true;
@@ -45,7 +36,9 @@ angular.module('speakerApp')
       $scope.queueStatus = false;
     };
     socket.on('new:talkRequest', function (user) {
+      console.log('user', user);
       $scope.talkRequests[user.name] = user;
+      console.log('talk request called on admin side');
       socket.emit('clientIsChannelReady');
       socketService.isChannelReady = true;
     });
@@ -53,39 +46,25 @@ angular.module('speakerApp')
       delete $scope.talkRequests[user.name];
     });
     socket.on('new:leaveRoom', function (user) {
+      console.log('a user left the room');
+      console.log('for real this time');
       delete $scope.talkRequests[user.name];
-      delete $scope.members[user.name];
-      $scope.memberCount--;
+      $scope.members--;
     });
-    socket.on('new:joinRoom', function (user) {
-      console.log('room was joined by ' + user.name);
-      $scope.members[user.name] = user;
-      $scope.memberCount++;
+    socket.on('new:joinRoom', function () {
+      $scope.members++;
     });
-
-    $scope.countMembers = function(){
-      var count = -1;
-      for (var i in $scope.members){
-        count++;
+    socket.on('new:checkQueueStatus', function() {
+      if ($scope.queueStatus) {
+        socket.emit('broadcast:queueIsOpen');
+      } else {
+        socket.emit('broadcast:queueIsClosed');
       }
-      return count;
-    };
-
-    socket.on('new:checkQueueStatus', function (room) {
-      if (room === $scope.user.room) {
-        if ($scope.queueStatus) {
-          socket.emit('broadcast:queueIsOpen');
-        } else {
-          socket.emit('broadcast:queueIsClosed');
-        }
-      }
-    });
-
-    socket.on('new:microphoneClickedOnClientSide', function() {
-      socketService.ready = true;
     });
 
     $scope.fillRequest = function(name){
+      console.log('emitting establishClientConnection from admin side');
+      socket.emit('broadcast:establishClientConnection');
 
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?
           {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
@@ -95,15 +74,23 @@ angular.module('speakerApp')
 
       var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
 
+<<<<<<< HEAD
         // Set up audio and video regardless of what devices are present.
         var sdpConstraints = {'mandatory': {
           'OfferToReceiveAudio':true
         }};
+=======
+      // Set up audio and video regardless of what devices are present.
+      var sdpConstraints = {'mandatory': {
+        'OfferToReceiveAudio':true,
+        'OfferToReceiveVideo':true
+      }};
+>>>>>>> d9b7489993bc0fb68822de6381e3b2a0e15d69eb
 
       ////////////////////////////////////
 
       var room = name;
-
+      
       if (room !== '') {
         console.log('Create or join room ', room);
         socket.emit('create or join', room);
@@ -149,21 +136,26 @@ angular.module('speakerApp')
         } else if (message.type === 'offer') {
           if (!socketService.isAdmin && !socketService.isStarted) {
             maybeStart();
+<<<<<<< HEAD
+          } else if (message.type === 'offer') {
+            if (!socketService.isAdmin && !socketService.isStarted) {
+              maybeStart();
+            }
+            socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+            doAnswer();
+          } else if (message.type === 'answer' && socketService.isStarted) {
+            socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+          } else if (message.type === 'candidate' && socketService.isStarted) {
+            var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
+              candidate:message.candidate});
+            console.log('candidate: ', candidate);
+            console.log('sdpMLineIndex: ', sdpMLineIndex);
+            console.log('CANDIDATE MESSAGE', message);
+            socketService.pc.addIceCandidate(candidate);
+          } else if (message === 'bye' && socketService.isStarted) {
+            handleRemoteHangup();
           }
-          socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
-          doAnswer();
-        } else if (message.type === 'answer' && socketService.isStarted) {
-          socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
-        } else if (message.type === 'candidate' && socketService.isStarted) {
-          var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
-            candidate:message.candidate});
-          console.log('candidate: ', candidate);
-          console.log('CANDIDATE MESSAGE', message);
-          socketService.pc.addIceCandidate(candidate);
-        } else if (message === 'bye' && socketService.isStarted) {
-          handleRemoteHangup();
-        }
-      });
+        });
 
         ////////////////////////////////////////////////////
         // var localVideo = document.getElementById('localVideo');
@@ -188,19 +180,73 @@ angular.module('speakerApp')
         // getUserMedia(constraints, handleUserMedia, handleUserMediaError);
         // console.log('Getting user audio');
 
+        var maybeStart = function() {
+          console.log('maybe start is running on admin side');
+          console.log('i am admin: ', socketService.isAdmin);
+          console.log('isStarted: ', socketService, 'localStream: ', socketService.localStream, 'isChannelready: ', socketService.isChannelReady);
+          if (!socketService.isStarted && socketService.isAdmin && socketService.isChannelReady) {
+            createPeerConnection();
+            // socketService.pc.addStream(socketService.localStream);
+            socketService.isStarted = true;
+            if (socketService.isAdmin) {
+              doCall();
+            }
+          }
+        };
+        console.log('am i admin?', socketService.isAdmin);
+=======
+          }
+          socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+          doAnswer();
+        } else if (message.type === 'answer' && socketService.isStarted) {
+          socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+        } else if (message.type === 'candidate' && socketService.isStarted) {
+          var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
+            candidate:message.candidate});
+          socketService.pc.addIceCandidate(candidate);
+        } else if (message === 'bye' && socketService.isStarted) {
+          handleRemoteHangup();
+        }
+      });
+
       var maybeStart = function() {
-        console.log('maybe start is running on admin side');
-        console.log('i am admin: ', socketService.isAdmin);
-        console.log('isStarted: ', socketService, 'isAdmin: ', socketService.isAdmin, 'isChannelready: ', socketService.isChannelReady);
-        if (!socketService.isStarted && socketService.isAdmin && socketService.ready && socketService.isChannelReady) {
+        console.log('maybe start is running');
+        console.log(socketService.isAdmin);
+        console.log('isStarted: ', socketService, 'localStream: ', socketService.localStream, 'isChannelready: ', socketService.isChannelReady);
+        if (!socketService.isStarted && socketService.localStream && socketService.isChannelReady) {
           createPeerConnection();
-          // socketService.pc.addStream(socketService.localStream);
+          socketService.pc.addStream(socketService.localStream);
           socketService.isStarted = true;
           if (socketService.isAdmin) {
             doCall();
           }
         }
       };
+
+      ////////////////////////////////////////////////////
+      var localVideo = document.getElementById('localVideo');
+      var remoteVideo = document.getElementById('remoteVideo');
+
+      var handleUserMedia = function(stream) {
+        socketService.localStream = stream;
+        attachMediaStream(localVideo, stream);
+        console.log('Adding local stream.');
+        sendMessage('got user media');
+        console.log(socketService.isAdmin);
+        if (socketService.isAdmin) {
+          maybeStart();
+        }
+      };
+
+      function handleUserMediaError(error){
+        console.log('navigator.getUserMedia error: ', error);
+      }
+
+      var constraints = {audio: true, video: true};
+      getUserMedia(constraints, handleUserMedia, handleUserMediaError);
+      console.log('Getting user audio');
+
+>>>>>>> d9b7489993bc0fb68822de6381e3b2a0e15d69eb
 
       var requestTurn = function (turn_url) {
         var turnExists = false;
@@ -312,7 +358,7 @@ angular.module('speakerApp')
       var handleRemoteStreamAdded = function(event) {
         console.log('remote stream added.');
 
-        attachMediaStream(remoteAudio, event.stream);
+        attachMediaStream(remoteVideo, event.stream);
         socketService.remoteStream = event.stream;
       };
 
@@ -412,12 +458,16 @@ angular.module('speakerApp')
             sdpLines.splice(i, 1);
           }
         }
+<<<<<<< HEAD
+        if (socketService.isAdmin) {
+          maybeStart();
+        }
+=======
+
         sdpLines[mLineIndex] = mLineElements.join(' ');
         return sdpLines;
       }
-      if (socketService.isAdmin) {
-        maybeStart();
-      }
+>>>>>>> d9b7489993bc0fb68822de6381e3b2a0e15d69eb
     };
   });
 

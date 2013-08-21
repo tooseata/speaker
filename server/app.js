@@ -104,7 +104,26 @@ app.io.sockets.on('connection', function(socket){
   socket.on('clientIsChannelReady', function(){
     socket.broadcast.emit('clientIsChannelReady-client');
   });
-
+  socket.on('broadcast:establishClientConnection', function() {
+    console.log('trigger for establishClientConnection received on server side');
+    socket.broadcast.emit('new:establishClientConnection');
+  });
+  socket.on('broadcast:checkQueueStatus', function(data) {
+    console.log('User is checking the status of the queue');
+    socket.broadcast.emit('new:checkQueueStatus', data.user.room);
+  });
+  socket.on('broadcast:queueIsOpen', function() {
+    console.log('Server telling client queue is open');
+    socket.broadcast.emit('new:queueIsOpen');
+  });
+  socket.on('broadcast:queueIsClosed', function() {
+    console.log('Server telling client queue is closed');
+    socket.broadcast.emit('new:queueIsClosed');
+  });
+  socket.on('broadcast:microphoneClickedOnClientSide', function() {
+    console.log('server received notification from client that microphone is allowed');
+    socket.broadcast.emit('new:microphoneClickedOnClientSide');
+  });
 });
 
 
