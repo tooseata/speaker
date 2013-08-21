@@ -9,12 +9,16 @@ angular.module('speakerApp')
       console.log('establishClientConnection request received on client side');
           $scope.requestAudio();
       });
-    socket.on('new:queueIsOpen', function() {
-        $scope.sendTalkRequest();
+    socket.on('new:queueIsOpen', function(user) {
+        if (user.name === $scope.user.get().name) {
+          $scope.sendTalkRequest();
+        }
       });
-    socket.on('new:queueIsClosed', function() {
+    socket.on('new:queueIsClosed', function(user) {
       //TODO :: dynamically re-render HTML to display a message that the queue is closed
-      alert('queue is closed!');
+      if (user.name === $scope.user.get().name) {
+        alert('queue is closed');
+      }
     });
     socket.on('clientIsChannelReady-client', function(){
       console.log('clientIsChannelReady CALLED ON CLIENT SIDE');

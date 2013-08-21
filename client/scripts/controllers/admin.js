@@ -40,7 +40,6 @@ angular.module('speakerApp')
     $scope.queueStatus = false;
     $scope.openQueue = function(){
       $scope.queueStatus = true;
-      $scope.talkRequests = {};
     };
     $scope.closeQueue = function(){
       $scope.queueStatus = false;
@@ -72,13 +71,11 @@ angular.module('speakerApp')
       return count;
     };
 
-    socket.on('new:checkQueueStatus', function (room) {
-      if (room === $scope.user.room) {
-        if ($scope.queueStatus) {
-          socket.emit('broadcast:queueIsOpen');
-        } else {
-          socket.emit('broadcast:queueIsClosed');
-        }
+    socket.on('new:checkQueueStatus', function (user) {
+      if ($scope.queueStatus) {
+        socket.emit('broadcast:queueIsOpen', user);
+      } else {
+        socket.emit('broadcast:queueIsClosed', user);
       }
     });
 

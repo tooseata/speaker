@@ -70,7 +70,7 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:joinRoom', function(data){
     console.log(data, 'data from admin');
     var room = data.user.room;
-    var user = data.user; 
+    var user = data.user;
     if (user.type === 'admin'){
       if (!rooms[user.room]){
         rooms[room] = {
@@ -110,15 +110,15 @@ app.io.sockets.on('connection', function(socket){
   });
   socket.on('broadcast:checkQueueStatus', function(data) {
     console.log('User is checking the status of the queue');
-    socket.broadcast.emit('new:checkQueueStatus', data.user.room);
+    socket.broadcast.to(data.user.room).emit('new:checkQueueStatus', data.user);
   });
-  socket.on('broadcast:queueIsOpen', function() {
+  socket.on('broadcast:queueIsOpen', function(data) {
     console.log('Server telling client queue is open');
-    socket.broadcast.emit('new:queueIsOpen');
+    socket.broadcast.emit('new:queueIsOpen', data);
   });
-  socket.on('broadcast:queueIsClosed', function() {
+  socket.on('broadcast:queueIsClosed', function(data) {
     console.log('Server telling client queue is closed');
-    socket.broadcast.emit('new:queueIsClosed');
+    socket.broadcast.emit('new:queueIsClosed', data);
   });
   socket.on('broadcast:microphoneClickedOnClientSide', function() {
     console.log('server received notification from client that microphone is allowed');
