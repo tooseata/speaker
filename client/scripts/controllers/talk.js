@@ -20,6 +20,7 @@ angular.module('speakerApp')
       console.log('clientIsChannelReady CALLED ON CLIENT SIDE');
       socketService.isChannelReady = true;
       console.log('setting isChannelReady on Client');
+      $scope.requestAudio();
     });
     $scope.maybeSendTalkRequest = function() {
       console.log('maybeSendTalkRequest was called')

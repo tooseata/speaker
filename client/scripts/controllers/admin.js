@@ -140,7 +140,6 @@ angular.module('speakerApp')
           var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
             candidate:message.candidate});
           console.log('candidate: ', candidate);
-          console.log('sdpMLineIndex: ', sdpMLineIndex);
           console.log('CANDIDATE MESSAGE', message);
           socketService.pc.addIceCandidate(candidate);
         } else if (message === 'bye' && socketService.isStarted) {
@@ -295,7 +294,7 @@ angular.module('speakerApp')
       var handleRemoteStreamAdded = function(event) {
         console.log('remote stream added.');
 
-        attachMediaStream(remoteVideo, event.stream);
+        attachMediaStream(remoteAudio, event.stream);
         socketService.remoteStream = event.stream;
       };
 
