@@ -17,10 +17,14 @@ module.exports = function(config) {
       'test/e2e/*.js'
     ],
 
+    urlRoot: '/_karma_/',
+
+    proxies: {
+      '/': 'http://localhost:8000/'
+    },
 
     // list of files to exclude
     exclude: [],
-
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
@@ -31,7 +35,6 @@ module.exports = function(config) {
 
     // enable / disable colors in the output (reporters and logs)
     colors: true,
-
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
