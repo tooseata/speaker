@@ -18,7 +18,7 @@ angular.module('speakerApp')
     };
     return socketService;
   })
-  .controller('AdminCtrl', function ($scope, User, socketService, socket, $http) {
+  .controller('AdminCtrl', function ($scope, $location, User, Talker, socketService, socket, $http) {
     $scope.members = {};
     $scope.talkRequests = {};
     $scope.memberCount = 0;
@@ -84,6 +84,9 @@ angular.module('speakerApp')
     });
 
     $scope.fillRequest = function(name){
+
+      Talker.set(name);
+      $location.path('/listen/');
 
       var pcConfig = webrtcDetectedBrowser === 'firefox' ?
           {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
