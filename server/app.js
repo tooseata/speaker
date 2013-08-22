@@ -66,8 +66,9 @@ app.io.sockets.on('connection', function(socket){
     var user = data;
     var room = user.room;
     rooms[room].talkRequests[user.name] = user;
-    socket.broadcast.to(room).emit('new:talkRequest', user);
-    if (!rooms[room].isOpen){
+    if (rooms[room].isOpen){
+      socket.broadcast.to(room).emit('new:talkRequest', user);
+    } else {
       socket.join(user.name);
       socket.to(user.name).emit('new:queueIsClosed', user);
     }
@@ -85,7 +86,7 @@ app.io.sockets.on('connection', function(socket){
     var room = user.room;
     if (user.type === 'admin'){
       rooms[room] = {
-        members: {admin: true},
+        members: {},
         talkRequests: {},
         isOpen: true
       };

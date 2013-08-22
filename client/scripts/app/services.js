@@ -25,14 +25,24 @@ app.service('User', function(){
   };
 });
 
-app.service('Talker', function() {
-  var talker = '';
+app.service('Room', function() {
+  var room = {
+    talkRequests: {},
+    memberCount: 0,
+    talker: ''
+  };
   return {
     get: function() {
-      return talker;
+      return room;
     },
-    set: function(username) {
-      talker = username;
+    setTalkRequests: function(talkRequests) {
+      room.talkRequests = talkRequests;
+    },
+    setMemberCount: function(memberCount) {
+      room.memberCount = memberCount;
+    },
+    setTalker: function(talker) {
+      room.talker = talker;
     }
   };
 });

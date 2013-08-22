@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('AdminCtrl', function ($scope, $location, User, Talker, socket, $http) {
+  .controller('AdminCtrl', function ($scope, $location, User, Room, socket, $http) {
     // Scope
-    $scope.talkRequests = {};
-    $scope.memberCount = 0;
+    $scope.talkRequests = Room.get().talkRequests;
+    $scope.memberCount = Room.get().memberCount;
     $scope.user = User.get();
     $scope.queueStatus = true;
 
@@ -18,7 +18,6 @@ angular.module('speakerApp')
     };
 
     // Private Variables and Page load Logic.
-    var members = {};
 
     if (User.get().type !== 'admin'){
       $http.get('/session').success(function(data){
@@ -27,9 +26,8 @@ angular.module('speakerApp')
           $scope.user = User.get();
           socket.emit('broadcast:join', $scope.user);
           $http.get('/room/' + $scope.user.room + '').success(function(room){
-            members = room.members;
             $scope.talkRequests = room.talkRequests;
-            $scope.memberCount = countMembers();
+            $scope.memberCount = countMembers(room.members);
           });
         }
       });
@@ -39,7 +37,7 @@ angular.module('speakerApp')
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
 
-    var countMembers = function(){
+    var countMembers = function(members){
       var count = 0;
       for (var i in members){
         count++;
@@ -59,17 +57,17 @@ angular.module('speakerApp')
 
     socket.on('new:leaveRoom', function (user) {
       delete $scope.talkRequests[user.name];
-      delete members[user.name];
       $scope.memberCount--;
     });
 
     socket.on('new:joinRoom', function (user) {
-      members[user.name] = user;
       $scope.memberCount++;
     });
 
     $scope.fillRequest = function(name){
-      Talker.set(name);
+      Room.setTalkRequests($scope.talkRequests);
+      Room.setMemberCount($scope.memberCount);
+      Room.setTalker(name);
       $location.path('/listen/');
     };
 

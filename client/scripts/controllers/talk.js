@@ -16,6 +16,7 @@ angular.module('speakerApp')
     };
 
     socket.on('new:queueIsClosed', function(user) {
+      $scope.sentRequest = false;
       window.alert('The admin is not accepting talk requests right now.', user);
     });
 
