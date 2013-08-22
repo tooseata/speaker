@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('CreateCtrl', function ($scope, $location, User, socket, $http) {
+  .controller('CreateCtrl', function ($scope, $location, $cookies, User, socket, $http) {
 
     // Scope Variables
     $scope.existingRooms = {};

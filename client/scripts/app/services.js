@@ -21,6 +21,11 @@ app.service('User', function(){
     },
     set: function(userObj){
       user = userObj;
+    },
+    kill: function(){
+      user.type = '';
+      user.name = '';
+      user.room = '';
     }
   };
 });

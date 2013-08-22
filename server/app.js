@@ -69,7 +69,7 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(room).emit('new:talkRequest', user);
     if (!rooms[room].isOpen){
       socket.join(user.name);
-      socket.to(user.name).emit('new:queueIsClosed', user);
+      socket.to(user.name).emit('new:queueIsClosed');
     }
 
   });
@@ -85,7 +85,7 @@ app.io.sockets.on('connection', function(socket){
     var room = user.room;
     if (user.type === 'admin'){
       rooms[room] = {
-        members: {admin: true},
+        members: {},
         talkRequests: {},
         isOpen: true
       };
@@ -118,7 +118,9 @@ app.io.sockets.on('connection', function(socket){
     if (user.type === 'admin'){
       delete rooms[room];
     } else {
-      delete rooms[room].members[user.name];
+      if (rooms[room]){
+        delete rooms[room].members[user.name];
+      }
     }
     socket.leave(room);
     socket.broadcast.to(room).emit('new:leaveRoom', user);

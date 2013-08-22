@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('TalkCtrl', function ($scope, User, socket, $http) {
+  .controller('TalkCtrl', function ($scope, $location, User, socket, $http) {
     $scope.user = User.get();
     $scope.sentRequest = false;
 
@@ -15,8 +15,17 @@ angular.module('speakerApp')
       $scope.sentRequest = false;
     };
 
-    socket.on('new:queueIsClosed', function(user) {
-      window.alert('The admin is not accepting talk requests right now.', user);
+    socket.on('new:queueIsClosed', function() {
+      window.alert('The admin is not accepting talk requests right now.');
+    });
+
+    socket.on('new:closeRoom', function() {
+      socket.emit('broadcast:leave', $scope.user);
+      socket.removeAllListeners('new:closeRoom');
+      User.kill();
+      $scope.user = User.get();
+      $location.path('/');
+      window.alert('The admin closed the room.');
     });
 
     if ($scope.user.name === ''){
