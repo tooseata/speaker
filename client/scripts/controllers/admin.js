@@ -1,23 +1,5 @@
 'use strict';
-
 angular.module('speakerApp')
-  .factory('socketService', function() {
-    var socketService = {
-      socket: null,
-      isChannelReady: null,
-      isAdmin: null,
-      isStarted: null,
-      localStream: null,
-      pc: null,
-      remoteStream: null,
-      turnReady: null,
-      ready: null,
-      setSocket: function(s) {
-        this.socket = s;
-      }
-    };
-    return socketService;
-  })
   .controller('AdminCtrl', function ($scope, User, socketService, socket, $http) {
     $scope.members = {};
     $scope.talkRequests = {};

@@ -1,5 +1,23 @@
 'use strict';
 
+app.factory('socketService', function() {
+  var socketService = {
+    socket: null,
+    isChannelReady: null,
+    isAdmin: null,
+    isStarted: null,
+    localStream: null,
+    pc: null,
+    remoteStream: null,
+    turnReady: null,
+    ready: null,
+    setSocket: function(s) {
+      this.socket = s;
+    }
+  };
+  return socketService;
+});
+
 app.factory('socket', function ($rootScope) {
   var socket = io.connect(window.location.origin);
   return {
@@ -29,4 +47,7 @@ app.factory('socket', function ($rootScope) {
 //   return audio;
 // }]);
 
+// app.factory('WebRtcService', function ($rootScope) {
+
+// });
 
