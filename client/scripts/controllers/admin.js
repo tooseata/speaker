@@ -1,6 +1,6 @@
 'use strict';
 angular.module('speakerApp')
-  .controller('AdminCtrl', function ($scope, User, socketService, socket, $http) {
+  .controller('AdminCtrl', function ($scope, User, socketService, socket, $http, WebRtcService) {
     $scope.members = {};
     $scope.talkRequests = {};
     $scope.memberCount = 0;
@@ -28,11 +28,13 @@ angular.module('speakerApp')
     $scope.closeQueue = function(){
       $scope.queueStatus = false;
     };
+
     socket.on('new:talkRequest', function (user) {
       $scope.talkRequests[user.name] = user;
       socket.emit('clientIsChannelReady');
       socketService.isChannelReady = true;
     });
+
     socket.on('new:cancelTalkRequest', function (user) {
       delete $scope.talkRequests[user.name];
     });
@@ -68,28 +70,29 @@ angular.module('speakerApp')
         socket.emit('message', message);
       };
 
+    // Stay on admin.js. This will act as an indicatator to show which clients are ready to have a P2P connection 
     socket.on('new:microphoneClickedOnClientSide', function() {
       socketService.ready = true;
     });
 
     $scope.fillRequest = function(name){
 
-      var pcConfig = webrtcDetectedBrowser === 'firefox' ?
-          {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
-          {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+      // var pcConfig = webrtcDetectedBrowser === 'firefox' ?
+      //     {'iceServers':[{'url':'stun:23.21.150.121'}]} : // number IP
+      //     {'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
 
-      console.log(pcConfig);
+      // console.log(pcConfig);
 
-      var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
+      // var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
 
-        // Set up audio and video regardless of what devices are present.
-        var sdpConstraints = {'mandatory': {
-          'OfferToReceiveAudio':true
-        }};
+      //   // Set up audio and video regardless of what devices are present.
+      //   var sdpConstraints = {'mandatory': {
+      //     'OfferToReceiveAudio':true
+      //   }};
 
       ////////////////////////////////////
 
-      var room = name;
+      var room = $scope.user.room;
 
 
       socket.on('join', function(room) {
@@ -125,7 +128,7 @@ angular.module('speakerApp')
         }
       });
 
-      var remoteAudio = document.getElementById('remoteAudio');
+      // var remoteAudio = document.getElementById('remoteAudio');
        
       var maybeStart = function() {
         console.log('maybe start is running on admin side');
@@ -142,37 +145,39 @@ angular.module('speakerApp')
         }
       };
 
-      var requestTurn = function (turn_url) {
-        var turnExists = false;
-        for (var i in pcConfig.iceServers) {
-          if (pcConfig.iceServers[i].url.substr(0, 5) === 'turn:') {
-            turnExists = true;
-            turnReady = true;
-            break;
-          }
-        }
-        if (!turnExists) {
-          console.log('Getting TURN server from ', turn_url);
-          // No TURN server. Get one from computeengineondemand.appspot.com:
-          var xhr = new XMLHttpRequest();
-          xhr.onreadystatechange = function(){
-            if (xhr.readyState === 4 && xhr.status === 200) {
-              var turnServer = JSON.parse(xhr.responseText);
-              console.log('Got TURN server: ', turnServer);
-              pcConfig.iceServers.push({
-                'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
-                'credential': turnServer.password
-              });
-              turnReady = true;
-            }
-          };
-          xhr.open('GET', turn_url, true);
-          xhr.send();
-        }
-      };
+      // var requestTurn = function (turn_url) {
+      //   var turnExists = false;
+      //   for (var i in pcConfig.iceServers) {
+      //     if (pcConfig.iceServers[i].url.substr(0, 5) === 'turn:') {
+      //       turnExists = true;
+      //       turnReady = true;
+      //       break;
+      //     }
+      //   }
+      //   if (!turnExists) {
+      //     console.log('Getting TURN server from ', turn_url);
+      //     // No TURN server. Get one from computeengineondemand.appspot.com:
+      //     var xhr = new XMLHttpRequest();
+      //     xhr.onreadystatechange = function(){
+      //       if (xhr.readyState === 4 && xhr.status === 200) {
+      //         var turnServer = JSON.parse(xhr.responseText);
+      //         console.log('Got TURN server: ', turnServer);
+      //         pcConfig.iceServers.push({
+      //           'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
+      //           'credential': turnServer.password
+      //         });
+      //         turnReady = true;
+      //       }
+      //     };
+      //     xhr.open('GET', turn_url, true);
+      //     xhr.send();
+      //   }
+      // };
 
-      requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+      // requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
+// Is this function needed? 
       window.onbeforeunload = function(e) {
         sendMessage('bye');
       };

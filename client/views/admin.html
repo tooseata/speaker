@@ -9,7 +9,12 @@
     <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="openQueue()">Open Queue</a>
     <a class="btn btn-large btn-danger" ng-switch-when="true" ng-click="closeQueue()">Close Queue</a>
   </div>
+  <!-- Button need to connect the user on the listen.js page -->
+
   <button ng-repeat="user in talkRequests" ng-show="queueStatus" ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}}</button>
+
+<!--     <a ng-repeat="user in talkRequests" ng-show="queueStatus"class="btn btn-large btn-block btn-primary" type="button" href="#/listen">{{user.type}} Status</a> -->
+
 
 </div>
 

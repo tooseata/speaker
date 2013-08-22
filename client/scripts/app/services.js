@@ -25,6 +25,3 @@ app.service('User', function(){
   };
 });
 
-
-
-

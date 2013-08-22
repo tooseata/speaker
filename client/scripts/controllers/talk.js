@@ -1,34 +1,40 @@
 'use strict';
-
 angular.module('speakerApp')
   .controller('TalkCtrl', function ($scope, User, socketService, socket) {
+    
     $scope.user = User;
     $scope.sentRequest = false;
     $scope.joined = false;
+
     socket.on('new:establishClientConnection', function() {
       console.log('establishClientConnection request received on client side');
           $scope.requestAudio();
       });
+
     socket.on('new:queueIsOpen', function(user) {
         if (user.name === $scope.user.get().name) {
           $scope.sendTalkRequest();
         }
       });
+
     socket.on('new:queueIsClosed', function(user) {
       //TODO :: dynamically re-render HTML to display a message that the queue is closed
       if (user.name === $scope.user.get().name) {
         alert('queue is closed');
       }
     });
+
     socket.on('clientIsChannelReady-client', function(){
       console.log('clientIsChannelReady CALLED ON CLIENT SIDE');
       socketService.isChannelReady = true;
       console.log('setting isChannelReady on Client');
       $scope.requestAudio();
     });
+
     $scope.maybeSendTalkRequest = function() {
       socket.emit('broadcast:checkQueueStatus', {user : $scope.user.get()});
     };
+
     $scope.sendTalkRequest = function(){
       console.log('sendTalkRequest was called');
       socket.emit('broadcast:talkRequest', {user : $scope.user.get()});

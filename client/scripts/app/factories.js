@@ -42,6 +42,44 @@ app.factory('socket', function ($rootScope) {
   };
 });
 
+app.factory('WebRtcService', ['socketService', '$document', '$http', function (socketService,$document,$http) {
+  var pcConfig = webrtcDetectedBrowser === 'firefox' ? {'iceServers':[{'url':'stun:23.21.150.121'}]} :{'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
+  var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
+  var sdpConstraints = {'mandatory': {'OfferToReceiveAudio':true}};
+  var remoteAudio = $document[0].getElementById('remoteAudio');
+  var turnExists;
+
+  return {
+    requestTurn: function (turn_url) {
+      debugger;
+      turnExists = false;
+      for (var i in pcConfig.iceServers) {
+        if (pcConfig.iceServers[i].url.substr(0, 5) === 'turn:') {
+          turnExists = true;
+          turnReady = true;
+          break;
+        }
+      }
+      if (!turnExists) {
+        // refactor to use angular's $http service 
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function(){
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var turnServer = JSON.parse(xhr.responseText);
+            pcConfig.iceServers.push({
+              'url': 'turn:' + turnServer.username + '@' + turnServer.turn,
+              'credential': turnServer.password
+            });
+            turnReady = true;
+          }
+        };
+        xhr.open('GET', turn_url, true);
+        xhr.send();
+      }
+    }
+  };
+}]);
+
 // app.factory('gUM', ['$document', function ($document) {
 //   var audio = $document[0].createElement('audio');
 //   return audio;
