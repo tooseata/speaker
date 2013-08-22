@@ -1,5 +1,8 @@
 <div id="admin_header">
-  <h4 id="user-count">Room: {{user.room}}, {{memberCount}} users.</h4>
+  <div>
+    <h4 id="user-count">Room: {{user.room}}, {{memberCount}} users.</h4>
+  </div>
+  <button ng-click="deleteRoom()" class="btn btn-medium btn-primary">Close room</button>
 </div>
 
 <div id="talk_requests">

@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('AdminCtrl', function ($scope, User, socket, $http) {
+  .controller('AdminCtrl', function ($scope, $location, User, socket, $http) {
     // Scope
     $scope.talkRequests = {};
-    $scope.memberCount = 0;
+    $scope.memberCount = 1;
     $scope.user = User.get();
     $scope.queueStatus = true;
 
@@ -16,7 +16,13 @@ angular.module('speakerApp')
       $scope.queueStatus = false;
       toggleQueueOnServer(false);
     };
-
+    $scope.closeRoom = function(){
+      socket.emit('broadcast:closeRoom', $scope.user);
+      User.set({});
+      $scope.user = User.get();
+      $http.post('/session', JSON.stringify($scope.user));
+      $location.path('/');
+    };
     // Private Variables and Page load Logic.
     var members = {};
 

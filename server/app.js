@@ -100,6 +100,18 @@ app.io.sockets.on('connection', function(socket){
     socket.join(data.room);
   });
 
+  socket.on('broadcast:leave', function(data){
+    socket.leave(data.room);
+  });
+
+  socket.on('broadcast:closeRoom', function(data){
+    var user = data;
+    var room = user.room;
+    delete rooms[room];
+    socket.broadcast.to(room).emit('new:closeRoom');
+    socket.leave(room);
+  });
+
   socket.on('broadcast:leaveRoom', function(data){
     var user = data;
     var room = user.room;
