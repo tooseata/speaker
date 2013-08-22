@@ -1,28 +1,6 @@
 <div class="hero-unit">
-  <div id="container_button" ng-show="joined">
-    <div id="hole">
-      <div id="button">
-        <div id="mic"></div>
-      </div>
-    </div>
+  <div id="request_button_container" ng-switch on="sentRequest">
+    <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="sendTalkRequest()">Request to Speak</a>
+    <a class="btn btn-large btn-success" ng-switch-when="true" ng-click="cancelTalkRequest()">Cancel Request</a>
   </div>
-    <div id="request_button_container" ng-switch on="sentRequest">
-      <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="maybeSendTalkRequest()">Request to Speak</a>
-      <a class="btn btn-large btn-success" ng-switch-when="true" ng-click="cancelTalkRequest()">Cancel Request</a>
-    </div>
 </div>
-<!-- Testing DIV -->
-
-<p><canvas style="background: white;"></canvas></p>
-
-
-<div id='container'>
-
-  <div id='audios'>
-    <audio id='localVideo' autoplay></audio>
-  </div>
-
-</div>
-
-
-<!-- Testing DIV -->
