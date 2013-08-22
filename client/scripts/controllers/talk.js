@@ -63,7 +63,6 @@ angular.module('speakerApp')
         getUserMedia({audio: true}, onStream, onStreamError);
       };
      var onStream = function(stream) {
-        console.log('onStream was called and passed : ', stream);
         socket.emit('broadcast:microphoneClickedOnClientSide');
         var input = context.createMediaStreamSource(stream);
         var filter = context.createBiquadFilter();

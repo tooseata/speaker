@@ -23,7 +23,9 @@ angular.module('speakerApp')
     $scope.talkRequests = {};
     $scope.memberCount = 0;
     $scope.user = User.get();
-    if (User.get().type !== 'admin'){
+    if (User.get().type === 'admin') {
+      socketService.isAdmin = true;
+    } else {
       $http.get('/session').success(function(data){ // async
         User.set(data);
         $scope.user = User.get();
@@ -79,6 +81,11 @@ angular.module('speakerApp')
       }
     });
 
+     var sendMessage = function(message){
+        console.log('Sending message: ', message);
+        socket.emit('message', message);
+      };
+
     socket.on('new:microphoneClickedOnClientSide', function() {
       socketService.ready = true;
     });
@@ -102,18 +109,6 @@ angular.module('speakerApp')
 
       var room = name;
 
-      if (room !== '') {
-        console.log('Create or join room ', room);
-        socket.emit('create or join', room);
-      }
-
-      socket.on('created', function(room) {
-        console.log('Created room ' + room);
-      });
-
-      socket.on('full', function(room) {
-        console.log('Room ' + room + ' is full');
-      });
 
       socket.on('join', function(room) {
         console.log('Another peer made a request to join room', room);
@@ -121,30 +116,16 @@ angular.module('speakerApp')
         socketService.isChannelReady = true;
       });
 
-      socket.on('joined', function(room) {
-        console.log('Another peer has joined the room', room);
-        socketService.isChannelReady = true;
-      });
 
       socket.on('log', function(array) {
         console.log.apply(console, array);
       });
 
-      // MOVE TO ADMIN
-
-              ///////////////////////////////////////////////////////
-
-      var sendMessage = function(message){
-        console.log('Sending message: ', message);
-        socket.emit('message', message);
-      };
 
       socket.on('message', function(message) {
         console.log('Received message: ', message);
-        if (message === 'got user media') {
-
-          maybeStart();
-        } else if (message.type === 'offer') {
+        
+        if (message.type === 'offer') {
           if (!socketService.isAdmin && !socketService.isStarted) {
             maybeStart();
           }
@@ -163,34 +144,14 @@ angular.module('speakerApp')
         }
       });
 
-        ////////////////////////////////////////////////////
-        // var localVideo = document.getElementById('localVideo');
-        var remoteAudio = document.getElementById('remoteAudio');
-        console.log('line 134 called!');
-        // var handleUserMedia = function(stream) {
-        //   socketService.localStream = stream;
-        //   attachMediaStream(localVideo, stream);
-        //   console.log('Adding local stream.');
-        //   sendMessage('got user media');
-        //   console.log(socketService.isAdmin);
-        //   if (socketService.isAdmin) {
-        //     maybeStart();
-        //   }
-        // };
-
-        // function handleUserMediaError(error){
-        //   console.log('navigator.getUserMedia error: ', error);
-        // }
-
-        // var constraints = {audio: true};
-        // getUserMedia(constraints, handleUserMedia, handleUserMediaError);
-        // console.log('Getting user audio');
-
+      var remoteAudio = document.getElementById('remoteAudio');
+       
       var maybeStart = function() {
         console.log('maybe start is running on admin side');
         console.log('i am admin: ', socketService.isAdmin);
         console.log('isStarted: ', socketService, 'isAdmin: ', socketService.isAdmin, 'isChannelready: ', socketService.isChannelReady);
         if (!socketService.isStarted && socketService.isAdmin && socketService.ready && socketService.isChannelReady) {
+          console.log('P2p Connection is about to go');
           createPeerConnection();
           // socketService.pc.addStream(socketService.localStream);
           socketService.isStarted = true;
@@ -332,8 +293,6 @@ angular.module('speakerApp')
 
       var stop = function () {
         socketService.isStarted = false;
-        // isAudioMuted = false;
-        // isVideoMuted = false;
         socketService.pc.close();
         socketService.pc = null;
       };
@@ -413,7 +372,9 @@ angular.module('speakerApp')
         sdpLines[mLineIndex] = mLineElements.join(' ');
         return sdpLines;
       }
+      console.log(socketService.isAdmin);
       if (socketService.isAdmin) {
+        console.log('maybe start is running on admin side');
         maybeStart();
       }
     };
