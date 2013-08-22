@@ -1,0 +1,11 @@
+<div class="hero-unit">
+<<<<<<< HEAD
+  <h1>Listen</h1>
+  <!-- <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+  <a class="btn btn-large btn-success" href="#/join">Join Room</a>
+  <a class="btn btn-large btn-success" href="#/create">Create Room</a> -->
+=======
+  <h2>{{talker}}</h2>
+  <button ng-click="closeRequest()" class="btn btn-large btn-block btn-primary" type="button">Close Request</button>
+>>>>>>> f9143032334cb0c99c4773b72de9136a262f8142
+</div>

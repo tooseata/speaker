@@ -218,6 +218,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', f
     turnExists: turnExists,
     createPeerConnection: createPeerConnection,
     handleRemoteHangup: handleRemoteHangup,
+    sendMessage: sendMessage,
     maybeStart: function() {
       console.log('maybe start is running on admin side');
       console.log('i am admin: ', socketService.isAdmin);

@@ -1,21 +1,47 @@
 'use strict';
-
 angular.module('speakerApp')
-
-  .controller('TalkCtrl', function ($scope, User, socketService, socket, WebRtcService, $http) {
+<<<<<<< HEAD
+  .controller('TalkCtrl', function ($scope, User, socketService, socket, WebRtcService) {
     
-    $scope.user = User.get();
+    $scope.user = User;
     $scope.sentRequest = false;
     $scope.joined = false;
 
-    socket.on('new:clientIsChannelReady', function(){
-      console.log('received client is channel ready from server');
+    socket.on('new:establishClientConnection', function() {
+      console.log('establishClientConnection request received on client side');
+          $scope.requestAudio();
+      });
+
+    socket.on('new:queueIsOpen', function(user) {
+        if (user.name === $scope.user.get().name) {
+          $scope.sendTalkRequest();
+        }
+      });
+
+    socket.on('new:queueIsClosed', function(user) {
+      //TODO :: dynamically re-render HTML to display a message that the queue is closed
+      if (user.name === $scope.user.get().name) {
+        alert('queue is closed');
+      }
+    });
+
+    socket.on('clientIsChannelReady-client', function(){
+      console.log('clientIsChannelReady CALLED ON CLIENT SIDE');
       socketService.isChannelReady = true;
+      console.log('setting isChannelReady on Client');
       $scope.requestAudio();
     });
 
+    $scope.maybeSendTalkRequest = function() {
+      socket.emit('broadcast:checkQueueStatus', {user : $scope.user.get()});
+    };
+=======
+  .controller('TalkCtrl', function ($scope, User, socket, $http) {
+    $scope.user = User.get();
+    $scope.sentRequest = false;
+>>>>>>> f9143032334cb0c99c4773b72de9136a262f8142
+
     $scope.sendTalkRequest = function(){
-      console.log('talk request called from client side');
       socket.emit('broadcast:talkRequest', $scope.user);
       $scope.sentRequest = true;
     };
@@ -24,21 +50,7 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
     };
-    socket.on('new:queueIsClosed', function(user) {
-      $scope.sentRequest = false;
-      window.alert('The admin is not accepting talk requests right now.', user);
-    });
-
-    if ($scope.user.name === ''){
-      $http.get('/session').success(function(data){
-        if (data){
-          console.log(data);
-          User.set(data);
-          $scope.user = User.get();
-        }
-      });
-    }
-
+<<<<<<< HEAD
     $scope.requestAudio = function(){
       var sample = new MicrophoneSample();
       var context = new webkitAudioContext();
@@ -117,7 +129,6 @@ angular.module('speakerApp')
         if (message === 'got user media') {
           WebRtcService.maybeStart();
         } else if (message.type === 'offer') {
-          console.log('received offer on client side');
           WebRtcService.maybeStart();
           socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
           doAnswer();
@@ -144,5 +155,23 @@ angular.module('speakerApp')
         sendMessage('bye');
       };
 
-    };
+          };
   });
+=======
+
+    socket.on('new:queueIsClosed', function(user) {
+      $scope.sentRequest = false;
+      window.alert('The admin is not accepting talk requests right now.', user);
+    });
+
+    if ($scope.user.name === ''){
+      $http.get('/session').success(function(data){
+        if (data){
+          console.log(data);
+          User.set(data);
+          $scope.user = User.get();
+        }
+      });
+    }
+  });
+>>>>>>> f9143032334cb0c99c4773b72de9136a262f8142

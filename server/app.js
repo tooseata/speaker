@@ -6,12 +6,10 @@ var express = require('express'),
 
   var app = express();
 
-
+// Need to modularize. 
 var rooms = {};
 var sessions = {};
-var getCookieId = function(string){
-  return string.slice(string.indexOf('=') + 1);
-};
+//
 
 var config = module.exports = {};
 config.server = {'distFolder': path.resolve(__dirname, '../dist')};
@@ -38,6 +36,10 @@ app.configure(function(){
     sessions[getCookieId(req.headers.cookie)] = req.body;
     res.send(200);
   });
+  app.post('/toggleQueue', function(req, res){
+    rooms[req.body.room].isOpen = req.body.bool;
+    res.send(200);
+  });
 });
 
 app.configure( 'development', function() {
@@ -48,6 +50,12 @@ app.configure( 'production', function() {
     app.use( express.errorHandler() );
 } );
 
+
+
+var getCookieId = function(string){
+  return string.slice(string.indexOf('=') + 1);
+};
+
 // Start server - hook in sockets instance
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
     console.log( 'Express server listening on ' + app.get( 'port' ) );
@@ -55,29 +63,34 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 
 app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:talkRequest', function(data){
-    var room = data.user.room;
-    var user = data.user;
+    var user = data;
+    var room = user.room;
     rooms[room].talkRequests[user.name] = user;
-    socket.broadcast.to(room).emit('new:talkRequest', user);
+    if (rooms[room].isOpen){
+      socket.broadcast.to(room).emit('new:talkRequest', user);
+      socket.to(room).emit('new:clientIsChannelReady');
+    } else {
+      socket.join(user.name);
+      socket.to(user.name).emit('new:queueIsClosed', user);
+    }
+
   });
   socket.on('broadcast:cancelTalkRequest', function(data){
-    var room = data.user.room;
-    var user = data.user;
+    var user = data;
+    var room = user.room;
     delete rooms[room].talkRequests[user.name];
     socket.broadcast.to(room).emit('new:cancelTalkRequest', user);
   });
 
   socket.on('broadcast:joinRoom', function(data){
-    console.log(data, 'data from admin');
-    var room = data.user.room;
-    var user = data.user;
+    var user = data;
+    var room = user.room;
     if (user.type === 'admin'){
-      if (!rooms[user.room]){
-        rooms[room] = {
-          members: {admin: true},
-          talkRequests: {}
-        };
-      }
+      rooms[room] = {
+        members: {},
+        talkRequests: {},
+        isOpen: true
+      };
     } else {
       rooms[room].members[user.name] = true;
       socket.broadcast.to(room).emit('new:joinRoom', user);
@@ -85,44 +98,41 @@ app.io.sockets.on('connection', function(socket){
     socket.join(room);
   });
 
-  socket.on('broadcast:leaveRoom', function(data){
-    var room = data.user.room;
-    var user = data.user;
-    if (user.type === 'admin'){
-      delete rooms[room];
-    } else if (rooms[room]) {
-      delete rooms[room].members[user.name];
-    }
-    socket.leave(room);
-    socket.broadcast.to(room).emit('new:leaveRoom', user);
+  socket.on('broadcast:join', function(data){
+    socket.join(data.room);
   });
 
   socket.on('message', function(message) {
-    socket.broadcast.emit('message', message);
+    console.log("REACEOIVEIFESFLIJSODFIJ");
+     socket.broadcast.emit('message', message);
   });
 
-  socket.on('clientIsChannelReady', function(){
-    socket.broadcast.emit('clientIsChannelReady-client');
+  socket.on('broadcast:clientIsChannelReady', function() {
+    console.log('&*************client is channel ready called');
   });
+
+  socket.on('broadcast:microphoneClickedOnClientSide', function() {
+    console.log('server received notification from client that microphone is allowed');
+    socket.broadcast.emit('new:microphoneClickedOnClientSide');
+  });
+
   socket.on('broadcast:establishClientConnection', function() {
     console.log('trigger for establishClientConnection received on server side');
     socket.broadcast.emit('new:establishClientConnection');
   });
-  socket.on('broadcast:checkQueueStatus', function(data) {
-    console.log('User is checking the status of the queue');
-    socket.broadcast.to(data.user.room).emit('new:checkQueueStatus', data.user);
-  });
-  socket.on('broadcast:queueIsOpen', function(data) {
-    console.log('Server telling client queue is open');
-    socket.broadcast.emit('new:queueIsOpen', data);
-  });
-  socket.on('broadcast:queueIsClosed', function(data) {
-    console.log('Server telling client queue is closed');
-    socket.broadcast.emit('new:queueIsClosed', data);
-  });
-  socket.on('broadcast:microphoneClickedOnClientSide', function() {
-    console.log('server received notification from client that microphone is allowed');
-    socket.broadcast.emit('new:microphoneClickedOnClientSide');
+
+  socket.on('broadcast:leaveRoom', function(data){
+    var user = data;
+    var room = user.room;
+    if (user.type === 'admin'){
+      delete rooms[room];
+    } else {
+      if (rooms[room]){
+        delete rooms[room].members[user.name];
+      }
+    }
+    socket.leave(room);
+    socket.broadcast.to(room).emit('new:leaveRoom', user);
   });
 });
 

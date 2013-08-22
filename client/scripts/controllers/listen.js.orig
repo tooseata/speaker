@@ -1,23 +1,13 @@
 'use strict';
 
 angular.module('speakerApp')
-
-  .controller('ListenCtrl', function ($scope, $location, User, Room, socketService, socket, $http, WebRtcService) {
+<<<<<<< HEAD
+.controller('ListenCtrl', function ($scope, User, socketService, socket, $http, WebRtcService) {
     var pcConfig = WebRtcService.pcConfig;
     var pcConstraints = WebRtcService.pcConstraints;
     var sdpConstraints = WebRtcService.sdpConstraints;
     var remoteAudio = WebRtcService.remoteAudio;
     var turnExists = WebRtcService.turnExists;
-
-    $scope.talker = Room.get().talker;
-
-    $scope.closeRequest = function() {
-      //TODO close peer connection
-      var talkRequests = Room.get().talkRequests;
-      delete talkRequests[$scope.talker];
-      Room.setTalkRequests(talkRequests);
-      $location.path('/admin/');
-    };
 
     socket.on('message', function(message) {
       console.log('Received message: ', message);
@@ -46,4 +36,20 @@ angular.module('speakerApp')
       sendMessage('bye');
     };
     WebRtcService.maybeStart();
+});
+
+=======
+  .controller('ListenCtrl', function ($scope, $location, User, Room, socket, $http) {
+
+    $scope.talker = Room.get().talker;
+
+    $scope.closeRequest = function() {
+      // close peer connection
+      var talkRequests = Room.get().talkRequests;
+      delete talkRequests[$scope.talker];
+      Room.setTalkRequests(talkRequests);
+      $location.path('/admin/');
+    };
+
   });
+>>>>>>> f9143032334cb0c99c4773b72de9136a262f8142

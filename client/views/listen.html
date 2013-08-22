@@ -1,6 +1,8 @@
 <div class="hero-unit">
-  <h1>Listen</h1>
-  <!-- <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-  <a class="btn btn-large btn-success" href="#/join">Join Room</a>
-  <a class="btn btn-large btn-success" href="#/create">Create Room</a> -->
+  <h2>{{talker}}</h2>
+  <button ng-click="closeRequest()" class="btn btn-large btn-block btn-primary" type="button">Close Request</button>
+</div>
+
+<div id='audios'>
+  <audio id='remoteAudio' autoplay></audio>
 </div>

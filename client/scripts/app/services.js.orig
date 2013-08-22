@@ -25,6 +25,8 @@ app.service('User', function(){
   };
 });
 
+<<<<<<< HEAD
+=======
 app.service('Room', function() {
   var room = {
     talkRequests: {},
@@ -46,3 +48,4 @@ app.service('Room', function() {
     }
   };
 });
+>>>>>>> f9143032334cb0c99c4773b72de9136a262f8142
