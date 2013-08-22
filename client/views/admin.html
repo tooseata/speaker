@@ -11,9 +11,9 @@
   </div>
   <!-- Button need to connect the user on the listen.js page -->
 
-  <button ng-repeat="user in talkRequests" ng-show="queueStatus" ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}}</button>
+<!--   <button ng-repeat="user in talkRequests" ng-show="queueStatus" ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}}</button> -->
 
-<!--     <a ng-repeat="user in talkRequests" ng-show="queueStatus"class="btn btn-large btn-block btn-primary" type="button" href="#/listen">{{user.type}} Status</a> -->
+    <a ng-repeat="user in talkRequests" ng-show="queueStatus"class="btn btn-large btn-block btn-primary" type="button" href="#/listen">{{user.type}} Status</a>
 
 
 </div>
