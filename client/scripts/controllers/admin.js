@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('AdminCtrl', function ($scope, User, socket, $http) {
+  .controller('AdminCtrl', function ($scope, $location, User, Talker, socket, $http) {
     // Scope
     $scope.talkRequests = {};
     $scope.memberCount = 0;
@@ -67,6 +67,11 @@ angular.module('speakerApp')
       members[user.name] = user;
       $scope.memberCount++;
     });
+
+    $scope.fillRequest = function(name){
+      Talker.set(name);
+      $location.path('/listen/');
+    };
 
   });
 

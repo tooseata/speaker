@@ -24,3 +24,15 @@ app.service('User', function(){
     }
   };
 });
+
+app.service('Talker', function() {
+  var talker = '';
+  return {
+    get: function() {
+      return talker;
+    },
+    set: function(username) {
+      talker = username;
+    }
+  };
+});
