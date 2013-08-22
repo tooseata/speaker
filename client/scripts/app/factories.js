@@ -23,3 +23,10 @@ app.factory('socket', function ($rootScope) {
     }
   };
 });
+
+// app.factory('gUM', ['$document', function ($document) {
+//   var audio = $document[0].createElement('audio');
+//   return audio;
+// }]);
+
+

@@ -124,7 +124,6 @@ angular.module('speakerApp')
 
       socket.on('message', function(message) {
         console.log('Received message: ', message);
-        
         if (message.type === 'offer') {
           if (!socketService.isAdmin && !socketService.isStarted) {
             maybeStart();
