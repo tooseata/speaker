@@ -41,7 +41,8 @@
     "karma-coffee-preprocessor": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-ng-scenario": "~0.1.0",
-    "grunt-nodemon": "~0.1.0"
+    "grunt-nodemon": "~0.1.0",
+    "grunt-express": "~1.0.0-beta2"
   },
   "engines": {
     "node": ">=0.8.0"

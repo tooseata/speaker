@@ -31,8 +31,5 @@ app.config(function ($routeProvider, $httpProvider) {
       .otherwise({
         redirectTo: '/'
       });
-<<<<<<< HEAD
-=======
     $httpProvider.defaults.withCredentials = true;
->>>>>>> master
   });
