@@ -1,7 +1,8 @@
 'use strict';
 
-var app = angular.module('speakerApp', ['ui.validate']);
-app.config(function ($routeProvider, $locationProvider) {
+var app = angular.module('speakerApp', ['ui.validate', 'ngCookies']);
+app.config(function ($routeProvider, $httpProvider) {
+
     $routeProvider
       .when('/', {
         templateUrl: 'views/main.html',
@@ -23,7 +24,15 @@ app.config(function ($routeProvider, $locationProvider) {
         templateUrl: 'views/admin.html',
         controller: 'AdminCtrl'
       })
+      .when('/listen', {
+        templateUrl: 'views/listen.html',
+        controller: 'ListenCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });
+<<<<<<< HEAD
+=======
+    $httpProvider.defaults.withCredentials = true;
+>>>>>>> master
   });

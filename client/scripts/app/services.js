@@ -18,6 +18,36 @@ app.service('User', function(){
     },
     setType: function(type){
       user.type = type;
+    },
+    set: function(userObj){
+      user = userObj;
+    },
+    kill: function(){
+      user.type = '';
+      user.name = '';
+      user.room = '';
+    }
+  };
+});
+
+app.service('Room', function() {
+  var room = {
+    talkRequests: {},
+    memberCount: 0,
+    talker: ''
+  };
+  return {
+    get: function() {
+      return room;
+    },
+    setTalkRequests: function(talkRequests) {
+      room.talkRequests = talkRequests;
+    },
+    setMemberCount: function(memberCount) {
+      room.memberCount = memberCount;
+    },
+    setTalker: function(talker) {
+      room.talker = talker;
     }
   };
 });
