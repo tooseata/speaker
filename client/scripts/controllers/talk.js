@@ -11,14 +11,7 @@ angular.module('speakerApp')
     socket.on('new:clientIsChannelReady', function(){
       console.log('received client is channel ready from server');
       socketService.isChannelReady = true;
-      $scope.requestAudio();
     });
-
-    $scope.sendTalkRequest = function(){
-      console.log('talk request called from client side');
-      socket.emit('broadcast:talkRequest', $scope.user);
-      $scope.sentRequest = true;
-    };
 
     $scope.cancelTalkRequest = function(){
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
@@ -83,6 +76,8 @@ angular.module('speakerApp')
         input.connect(filter);
         filter.connect(analyser);
         requestAnimFrame(visualize.bind(analyser));
+        socket.emit('broadcast:talkRequest', $scope.user);
+        $scope.sentRequest = true;
         handleUserMedia(stream);
       };
 
