@@ -1,20 +1,10 @@
 {
   "name": "speaker",
-  "version": "0.0.0",
+  "version": "0.0.0-1",
   "private": true,
   "dependencies": {
     "express": "3.3.5",
-    "socket.io": "~0.9.14",
-    "karma-script-launcher": "~0.1.0",
-    "karma-chrome-launcher": "~0.1.0",
-    "karma-firefox-launcher": "~0.1.0",
-    "karma-html2js-preprocessor": "~0.1.0",
-    "karma-jasmine": "~0.1.0",
-    "karma-requirejs": "~0.1.0",
-    "karma-coffee-preprocessor": "~0.1.0",
-    "karma-phantomjs-launcher": "~0.1.0",
-    "karma": "~0.10.1",
-    "grunt-karma": "~0.6.1"
+    "socket.io": "~0.9.14"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
@@ -40,7 +30,17 @@
     "connect-livereload": "~0.2.0",
     "grunt-google-cdn": "~0.2.0",
     "grunt-ngmin": "~0.0.2",
-    "karma-junit-reporter": "~0.1.0"
+    "karma-junit-reporter": "~0.1.0",
+    "karma-script-launcher": "~0.1.0",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.0",
+    "karma-requirejs": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "karma": "~0.10.1",
+    "grunt-karma": "~0.6.1"
   },
   "engines": {
     "node": ">=0.8.0"
@@ -48,5 +48,6 @@
   "scripts": {
     "test": "grunt test",
     "start": "node server/app.js"
-  }
+  },
+  "subdomain": "speaker"
 }
