@@ -13,6 +13,9 @@ var mountFolder = function (connect, dir) {
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
+  // show elapsed time at the end
+  require('time-grunt')(grunt);
+
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
@@ -47,7 +50,7 @@ module.exports = function (grunt) {
     },
     connect: {
       options: {
-        port: 9000,
+        port: 3000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost'
       },
@@ -57,7 +60,9 @@ module.exports = function (grunt) {
             return [
               lrSnippet,
               mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app)
+              mountFolder(connect, yeomanConfig.app),
+              // mountFolder(connect, 'app'),
+              require('./server/app.js')
             ];
           }
         }
@@ -108,26 +113,6 @@ module.exports = function (grunt) {
         'Gruntfile.js',
         '<%= yeoman.app %>/scripts/{,*/}*.js'
       ]
-    },
-    coffee: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/scripts',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/scripts',
-          ext: '.js'
-        }]
-      },
-      test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
-      }
     },
     // not used since Uglify task does concat,
     // but still available if needed
@@ -239,11 +224,14 @@ module.exports = function (grunt) {
       }
     },
     concurrent: {
+      target: {
+        tasks: ['nodemon', 'karma:unit', 'watch', 'open'],
+        options: {
+          logConcurrentOutput: true
+        }
+      },
       server: [
         'coffee:dist'
-      ],
-      test: [
-        'coffee'
       ],
       dist: [
         'coffee',
@@ -255,7 +243,14 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         configFile: 'karma.conf.js',
-        singleRun: true
+        // singleRun: false
+      }
+    },
+    nodemon: {
+      dev: {
+        options: {
+          file: 'server/app.js'
+        }
       }
     },
     cdnify: {
@@ -291,17 +286,18 @@ module.exports = function (grunt) {
 
     grunt.task.run([
       'clean:server',
-      'concurrent:server',
-      'connect:livereload',
-      'open',
-      'watch'
+      // 'concurrent:server',
+      // 'connect:livereload',
+      // 'open',
+      'concurrent:target'
+      // 'nodemon:dev',
+      // 'watch'
     ]);
   });
 
   grunt.registerTask('test', [
     'clean:server',
-    'concurrent:test',
-    'connect:test',
+    // 'connect:test',
     'karma'
   ]);
 

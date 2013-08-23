@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <testsuites>
-  <testsuite name="Chrome 28.0.1500 (Mac OS X 10.8.4)" package="unit" timestamp="2013-08-21T00:39:49" id="0" hostname="MathBook Pro" tests="1" errors="0" failures="0" time="4.002">
+  <testsuite name="Chrome 29.0.1547 (Mac OS X 10.8.4)" package="unit" timestamp="2013-08-23T17:07:12" id="0" hostname="MathBook Pro" tests="1" errors="0" failures="0" time="0.015">
     <properties>
-      <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.95 Safari/537.36"/>
+      <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"/>
     </properties>
-    <testcase name="should attach a list of awesomeThings to the scope" time="4.002" classname="unit Chrome 28.0.1500 (Mac OS X 10.8.4).Controller: MainCtrl"/>
-    <system-out><![CDATA[Chrome 28.0.1500 (Mac OS X 10.8.4) LOG: LOG
+    <testcase name="should attach a list of awesomeThings to the scope" time="0.015" classname="unit Chrome 29.0.1547 (Mac OS X 10.8.4).Controller: MainCtrl"/>
+    <system-out><![CDATA[Chrome 29.0.1547 (Mac OS X 10.8.4) LOG: LOG
  'This appears to be Chrome'
 ]]></system-out>
     <system-err/>

@@ -4,14 +4,13 @@ var express = require('express'),
   io = require('socket.io'),
   appConfig = require( './../app-config.json' );
 
-  var app = express();
-
+var app = express();
 
 var rooms = {};
 
-var config = module.exports = {};
-config.server = {'distFolder': path.resolve(__dirname, '../dist')};
-config.server = {'staticUrl': __dirname +'/static'};
+// var config = module.exports = {};
+// config.server = {'distFolder': path.resolve(__dirname, '../dist')};
+// config.server = {'staticUrl': __dirname +'/static'};
 
 app.configure(function(){
   app.set( 'views', path.join( __dirname, './../client' ) );
