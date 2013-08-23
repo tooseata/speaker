@@ -16,8 +16,19 @@ angular.module('speakerApp')
       $scope.queueStatus = false;
       toggleQueueOnServer(false);
     };
-
-
+    $scope.closeRoom = function(){
+      socket.emit('broadcast:closeRoom', $scope.user);
+      User.kill();
+      $scope.user = User.get();
+      $http.post('/session', JSON.stringify($scope.user));
+      $location.path('/');
+    };
+    $scope.fillRequest = function(name){
+      Room.setTalkRequests($scope.talkRequests);
+      Room.setMemberCount($scope.memberCount);
+      Room.setTalker(name);
+      $location.path('/listen/');
+    };
 
     // Private Variables and Page load Logic.
     if (User.get().type === 'admin') {
@@ -31,6 +42,7 @@ angular.module('speakerApp')
           $http.get('/room/' + $scope.user.room + '').success(function(room){
             $scope.talkRequests = room.talkRequests;
             $scope.memberCount = countMembers(room.members);
+            socketService.isAdmin = true;
           });
         }
       });
@@ -42,9 +54,9 @@ angular.module('speakerApp')
 
     var countMembers = function(members){
       var count = 0;
-      for (var i in members){
+      _.each(members, function(){
         count++;
-      }
+      });
       return count;
     };
 
@@ -55,8 +67,7 @@ angular.module('speakerApp')
       socket.emit('broadcast:clientIsChannelReady');
       socketService.isChannelReady = true;
     });
-    
-    
+
     socket.on('new:cancelTalkRequest', function (user) {
       delete $scope.talkRequests[user.name];
     });
@@ -66,16 +77,10 @@ angular.module('speakerApp')
       $scope.memberCount--;
     });
 
-    socket.on('new:joinRoom', function (user) {
+    socket.on('new:joinRoom', function () {
       $scope.memberCount++;
     });
 
-    $scope.fillRequest = function(name){
-      Room.setTalkRequests($scope.talkRequests);
-      Room.setMemberCount($scope.memberCount);
-      Room.setTalker(name);
-      $location.path('/listen/');
-    };
 
     socket.on('new:microphoneClickedOnClientSide', function() {
       socketService.ready = true;

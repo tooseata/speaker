@@ -2,7 +2,7 @@
 
 angular.module('speakerApp')
 
-  .controller('TalkCtrl', function ($scope, User, socketService, socket, WebRtcService, $http) {
+  .controller('TalkCtrl', function ($scope, $location, User, socketService, socket, WebRtcService, $http) {
     
     $scope.user = User.get();
     $scope.sentRequest = false;
@@ -38,6 +38,15 @@ angular.module('speakerApp')
         }
       });
     }
+
+    socket.on('new:closeRoom', function() {
+      socket.emit('broadcast:leave', $scope.user);
+      socket.removeAllListeners('new:closeRoom');
+      User.kill();
+      $scope.user = User.get();
+      $location.path('/');
+      window.alert('The admin closed the room.');
+    });
 
     $scope.requestAudio = function(){
       var sample = new MicrophoneSample();

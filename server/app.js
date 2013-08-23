@@ -83,6 +83,7 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:joinRoom', function(data){
+    console.log(data, rooms);
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
@@ -102,22 +103,27 @@ app.io.sockets.on('connection', function(socket){
     socket.join(data.room);
   });
 
+  socket.on('broadcast:leave', function(data){
+    socket.leave(data.room);
+  });
+
   socket.on('message', function(message) {
-    console.log("REACEOIVEIFESFLIJSODFIJ");
      socket.broadcast.emit('message', message);
   });
 
-  socket.on('broadcast:clientIsChannelReady', function() {
-    console.log('&*************client is channel ready called');
+  socket.on('broadcast:closeRoom', function(data){
+    var user = data;
+    var room = user.room;
+    delete rooms[room];
+    socket.broadcast.to(room).emit('new:closeRoom');
+    socket.leave(room);
   });
 
   socket.on('broadcast:microphoneClickedOnClientSide', function() {
-    console.log('server received notification from client that microphone is allowed');
     socket.broadcast.emit('new:microphoneClickedOnClientSide');
   });
 
   socket.on('broadcast:establishClientConnection', function() {
-    console.log('trigger for establishClientConnection received on server side');
     socket.broadcast.emit('new:establishClientConnection');
   });
 
