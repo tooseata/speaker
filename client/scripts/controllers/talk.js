@@ -2,7 +2,7 @@
 
 angular.module('speakerApp')
 
-  .controller('TalkCtrl', function ($scope, $location, User, socketService, socket, WebRtcService, $http) {
+  .controller('TalkCtrl', function ($scope, $location, User, socketService, socket, WebRtcService, $http, mediaConstraints) {
     
     $scope.user = User.get();
     $scope.sentRequest = false;
@@ -45,7 +45,32 @@ angular.module('speakerApp')
       window.alert('The admin closed the room.');
     });
 
+    $scope.requestVideo = function() {
+      console.log('trigger video');
+      mediaConstraints.type = 'video';
+      var localVideo = document.querySelector('localVideo');
+      var constraints = {audio: true, video: true};
+
+      var onStreamError = function(e) {
+        console.error('Error getting video', e);
+      };
+
+      var onVideoStream = function(stream) {
+        socket.emit('broadcast:talkRequest', $scope.user);
+        $scope.sentRequest = true;
+        handleUserMedia(stream, {video: true});
+      };
+
+      getUserMedia(constraints, onVideoStream, onStreamError);
+    };
+
     $scope.requestAudio = function(){
+      mediaConstraints.type = 'audio';
+      var MicrophoneSample = function() {
+        this._width = 640;
+        this._height = 480;
+        this.canvas = document.querySelector('canvas');
+      };
       var sample = new MicrophoneSample();
       var context = new webkitAudioContext();
       var analyser = context.createAnalyser();
@@ -60,11 +85,7 @@ angular.module('speakerApp')
           window.setTimeout(callback, 1000 / 60);
           };
       })();
-      function MicrophoneSample() {
-        this._width = 640;
-        this._height = 480;
-        this.canvas = document.querySelector('canvas');
-      }
+
       // getUserMedia(constraints, handleUserMedia, )
       var getMicrophoneInput = function (source) {
         getUserMedia({audio: true}, onStream, onStreamError);
@@ -108,50 +129,48 @@ angular.module('speakerApp')
         requestAnimFrame(visualize.bind(analyser));
       };
 
-      ////////////////////////////////////////////////////
-      var localVideo = document.getElementById('localVideo');
-      var remoteVideo = document.getElementById('remoteVideo');
-
-      var handleUserMedia = function(stream) {
-        console.log('handleUserMedia was called and passed', stream);
-        socketService.localStream = stream;
-        WebRtcService.sendMessage('got user media');
-      };
-
       getMicrophoneInput(sample);
+    };
 
-      socket.on('message', function(message) {
-        console.log('Received message: ', message);
-        if (message === 'got user media') {
-          WebRtcService.maybeStart();
-        } else if (message.type === 'offer') {
-          console.log('received offer on client side');
-          WebRtcService.maybeStart();
-          socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
-          doAnswer();
-        } else if (message.type === 'answer' && socketService.isStarted) {
-          socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
-        } else if (message.type === 'candidate' && socketService.isStarted) {
-          var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
-            candidate:message.candidate});
-          console.log('***candidate***: ', candidate);
-          socketService.pc.addIceCandidate(candidate);
-        } else if (message === 'bye' && socketService.isStarted) {
-          WebRtcService.handleRemoteHangup();
-        }
-      });
+    var handleUserMedia = function(stream, type) {
+      console.log('handleUserMedia was called and passed', stream);
+      socketService.localStream = stream;
+      if (arguments[1]) {
+        attachMediaStream(localVideo, stream);
+      }
+      WebRtcService.sendMessage('got user media');
+    };
 
-      var doAnswer = function() {
-        console.log('Sending answer to peer.');
-        socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
-      };
+    socket.on('message', function(message) {
+      console.log('Received message: ', message);
+      if (message === 'got user media') {
+        WebRtcService.maybeStart();
+      } else if (message.type === 'offer') {
+        console.log('received offer on client side');
+        WebRtcService.maybeStart();
+        socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+        doAnswer();
+      } else if (message.type === 'answer' && socketService.isStarted) {
+        socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+      } else if (message.type === 'candidate' && socketService.isStarted) {
+        var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
+          candidate:message.candidate});
+        console.log('***candidate***: ', candidate);
+        socketService.pc.addIceCandidate(candidate);
+      } else if (message === 'bye' && socketService.isStarted) {
+        WebRtcService.handleRemoteHangup();
+      }
+    });
 
-      WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    var doAnswer = function() {
+      console.log('Sending answer to peer.');
+      socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
+    };
 
-      window.onbeforeunload = function(e) {
-        socket.emit('broadcast:cancelTalkRequest', $scope.user);
-        $scope.sentRequest = false;
-      };
+    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
+    window.onbeforeunload = function(e) {
+      socket.emit('broadcast:cancelTalkRequest', $scope.user);
+      $scope.sentRequest = false;
     };
   });

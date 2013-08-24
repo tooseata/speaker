@@ -6,7 +6,6 @@ angular.module('speakerApp')
     var pcConfig = WebRtcService.pcConfig;
     var pcConstraints = WebRtcService.pcConstraints;
     var sdpConstraints = WebRtcService.sdpConstraints;
-    var remoteAudio = WebRtcService.remoteAudio;
     var turnExists = WebRtcService.turnExists;
 
     $scope.talker = Room.get().talker;

@@ -54,11 +54,12 @@ app.factory('socket', function ($rootScope) {
   };
 });
 
-app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', function (socketService, $document, $http, socket) {
+app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', 'mediaConstraints', function (socketService, $document, $http, socket, mediaConstraints) {
   var pcConfig = webrtcDetectedBrowser === 'firefox' ? {'iceServers':[{'url':'stun:23.21.150.121'}]} :{'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
   var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
-  var sdpConstraints = {'mandatory': {'OfferToReceiveAudio':true}};
+  var sdpConstraints = {'mandatory': {'OfferToReceiveAudio':true, 'OfferToReceiveVideo': true}};
   var remoteAudio = $document[0].getElementById('remoteAudio');
+  var remoteVideo = $document[0].getElementById('remoteVideo');
   var turnExists;
 
   var sendMessage = function(message){
@@ -120,7 +121,9 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', f
 
   var handleRemoteStreamAdded = function(event) {
     console.log('remote stream added.');
-    attachMediaStream(remoteAudio, event.stream);
+    var type = (mediaConstraints.type === 'video' ? remoteVideo : remoteAudio);
+    debugger;
+    attachMediaStream(type, event.stream);
     socketService.remoteStream = event.stream;
   };
 
