@@ -92,9 +92,6 @@ app.service('Session', function($http, $location, User, Room, socket){
           }
         });
       }
-    },
-    talker: function(scope){
-
     }
   };
 });
