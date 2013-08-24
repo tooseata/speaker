@@ -17,8 +17,13 @@ angular.module('speakerApp')
       var talkRequests = Room.get().talkRequests;
       delete talkRequests[$scope.talker];
       Room.setTalkRequests(talkRequests);
+      socket.emit('broadcast:closeRequest');
       $location.path('/admin/');
     };
+
+    socket.on('new:cancelTalkRequest', function () {
+      $scope.closeRequest();
+    });
 
     socket.on('message', function(message) {
       console.log('Received message: ', message);

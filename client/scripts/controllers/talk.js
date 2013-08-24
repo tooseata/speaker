@@ -13,15 +13,17 @@ angular.module('speakerApp')
     });
 
     $scope.cancelTalkRequest = function(){
-      WebRtcService.stop();
-      WebRtcService.sendMessage('bye');
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
     };
-    
+
     socket.on('new:queueIsClosed', function(user) {
       $scope.sentRequest = false;
       window.alert('The admin is not accepting talk requests right now.', user);
+    });
+
+    socket.on('new:closeRequest', function(){
+      $scope.sentRequest = false;
     });
 
     if ($scope.user.name === ''){
@@ -80,7 +82,6 @@ angular.module('speakerApp')
         requestAnimFrame(visualize.bind(analyser));
         socket.emit('broadcast:talkRequest', $scope.user);
         $scope.sentRequest = true;
-        $scope.joined = true;
         handleUserMedia(stream);
       };
 
@@ -148,7 +149,8 @@ angular.module('speakerApp')
       WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
       window.onbeforeunload = function(e) {
-        sendMessage('bye');
+        socket.emit('broadcast:cancelTalkRequest', $scope.user);
+        $scope.sentRequest = false;
       };
 
     };

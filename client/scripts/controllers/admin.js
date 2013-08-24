@@ -68,10 +68,6 @@ angular.module('speakerApp')
       socketService.isChannelReady = true;
     });
 
-    socket.on('new:cancelTalkRequest', function (user) {
-      delete $scope.talkRequests[user.name];
-    });
-
     socket.on('new:leaveRoom', function (user) {
       delete $scope.talkRequests[user.name];
       $scope.memberCount--;
