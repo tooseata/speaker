@@ -8,11 +8,6 @@ var app = express();
 
 var rooms = {};
 var sessions = {};
-//
-
-// var config = module.exports = {};
-// config.server = {'distFolder': path.resolve(__dirname, '../dist')};
-// config.server = {'staticUrl': __dirname +'/static'};
 
 app.configure(function(){
   app.set( 'views', path.join( __dirname, './../client' ) );
@@ -39,6 +34,9 @@ app.configure(function(){
     rooms[req.body.room].isOpen = req.body.bool;
     res.send(200);
   });
+  // app.get('/', function (req, res) {
+  //   res.sendFile(__dirname + './../client/index.html');
+  // });
 });
 
 app.configure( 'development', function() {
@@ -141,4 +139,4 @@ app.io.sockets.on('connection', function(socket){
   });
 });
 
-
+// module.exports = app;

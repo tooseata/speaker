@@ -1,37 +1,13 @@
 <?xml version="1.0"?>
 <testsuites>
-  <testsuite name="Chrome 29.0.1547 (Mac OS X 10.8.4)" package="unit" timestamp="2013-08-23T23:47:39" id="0" hostname="MathBook Pro" tests="0" errors="1" failures="0" time="0">
+  <testsuite name="Chrome 29.0.1547 (Mac OS X 10.8.4)" package="unit" timestamp="2013-08-24T00:00:57" id="0" hostname="MathBook Pro" tests="1" errors="0" failures="0" time="0.018">
     <properties>
       <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"/>
     </properties>
-    <system-out><![CDATA[Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught SyntaxError: Unexpected token <<
-	at /Users/LDV/Dropbox/dev/speaker/client/scripts/app/app.js:34
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught ReferenceError: app is not defined
-	at /Users/LDV/Dropbox/dev/speaker/client/scripts/app/factories.js:5
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught ReferenceError: app is not defined
-	at /Users/LDV/Dropbox/dev/speaker/client/scripts/app/services.js:3
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught Error: No module: speakerApp
-	at /Users/LDV/Dropbox/dev/speaker/client/bower_components/angular/angular.js:1124
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught Error: No module: speakerApp
-	at /Users/LDV/Dropbox/dev/speaker/client/bower_components/angular/angular.js:1124
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught Error: No module: speakerApp
-	at /Users/LDV/Dropbox/dev/speaker/client/bower_components/angular/angular.js:1124
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught Error: No module: speakerApp
-	at /Users/LDV/Dropbox/dev/speaker/client/bower_components/angular/angular.js:1124
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught Error: No module: speakerApp
-	at /Users/LDV/Dropbox/dev/speaker/client/bower_components/angular/angular.js:1124
-,Chrome 29.0.1547 (Mac OS X 10.8.4) ERROR
-	Uncaught Error: No module: speakerApp
-	at /Users/LDV/Dropbox/dev/speaker/client/bower_components/angular/angular.js:1124
-
+    <testcase name="should attach a list of awesomeThings to the scope" time="0.018" classname="unit Chrome 29.0.1547 (Mac OS X 10.8.4).Controller: MainCtrl"/>
+    <system-out><![CDATA[Chrome 29.0.1547 (Mac OS X 10.8.4) LOG: LOG
+ 'This appears to be Chrome',Chrome 29.0.1547 (Mac OS X 10.8.4) LOG: LOG
+ 'new cookie!'
 ]]></system-out>
     <system-err/>
   </testsuite>
