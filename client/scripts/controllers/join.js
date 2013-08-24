@@ -1,16 +1,13 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('JoinCtrl', function ($scope, $location, User, socket, $http) {
+  .controller('JoinCtrl', function ($scope, $location, $http, User, socket, Session) {
 
     // Scope variables.
-    $scope.existingRooms = {};
+    $scope.existingRooms = Session.existingRooms($scope);
     $scope.user = User.get();
 
     $scope.update = function(userName, room) {
-      if ($scope.user.room){
-        socket.emit('broadcast:leaveRoom', $scope.user);
-      }
       User.setType('user');
       User.setName(userName);
       User.setRoom(room);
@@ -27,19 +24,4 @@ angular.module('speakerApp')
     $scope.validateName = function(name){
       return !$scope.existingRooms[$scope.room].members[name];
     };
-
-    // On page load.
-    $http.get('/rooms').success(function(data){
-      $scope.existingRooms = data;
-    }).error(function(){
-      console.log('error on room collection.');
-    });
-    if ($scope.user.name === ''){
-      $http.get('/session').success(function(data){
-        if (data){
-          User.set(data);
-          $scope.user = User.get();
-        }
-      });
-    }
   });

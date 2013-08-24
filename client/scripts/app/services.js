@@ -51,3 +51,14 @@ app.service('Room', function() {
     }
   };
 });
+app.service('Session', function($http){
+  return {
+    existingRooms: function(scope){
+      $http.get('/rooms').success(function(data){
+        scope.existingRooms = data;
+      }).error(function(){
+        console.log('error on room collection.');
+      });
+    }
+  };
+});
