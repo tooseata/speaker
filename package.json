@@ -1,6 +1,6 @@
 {
   "name": "speaker",
-  "version": "0.0.0-1",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
     "express": "3.3.5",
@@ -30,6 +30,7 @@
     "connect-livereload": "~0.2.0",
     "grunt-google-cdn": "~0.2.0",
     "grunt-ngmin": "~0.0.2",
+    "karma": "~0.10.1",
     "karma-junit-reporter": "~0.1.0",
     "karma-script-launcher": "~0.1.0",
     "karma-chrome-launcher": "~0.1.0",
@@ -39,8 +40,11 @@
     "karma-requirejs": "~0.1.0",
     "karma-coffee-preprocessor": "~0.1.0",
     "karma-phantomjs-launcher": "~0.1.0",
-    "karma": "~0.10.1",
-    "grunt-karma": "~0.6.1"
+    "karma-ng-scenario": "~0.1.0",
+    "grunt-nodemon": "~0.1.0",
+    "grunt-express": "~1.0.0-beta2",
+    "grunt-shell": "~0.3.1",
+    "grunt-express-server": "~0.4.2"
   },
   "engines": {
     "node": ">=0.8.0"
@@ -48,6 +52,5 @@
   "scripts": {
     "test": "grunt test",
     "start": "node server/app.js"
-  },
-  "subdomain": "speaker"
+  }
 }

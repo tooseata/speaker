@@ -2,6 +2,7 @@
 'use strict';
 var LIVERELOAD_PORT = 35729;
 var lrSnippet = require('connect-livereload')({ port: LIVERELOAD_PORT });
+var path = require('path');
 var mountFolder = function (connect, dir) {
   return connect.static(require('path').resolve(dir));
 };
@@ -13,8 +14,12 @@ var mountFolder = function (connect, dir) {
 // 'test/spec/**/*.js'
 
 module.exports = function (grunt) {
+  // show elapsed time at the end
+  require('time-grunt')(grunt);
+
   // load all grunt tasks
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+  grunt.loadNpmTasks('grunt-express-server');
 
   // configurable paths
   var yeomanConfig = {
@@ -47,7 +52,7 @@ module.exports = function (grunt) {
     },
     connect: {
       options: {
-        port: 9000,
+        port: 3000,
         // Change this to '0.0.0.0' to access the server from outside.
         hostname: 'localhost'
       },
@@ -57,7 +62,9 @@ module.exports = function (grunt) {
             return [
               lrSnippet,
               mountFolder(connect, '.tmp'),
-              mountFolder(connect, yeomanConfig.app)
+              mountFolder(connect, yeomanConfig.app),
+              // mountFolder(connect, 'app'),
+              require('./server/app.js')
             ];
           }
         }
@@ -108,26 +115,6 @@ module.exports = function (grunt) {
         'Gruntfile.js',
         '<%= yeoman.app %>/scripts/{,*/}*.js'
       ]
-    },
-    coffee: {
-      dist: {
-        files: [{
-          expand: true,
-          cwd: '<%= yeoman.app %>/scripts',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/scripts',
-          ext: '.js'
-        }]
-      },
-      test: {
-        files: [{
-          expand: true,
-          cwd: 'test/spec',
-          src: '{,*/}*.coffee',
-          dest: '.tmp/spec',
-          ext: '.js'
-        }]
-      }
     },
     // not used since Uglify task does concat,
     // but still available if needed
@@ -239,12 +226,24 @@ module.exports = function (grunt) {
       }
     },
     concurrent: {
-      server: [
-        'coffee:dist'
-      ],
-      test: [
-        'coffee'
-      ],
+      target: {
+        tasks: ['nodemon', 'karma:unit', 'watch', 'open'],
+        options: {
+          logConcurrentOutput: true
+        }
+      },
+      server: {
+        tasks: ['shell:start', 'shell:home', 'shell:create'],
+        options: {
+          logConcurrentOutput: true
+        }
+      },
+      browse: {
+        tasks: ['shell:home', 'shell:create'],
+        options: {
+          logConcurrentOutput: true
+        }
+      },
       dist: [
         'coffee',
         'imagemin',
@@ -255,7 +254,14 @@ module.exports = function (grunt) {
     karma: {
       unit: {
         configFile: 'karma.conf.js',
-        singleRun: true
+        // singleRun: false
+      }
+    },
+    nodemon: {
+      dev: {
+        options: {
+          file: 'server/app.js'
+        }
       }
     },
     cdnify: {
@@ -281,6 +287,34 @@ module.exports = function (grunt) {
           ]
         }
       }
+    },
+    express: {
+      options: {
+      // Override defaults here
+      },
+      dev: {
+        options: {
+          script: './server/app.js'
+        }
+      }
+    },
+    shell: {
+      start: {
+        command: 'npm start;sleep 3',
+        options: {
+          stdout: true
+        }
+      },
+      sleep: {
+        command: 'sleep 2'
+      },
+      home: {
+        command: '/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --user-data-dir=tmp/tmp0 --window-size=800,600 --window-position=20,100 http://localhost:3000/'
+      },
+      create: {
+        command: '/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --user-data-dir=tmp/tmp1 --window-size=800,600 --window-position=840,100 http://localhost:3000/#/create'
+      }
+
     }
   });
 
@@ -290,18 +324,35 @@ module.exports = function (grunt) {
     }
 
     grunt.task.run([
-      'clean:server',
-      'concurrent:server',
-      'connect:livereload',
-      'open',
+      // 'clean:server',
+      // 'concurrent:server',
+      // 'connect:livereload',
+      // 'concurrent:shell',
+      // 'nodemon:dev',
+      'watch'
+    ]);
+  });
+
+  grunt.registerTask('double', function (target) {
+    if (target === 'dist') {
+      return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
+    }
+
+    grunt.task.run([
+      // 'clean:server',
+      // 'concurrent:server',
+      // 'connect:livereload',
+      'express:dev',
+      // 'concurrent:server',
+      // 'shell:sleep',
+      'concurrent:browse',
       'watch'
     ]);
   });
 
   grunt.registerTask('test', [
     'clean:server',
-    'concurrent:test',
-    'connect:test',
+    // 'connect:test',
     'karma'
   ]);
 

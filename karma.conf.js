@@ -14,7 +14,6 @@ module.exports = function (config) {
       'client/bower_components/angular-mocks/angular-mocks.js',
       'client/scripts/*.js',
       'client/scripts/**/*.js',
-      'test/mock/**/*.js',
       'test/spec/**/*.js'
     ],
 
@@ -27,6 +26,7 @@ module.exports = function (config) {
 
     junitReporter: {
       outputFile: 'test-results.xml',
+      suite: 'unit'
     },
 
     // web server port
@@ -43,7 +43,7 @@ module.exports = function (config) {
     logLevel: config.LOG_INFO,
 
     // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: false,
+    autoWatch: true,
 
     // Start these browsers, currently available:
     // - Chrome
@@ -60,7 +60,7 @@ module.exports = function (config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false,
+    singleRun: true,
 
     plugins: [
       'karma-jasmine',
