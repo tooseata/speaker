@@ -64,6 +64,7 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 }));
 
 app.io.sockets.on('connection', function(socket){
+  
   socket.on('broadcast:talkRequest', function(data){
     var user = data;
     var room = user.room;
@@ -75,8 +76,8 @@ app.io.sockets.on('connection', function(socket){
       socket.join(user.name);
       socket.to(user.name).emit('new:queueIsClosed', user);
     }
-
   });
+
   socket.on('broadcast:cancelTalkRequest', function(data){
     var user = data;
     var room = user.room;
@@ -127,6 +128,10 @@ app.io.sockets.on('connection', function(socket){
 
   socket.on('broadcast:establishClientConnection', function() {
     socket.broadcast.emit('new:establishClientConnection');
+  });
+
+  socket.on('broadcast:closeRequest', function() {
+    socket.broadcast.emit('new:closeRequest');
   });
 
   socket.on('broadcast:leaveRoom', function(data){

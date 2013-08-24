@@ -46,8 +46,11 @@ angular.module('speakerApp')
       socketService.isChannelReady = true;
     });
 
-    socket.on('new:cancelTalkRequest', function (user) {
-      delete $scope.talkRequests[user.name];
+    socket.on('message', function(message) {
+      console.log('Received message: ', message);
+      if (message.type === 'media type') {
+        User.setMediaType(message.value);
+      }
     });
 
     socket.on('new:leaveRoom', function (user) {
@@ -58,7 +61,6 @@ angular.module('speakerApp')
     socket.on('new:joinRoom', function () {
       $scope.memberCount++;
     });
-
 
     socket.on('new:microphoneClickedOnClientSide', function() {
       socketService.ready = true;

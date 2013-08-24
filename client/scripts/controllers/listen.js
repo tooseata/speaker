@@ -6,7 +6,6 @@ angular.module('speakerApp')
     var pcConfig = WebRtcService.pcConfig;
     var pcConstraints = WebRtcService.pcConstraints;
     var sdpConstraints = WebRtcService.sdpConstraints;
-    var remoteAudio = WebRtcService.remoteAudio;
     var turnExists = WebRtcService.turnExists;
 
     $scope.talker = Room.get().talker;
@@ -16,12 +15,18 @@ angular.module('speakerApp')
     Session.user($scope);
 
     $scope.closeRequest = function() {
-      //TODO close peer connection
+      WebRtcService.stop();
+      WebRtcService.sendMessage('bye');
       var talkRequests = Room.get().talkRequests;
       delete talkRequests[$scope.talker];
       Room.setTalkRequests(talkRequests);
+      socket.emit('broadcast:closeRequest');
       $location.path('/admin/');
     };
+
+    socket.on('new:cancelTalkRequest', function () {
+      $scope.closeRequest();
+    });
 
     socket.on('message', function(message) {
       console.log('Received message: ', message);
@@ -47,7 +52,8 @@ angular.module('speakerApp')
     WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
     window.onbeforeunload = function(e) {
-      sendMessage('bye');
+      WebRtcService.stop();
+      WebRtcService.sendMessage('bye');
     };
     WebRtcService.maybeStart();
   });

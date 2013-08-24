@@ -4,7 +4,8 @@ app.service('User', function(){
   var user = {
     type:'',
     name:'',
-    room:''
+    room:'',
+    mediaType:''
   };
   return {
     get: function(){
@@ -12,6 +13,9 @@ app.service('User', function(){
     },
     setName: function(userName){
       user.name = userName;
+    },
+    setMediaType: function(mediaType){
+      user.mediaType = mediaType;
     },
     setRoom: function(room){
       user.room = room;
