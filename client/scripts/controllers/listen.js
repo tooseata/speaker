@@ -2,7 +2,7 @@
 
 angular.module('speakerApp')
 
-  .controller('ListenCtrl', function ($scope, $location, User, Session, Room, socketService, socket, $http, WebRtcService) {
+  .controller('ListenCtrl', function ($scope, $location, User, Session, Room, socketService, socket, $http, WebRtcService, $window) {
     var pcConfig = WebRtcService.pcConfig;
     var pcConstraints = WebRtcService.pcConstraints;
     var sdpConstraints = WebRtcService.sdpConstraints;
@@ -51,7 +51,7 @@ angular.module('speakerApp')
 
     WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
-    window.onbeforeunload = function(e) {
+    $window.onbeforeunload = function(e) {
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
     };

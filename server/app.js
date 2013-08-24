@@ -79,10 +79,14 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:cancelTalkRequest', function(data){
-    var user = data;
-    var room = user.room;
-    delete rooms[room].talkRequests[user.name];
-    socket.broadcast.to(room).emit('new:cancelTalkRequest', user);
+    try{
+      var user = data;
+      var room = user.room;
+      delete rooms[room].talkRequests[user.name];
+      socket.broadcast.to(room).emit('new:cancelTalkRequest', user);
+    } catch(err){
+      console.log(err);
+    }
   });
 
   socket.on('broadcast:joinRoom', function(data){

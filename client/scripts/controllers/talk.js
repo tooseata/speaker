@@ -2,7 +2,7 @@
 
 angular.module('speakerApp')
 
-  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http) {
+  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http, $window) {
     
     Session.user($scope);
     $scope.user = User.get();
@@ -85,7 +85,7 @@ angular.module('speakerApp')
         socket.emit('broadcast:microphoneClickedOnClientSide');
         var input = context.createMediaStreamSource(stream);
         var filter = context.createBiquadFilter();
-        filter.frequency.value = 60.0;
+        filter.frequency.value = 6600.0;
         filter.type = filter.NOTCH;
         filter.Q = 10.0;
         // Connect graph.
@@ -160,7 +160,7 @@ angular.module('speakerApp')
 
     WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
-    window.onbeforeunload = function(e) {
+    $window.onbeforeunload = function(e) {
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
     };
