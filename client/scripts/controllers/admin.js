@@ -1,12 +1,15 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('AdminCtrl', function ($scope, $location, User, Room, socket, $http, socketService) {
+  .controller('AdminCtrl', function ($scope, $location, User, Session, Room, socket, $http, socketService) {
     // Scope
+    Session.userRoom($scope);
     $scope.talkRequests = Room.get().talkRequests;
     $scope.memberCount = Room.get().memberCount;
     $scope.user = User.get();
     $scope.queueStatus = true;
+    socketService.isAdmin = true;
+
 
     $scope.openQueue = function(){
       $scope.queueStatus = true;
@@ -31,34 +34,11 @@ angular.module('speakerApp')
     };
 
     // Private Variables and Page load Logic.
-    if (User.get().type === 'admin') {
-      socketService.isAdmin = true;
-    } else {
-      $http.get('/session').success(function(data){
-        if(data){
-          User.set(data);
-          $scope.user = User.get();
-          socket.emit('broadcast:join', $scope.user);
-          $http.get('/room/' + $scope.user.room + '').success(function(room){
-            $scope.talkRequests = room.talkRequests;
-            $scope.memberCount = countMembers(room.members);
-            socketService.isAdmin = true;
-          });
-        }
-      });
-    }
-
     var toggleQueueOnServer = function(bool){
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
 
-    var countMembers = function(members){
-      var count = 0;
-      _.each(members, function(){
-        count++;
-      });
-      return count;
-    };
+
 
     //              Listeners
 

@@ -51,7 +51,7 @@ app.service('Room', function() {
     }
   };
 });
-app.service('Session', function($http, $location, User){
+app.service('Session', function($http, $location, User, socket){
   return {
     existingRooms: function(scope){
       $http.get('/rooms').success(function(data){
@@ -71,6 +71,34 @@ app.service('Session', function($http, $location, User){
           }
         });
       }
+    },
+    userRoom: function(scope){
+      if (User.get().type === ''){
+        $http.get('/session').success(function(data){
+          if (data.type !== ''){
+            User.set(data);
+            scope.user = User.get();
+            socket.emit('broadcast:join', scope.user);
+            $http.get('/room/' + scope.user.room + '').success(function(room){
+              if (room.talkRequests){
+                scope.talkRequests = room.talkRequests;
+                scope.members = countMembers(room.members);
+              } else {
+                $location.path('/');
+              }
+            });
+          } else {
+            $location.path('/');
+          }
+        });
+      }
     }
   };
 });
+var countMembers = function(members){
+  var count = 0;
+  _.each(members, function(){
+    count++;
+  });
+  return count;
+};
