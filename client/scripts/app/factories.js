@@ -3,6 +3,7 @@
 //TODO clean up variable declarations
 
 app.factory('socketService', function() {
+  debugger;
   var socketService = {
     socket: null,
     isChannelReady: null,
@@ -54,13 +55,20 @@ app.factory('socket', function ($rootScope) {
   };
 });
 
-app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', 'mediaConstraints', function (socketService, $document, $http, socket, mediaConstraints) {
+app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', function (socketService, $document, $http, socket) {
   var pcConfig = webrtcDetectedBrowser === 'firefox' ? {'iceServers':[{'url':'stun:23.21.150.121'}]} :{'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
   var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
   var sdpConstraints = {'mandatory': {'OfferToReceiveAudio':true, 'OfferToReceiveVideo': true}};
   var remoteAudio = $document[0].getElementById('remoteAudio');
   var remoteVideo = $document[0].getElementById('remoteVideo');
   var turnExists;
+
+  // socket.on('message', function(message){
+  //   debugger;
+  //   if(mesage.type === "test"){
+
+  //   }
+  // });
 
   var sendMessage = function(message){
     console.log('Sending message: ', message);
@@ -121,7 +129,8 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
 
   var handleRemoteStreamAdded = function(event) {
     console.log('remote stream added.');
-    var type = (mediaConstraints.type === 'video' ? remoteVideo : remoteAudio);
+    debugger;
+    var type = (socketService.mediaConstraints === 'video' ? remoteVideo : remoteAudio);
     debugger;
     attachMediaStream(type, event.stream);
     socketService.remoteStream = event.stream;

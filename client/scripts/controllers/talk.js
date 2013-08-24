@@ -2,7 +2,7 @@
 
 angular.module('speakerApp')
 
-  .controller('TalkCtrl', function ($scope, $location, User, socketService, socket, WebRtcService, $http, mediaConstraints) {
+  .controller('TalkCtrl', function ($scope, $location, User, socketService, socket, WebRtcService, $http) {
     
     $scope.user = User.get();
     $scope.sentRequest = false;
@@ -47,7 +47,8 @@ angular.module('speakerApp')
 
     $scope.requestVideo = function() {
       console.log('trigger video');
-      mediaConstraints.type = 'video';
+      //socket.emit('message', {test:'testing'});
+      socketService.mediaConstraints = 'video';
       var localVideo = document.querySelector('localVideo');
       var constraints = {audio: true, video: true};
 
@@ -65,7 +66,7 @@ angular.module('speakerApp')
     };
 
     $scope.requestAudio = function(){
-      mediaConstraints.type = 'audio';
+      socketService.mediaConstraints = 'audio';
       var MicrophoneSample = function() {
         this._width = 640;
         this._height = 480;
