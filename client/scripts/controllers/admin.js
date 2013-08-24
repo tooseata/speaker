@@ -38,8 +38,6 @@ angular.module('speakerApp')
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
 
-
-
     //              Listeners
 
     socket.on('new:talkRequest', function (user) {

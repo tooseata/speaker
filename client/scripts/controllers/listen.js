@@ -2,7 +2,7 @@
 
 angular.module('speakerApp')
 
-  .controller('ListenCtrl', function ($scope, $location, User, Room, socketService, socket, $http, WebRtcService) {
+  .controller('ListenCtrl', function ($scope, $location, User, Session, Room, socketService, socket, $http, WebRtcService) {
     var pcConfig = WebRtcService.pcConfig;
     var pcConstraints = WebRtcService.pcConstraints;
     var sdpConstraints = WebRtcService.sdpConstraints;
@@ -10,6 +10,10 @@ angular.module('speakerApp')
     var turnExists = WebRtcService.turnExists;
 
     $scope.talker = Room.get().talker;
+    if ($scope.talker === ''){
+      $location.path('/admin');
+    }
+    Session.user($scope);
 
     $scope.closeRequest = function() {
       //TODO close peer connection

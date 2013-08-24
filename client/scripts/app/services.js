@@ -51,7 +51,7 @@ app.service('Room', function() {
     }
   };
 });
-app.service('Session', function($http, $location, User, socket){
+app.service('Session', function($http, $location, User, Room, socket){
   return {
     existingRooms: function(scope){
       $http.get('/rooms').success(function(data){
@@ -82,7 +82,7 @@ app.service('Session', function($http, $location, User, socket){
             $http.get('/room/' + scope.user.room + '').success(function(room){
               if (room.talkRequests){
                 scope.talkRequests = room.talkRequests;
-                scope.members = countMembers(room.members);
+                scope.memberCount = countMembers(room.members);
               } else {
                 $location.path('/');
               }
@@ -92,6 +92,9 @@ app.service('Session', function($http, $location, User, socket){
           }
         });
       }
+    },
+    talker: function(scope){
+
     }
   };
 });
