@@ -81,7 +81,6 @@ angular.module('speakerApp')
       $scope.memberCount++;
     });
 
-
     socket.on('new:microphoneClickedOnClientSide', function() {
       socketService.ready = true;
     });

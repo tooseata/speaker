@@ -142,8 +142,10 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', f
 
   var stop = function () {
     socketService.isStarted = false;
-    socketService.pc.close();
-    socketService.pc = null;
+    if (socketService.pc) {
+      socketService.pc.close();
+      socketService.pc = null;
+    }
   };
 
   // Set Opus as the default audio codec if it's present.
@@ -229,6 +231,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', f
     createPeerConnection: createPeerConnection,
     handleRemoteHangup: handleRemoteHangup,
     sendMessage: sendMessage,
+    stop: stop,
     maybeStart: function() {
       console.log('maybe start is running on admin side');
       console.log('i am admin: ', socketService.isAdmin);

@@ -6,7 +6,6 @@ angular.module('speakerApp')
     
     $scope.user = User.get();
     $scope.sentRequest = false;
-    $scope.joined = false;
 
     socket.on('new:clientIsChannelReady', function(){
       console.log('received client is channel ready from server');
@@ -14,9 +13,12 @@ angular.module('speakerApp')
     });
 
     $scope.cancelTalkRequest = function(){
+      WebRtcService.stop();
+      WebRtcService.sendMessage('bye');
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
     };
+    
     socket.on('new:queueIsClosed', function(user) {
       $scope.sentRequest = false;
       window.alert('The admin is not accepting talk requests right now.', user);
@@ -78,6 +80,7 @@ angular.module('speakerApp')
         requestAnimFrame(visualize.bind(analyser));
         socket.emit('broadcast:talkRequest', $scope.user);
         $scope.sentRequest = true;
+        $scope.joined = true;
         handleUserMedia(stream);
       };
 
@@ -133,7 +136,7 @@ angular.module('speakerApp')
           console.log('***candidate***: ', candidate);
           socketService.pc.addIceCandidate(candidate);
         } else if (message === 'bye' && socketService.isStarted) {
-          handleRemoteHangup();
+          WebRtcService.handleRemoteHangup();
         }
       });
 

@@ -12,7 +12,8 @@ angular.module('speakerApp')
     $scope.talker = Room.get().talker;
 
     $scope.closeRequest = function() {
-      //TODO close peer connection
+      WebRtcService.stop();
+      WebRtcService.sendMessage('bye');
       var talkRequests = Room.get().talkRequests;
       delete talkRequests[$scope.talker];
       Room.setTalkRequests(talkRequests);
@@ -43,7 +44,8 @@ angular.module('speakerApp')
     WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
     window.onbeforeunload = function(e) {
-      sendMessage('bye');
+      WebRtcService.stop();
+      WebRtcService.sendMessage('bye');
     };
     WebRtcService.maybeStart();
   });
