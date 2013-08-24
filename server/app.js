@@ -30,7 +30,11 @@ app.configure(function(){
     res.send(rooms[req.params.room]);
   });
   app.get('/session', function(req, res){
-    res.send(sessions[getCookieId(req.headers.cookie)]);
+    if (sessions[getCookieId(req.headers.cookie)]){
+      res.send(sessions[getCookieId(req.headers.cookie)]);
+    } else {
+      res.send({type:'', name:'', room:''});
+    }
   });
   app.post('/session', function(req, res){
     sessions[getCookieId(req.headers.cookie)] = req.body;
