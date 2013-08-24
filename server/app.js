@@ -33,6 +33,7 @@ app.configure(function(){
     if (sessions[getCookieId(req.headers.cookie)]){
       res.send(sessions[getCookieId(req.headers.cookie)]);
     } else {
+      sessions[getCookieId(req.headers.cookie)] = {type:'', name:'', room:''};
       res.send({type:'', name:'', room:''});
     }
   });
