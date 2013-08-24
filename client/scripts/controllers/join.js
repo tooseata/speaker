@@ -4,7 +4,7 @@ angular.module('speakerApp')
   .controller('JoinCtrl', function ($scope, $location, $http, User, socket, Session) {
 
     // Scope variables.
-    $scope.existingRooms = Session.existingRooms($scope);
+    Session.existingRooms($scope);
     $scope.user = User.get();
 
     $scope.update = function(userName, room) {

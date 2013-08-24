@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('CreateCtrl', function ($scope, $location, User, socket, $http) {
+  .controller('CreateCtrl', function ($scope, $location, $http, Session, User, socket) {
 
     // Scope Variables
-    $scope.existingRooms = {};
+    $scope.existingRooms = Session.existingRooms($scope);
     $scope.user = User.get();
 
     $scope.update = function(room) {
@@ -22,19 +22,4 @@ angular.module('speakerApp')
     $scope.validateRoom = function(room){
       return !$scope.existingRooms[room];
     };
-
-    // On page load.
-    $http.get('/rooms').success(function(data){
-      $scope.existingRooms = data;
-    }).error(function(){
-      console.log('error on create http req.');
-    });
-    if ($scope.user.type !== 'admin'){
-      $http.get('/session').success(function(data){
-        if (data){
-          User.set(data);
-          $scope.user = User.get();
-        }
-      });
-    }
   });

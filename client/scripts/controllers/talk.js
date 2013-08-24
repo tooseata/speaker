@@ -2,8 +2,9 @@
 
 angular.module('speakerApp')
 
-  .controller('TalkCtrl', function ($scope, $location, User, socketService, socket, WebRtcService, $http) {
+  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http) {
     
+    Session.user($scope);
     $scope.user = User.get();
     $scope.sentRequest = false;
     $scope.joined = false;
@@ -21,16 +22,6 @@ angular.module('speakerApp')
       $scope.sentRequest = false;
       window.alert('The admin is not accepting talk requests right now.', user);
     });
-
-    if ($scope.user.name === ''){
-      $http.get('/session').success(function(data){
-        if (data){
-          console.log(data);
-          User.set(data);
-          $scope.user = User.get();
-        }
-      });
-    }
 
     socket.on('new:closeRoom', function() {
       socket.emit('broadcast:leave', $scope.user);

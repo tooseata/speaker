@@ -51,7 +51,7 @@ app.service('Room', function() {
     }
   };
 });
-app.service('Session', function($http){
+app.service('Session', function($http, $location, User){
   return {
     existingRooms: function(scope){
       $http.get('/rooms').success(function(data){
@@ -59,6 +59,18 @@ app.service('Session', function($http){
       }).error(function(){
         console.log('error on room collection.');
       });
+    },
+    user: function(scope){
+      if (User.get().type === ''){
+        $http.get('/session').success(function(data){
+          if (data.type !== ''){
+            User.set(data);
+            scope.user = User.get();
+          } else {
+            $location.path('/');
+          }
+        });
+      }
     }
   };
 });
