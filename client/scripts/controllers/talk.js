@@ -8,6 +8,8 @@ angular.module('speakerApp')
     $scope.user = User.get();
     $scope.sentRequest = false;
     $scope.joined = false;
+    $scope.canTalk = true;
+    $scope.sentQuestion = false;
 
     socket.on('new:clientIsChannelReady', function(){
       console.log('received client is channel ready from server');

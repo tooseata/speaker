@@ -6,6 +6,12 @@
       </div>
     </div>
   </div>
+  <div questions ng-controller="QuestionsCtrl">
+  </div>
+  <form>
+    <input type='text' ng-model="question" placeholder="type your questions here."></input>
+    <a class="btn btn-small btn-success" ng-show="!canTalk || !sentQuestion" ng-click="submitQuestion()">Submit</a>
+  </form>
   <div id="request_button_container" ng-switch on="sentRequest">
     <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="requestAudio()">Request to Speak</a>
     <a class="btn btn-large btn-success" ng-switch-when="true" ng-click="cancelTalkRequest()">Cancel Request</a>

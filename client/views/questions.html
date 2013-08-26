@@ -1,4 +1,5 @@
 <div id="questions_list">
+  <h3>Questions</h3>
   <div ng-repeat="request in questions">
     <p>{{request.question.message}}</p>
     <button class="upvote_button" ng-click="upVote(request)"></button>
