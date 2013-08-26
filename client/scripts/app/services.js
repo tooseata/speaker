@@ -100,6 +100,14 @@ app.service('Session', function($http, $location, User, Room, socket){
           window.confirm('You are the admin of a room, would you like to return to it?') ? $location.path('/admin') : socket.emit('broadcast:closeRoom', User.get());
         }
       });
+    },
+    questions: function(scope){
+      $http.get('/messages').success(function(data){
+        if (data.length){
+          scope.questions = data;
+          console.log(scope.questions);
+        }
+      });
     }
   };
 });

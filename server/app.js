@@ -23,6 +23,14 @@ app.configure(function(){
   app.get('/room/:room', function(req, res){
     res.send(rooms[req.params.room]);
   });
+  app.get('/messages', function(req,res){
+    var cookieId = getCookieId(req.headers.cookie);
+    if (sessions[cookieId]){
+      res.send(rooms[sessions[cookieId].room].questions);
+    } else {
+      res.send(404);
+    }
+  });
   app.get('/session', function(req, res){
     if (sessions[getCookieId(req.headers.cookie)]){
       res.send(sessions[getCookieId(req.headers.cookie)]);
@@ -91,6 +99,7 @@ app.io.sockets.on('connection', function(socket){
     if (user.type === 'admin'){
       rooms[room] = {
         members: {},
+        questions: {},
         talkRequests: {},
         isOpen: true
       };
@@ -110,7 +119,19 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('message', function(message) {
-     socket.broadcast.emit('message', message);
+    socket.broadcast.emit('message', message);
+  });
+
+  socket.on('question:upVote', function(data){
+    var room = data.room;
+    var request = data.request;
+    socket.broadcast.to(room).emit('question:upVoted', request);
+  });
+
+  socket.on('question:downVote', function(data){
+    var room = data.room;
+    var request = data.request;
+    socket.broadcast.to(room).emit('question:downVoted', request);
   });
 
   socket.on('broadcast:closeRoom', function(data){
