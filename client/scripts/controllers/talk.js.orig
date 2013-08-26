@@ -2,7 +2,7 @@
 
 angular.module('speakerApp')
 
-  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http, $window) {
+  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http) {
     
     Session.user($scope);
     $scope.user = User.get();
@@ -23,10 +23,23 @@ angular.module('speakerApp')
       window.alert('The admin is not accepting talk requests right now.', user);
     });
 
+<<<<<<< HEAD
+=======
     socket.on('new:closeRequest', function(){
       $scope.sentRequest = false;
     });
 
+    if ($scope.user.name === ''){
+      $http.get('/session').success(function(data){
+        if (data){
+          console.log(data);
+          User.set(data);
+          $scope.user = User.get();
+        }
+      });
+    }
+
+>>>>>>> listenPage-fixes
     socket.on('new:closeRoom', function() {
       socket.emit('broadcast:leave', $scope.user);
       socket.removeAllListeners('new:closeRoom');
@@ -38,7 +51,8 @@ angular.module('speakerApp')
 
     $scope.requestVideo = function() {
       console.log('trigger video');
-      WebRtcService.sendMessage({type: 'media type', value: 'video'});
+      //socket.emit('message', {test:'testing'});
+      socketService.mediaConstraints = 'video';
       var localVideo = document.querySelector('localVideo');
       var constraints = {audio: true, video: true};
 
@@ -56,7 +70,7 @@ angular.module('speakerApp')
     };
 
     $scope.requestAudio = function(){
-      WebRtcService.sendMessage({type: 'media type', value: 'video'});
+      socketService.mediaConstraints = 'audio';
       var MicrophoneSample = function() {
         this._width = 640;
         this._height = 480;
@@ -85,7 +99,7 @@ angular.module('speakerApp')
         socket.emit('broadcast:microphoneClickedOnClientSide');
         var input = context.createMediaStreamSource(stream);
         var filter = context.createBiquadFilter();
-        filter.frequency.value = 6600.0;
+        filter.frequency.value = 60.0;
         filter.type = filter.NOTCH;
         filter.Q = 10.0;
         // Connect graph.
@@ -160,7 +174,7 @@ angular.module('speakerApp')
 
     WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
-    $window.onbeforeunload = function(e) {
+    window.onbeforeunload = function(e) {
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
     };

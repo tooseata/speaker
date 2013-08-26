@@ -1,7 +1,7 @@
 <div class="hero-unit">
-  <div id="container_button" ng-show="joined">
+  <div id="container_button">
     <div id="hole">
-      <div id="button">
+      <div id="button" ng-class="{on: sentRequest==true}">
         <div id="mic"></div>
       </div>
     </div>
@@ -10,12 +10,15 @@
     <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="requestAudio()">Request to Speak</a>
     <a class="btn btn-large btn-success" ng-switch-when="true" ng-click="cancelTalkRequest()">Cancel Request</a>
   </div>
-</div>
-<!-- Testing DIV -->
-<p><canvas style="background: white;"></canvas></p>
-<div id='container'>
-  <div id='audios'>
-    <audio id='localVideo' autoplay></audio>
+  <div id="request_button_container" ng-switch on="sentRequest">
+    <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="requestVideo()">Request to Speak with Video</a>
   </div>
 </div>
 <!-- Testing DIV -->
+<p><canvas style="background: white;"></canvas></p>
+
+<div id='media'>
+  <video id='localVideo' autoplay muted></video>
+</div>
+
+
