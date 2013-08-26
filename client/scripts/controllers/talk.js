@@ -7,6 +7,7 @@ angular.module('speakerApp')
     Session.user($scope);
     $scope.user = User.get();
     $scope.sentRequest = false;
+    $scope.localstream;
 
     socket.on('new:clientIsChannelReady', function(){
       console.log('received client is channel ready from server');
@@ -23,8 +24,10 @@ angular.module('speakerApp')
       window.alert('The admin is not accepting talk requests right now.', user);
     });
 
+    // Event to notify the client that the admin closed their connection 
     socket.on('new:closeRequest', function(){
       $scope.sentRequest = false;
+      $scope.localstream.stop();
     });
 
     socket.on('new:closeRoom', function() {
@@ -49,6 +52,7 @@ angular.module('speakerApp')
       var onVideoStream = function(stream) {
         socket.emit('broadcast:talkRequest', $scope.user);
         $scope.sentRequest = true;
+        $scope.localstream = stream;
         handleUserMedia(stream, {video: true});
       };
 
@@ -56,7 +60,7 @@ angular.module('speakerApp')
     };
 
     $scope.requestAudio = function(){
-      WebRtcService.sendMessage({type: 'media type', value: 'video'});
+      WebRtcService.sendMessage({type: 'media type', value: 'audio'});
       var MicrophoneSample = function() {
         this._width = 640;
         this._height = 480;
@@ -126,17 +130,17 @@ angular.module('speakerApp')
     var handleUserMedia = function(stream, type) {
       console.log('handleUserMedia was called and passed', stream);
       socketService.localStream = stream;
+      // If a type was passed into handleUserMedia call attachMediaStream on the localVideo node
+
       if (arguments[1]) {
         attachMediaStream(localVideo, stream);
       }
-      WebRtcService.sendMessage('got user media');
+      WebRtcService.maybeStart();
     };
 
     socket.on('message', function(message) {
       console.log('Received message: ', message);
-      if (message === 'got user media') {
-        WebRtcService.maybeStart();
-      } else if (message.type === 'offer') {
+      if (message.type === 'offer') {
         console.log('received offer on client side');
         WebRtcService.maybeStart();
         socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
@@ -144,9 +148,10 @@ angular.module('speakerApp')
       } else if (message.type === 'answer' && socketService.isStarted) {
         socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
       } else if (message.type === 'candidate' && socketService.isStarted) {
+        console.log('I am running from client RTCIceCandidate - candidate');
         var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
           candidate:message.candidate});
-        console.log('***candidate***: ', candidate);
+        console.log('Candidate on Client: ', candidate);
         socketService.pc.addIceCandidate(candidate);
       } else if (message === 'bye' && socketService.isStarted) {
         WebRtcService.handleRemoteHangup();
@@ -158,7 +163,7 @@ angular.module('speakerApp')
       socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
     };
 
-    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
     $window.onbeforeunload = function(e) {
       socket.emit('broadcast:cancelTalkRequest', $scope.user);

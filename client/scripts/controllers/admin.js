@@ -42,7 +42,7 @@ angular.module('speakerApp')
 
     socket.on('new:talkRequest', function (user) {
       $scope.talkRequests[user.name] = user;
-      socket.emit('broadcast:clientIsChannelReady');
+      // socket.emit('broadcast:clientIsChannelReady'); // Cut out. No listner  
       socketService.isChannelReady = true;
     });
 

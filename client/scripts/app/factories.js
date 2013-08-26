@@ -115,7 +115,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
         type: 'candidate',
         label: event.candidate.sdpMLineIndex,
         id: event.candidate.sdpMid,
-        candidate: event.candidate.candidate
+        candidate: event.candiƒdate.candidate
       });
     }
   };
@@ -135,6 +135,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
     // Set Opus as the preferred codec in SDP if Opus is present.
     sessionDescription.sdp = preferOpus(sessionDescription.sdp);
     socketService.pc.setLocalDescription(sessionDescription);
+    debugger;
     sendMessage(sessionDescription);
   };
 
@@ -250,7 +251,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
         }
       }();
     },
-        setLocalAndSendMessage: setLocalAndSendMessage,
+    setLocalAndSendMessage: setLocalAndSendMessage,
     requestTurn: function (turn_url) {
       turnExists = false;
       for (var i in pcConfig.iceServers) {
