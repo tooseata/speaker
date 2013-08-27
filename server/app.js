@@ -2,12 +2,19 @@ var express = require('express'),
   http = require('http'),
   path = require('path'),
   io = require('socket.io'),
-  appConfig = require( './../app-config.json' );
+  appConfig = require( './../app-config.json' ),
+  OpenTok = require('../node_modules/opentok');
 
 var app = express();
 
 var rooms = {};
 var sessions = {};
+
+var key = '39238222';
+var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
+var opentok = new OpenTok.OpenTokSDK(key, secret);
+var sessionId,
+    token;
 
 app.configure(function(){
   app.set( 'views', path.join( __dirname, './../client' ) );
@@ -46,6 +53,14 @@ app.configure(function(){
   app.post('/toggleQueue', function(req, res){
     rooms[req.body.room].isOpen = req.body.bool;
     res.send(200);
+  });
+  app.get('/testPost', function(req, res) {
+    var location = '10.0.1.29';
+    opentok.createSession(location, function(result) {
+      sessionId = result;
+      token = opentok.generateToken({session_id:sessionId});
+      res.send(JSON.stringify({sessionId: sessionId, token: token}));
+    });
   });
   // app.get('/', function (req, res) {
   //   res.sendFile(__dirname + './../client/index.html');
