@@ -27,9 +27,15 @@ angular.module('speakerApp')
       $location.path('/');
     };
     $scope.fillRequest = function(name){
+      // socket broadcast to set talker on server
       Room.setTalkRequests($scope.talkRequests);
       Room.setMemberCount($scope.memberCount);
       Room.setTalker(name);
+      var data = {
+        talker: Room.getTalker(),
+        roomName: $scope.user.room
+      }
+      socket.emit('broadcast:setTalker', data);
       $location.path('/listen/');
     };
 

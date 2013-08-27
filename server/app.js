@@ -66,20 +66,54 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 app.io.sockets.on('connection', function(socket){
 
   socket.on('message', function(message) {
-    try{
+  
+  // try{
+  //   if (socket.store.data.userClient){
+  //   console.log('Message from Client to Admin');
+  //   var clientRoomSource = socket.store.data.userClient.room;
+  //   console.log('Sending SOCKET DATA to room ' + clientRoomSource);
+  //   var clientNameSource = socket.store.data.userClient.name;
+  //   console.log('Joining SOCKET DATA to name ' + clientNameSource);
+  //   //console.log('Sending SOCKET DATA to room ' + clientRoomSource);
+  //   // Get socket ID of Admin for the room that the client belongs to
+  //   var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
+  //   console.log('Socket ID for ADMIN ' + roomAdminSocketId);
+  //   socket.join(clientNameSource);
+  //   // Route the message to the admin of the room
+  //   app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
+  //   socket.to(clientRoomSource).emit('message', message);
+  //   } 
+  // } catch(err){
+  //     console.log(err);
+  //   }
+
+    if (socket.store.data.userClient){
+      console.log('Message from Client to Admin');
       var clientRoomSource = socket.store.data.userClient.room;
-      console.log('Sending SOCKET DATA to room ' + clientRoomSource);
-      var clientNameSource = socket.store.data.userClient.name;
-      console.log('Joining SOCKET DATA to name ' + clientNameSource);
+      //console.log('Sending SOCKET DATA to room ' + clientRoomSource);
+      // Get socket ID of Admin for the room that the client belongs to
       var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
-      console.log('Socket ID for ADMIN ' + roomAdminSocketId);
-      socket.join(clientNameSource);
+      // Route the message to the admin of the room
       app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
-      socket.to(clientRoomSource).emit('message', message);
-    } catch(err){
-      console.log(err);
+
+      // var clientNameSource = socket.store.data.userClient.name;
+      // //console.log('Joining SOCKET DATA to name ' + clientNameSource);
+      // socket.join(clientNameSource);
+      // socket.to(clientRoomSource).emit('message', message);
+
+    } else {
+      console.log('Message from Admin to Client');
+      var room = socket.store.data.userAdmin.room;
+      var talker = rooms[room]['talker']
+      var talkerSocketId = rooms[room]["socketIds"][talker];
+      var adminRoomSource = socket.store.data.userAdmin.room;
+      console.log("**********************************");
+      console.log('room', room, 'talkerSocketId', talkerSocketId, 'adminRoomSource', adminRoomSource);
+      // Send the message to the correct client that made the request 
+      // var roomAdminSocketId = socket.store.data.userAdmin.room;
+      // socket.broadcast.to(adminRoomSource).emit('message', message);
+      app.io.sockets.sockets[talkerSocketId].emit('message', message);
     }
-    //socket.broadcast.emit('message', message);
   });
   
   socket.on('broadcast:talkRequest', function(data){
@@ -115,16 +149,21 @@ app.io.sockets.on('connection', function(socket){
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
-      rooms[room] = {
-        members: {},
-        talkRequests: {},
-        isOpen: true,
-        "adminSocketId": socket.id
-      }; 
+      console.log('SET SOCKET WITH ADMIN USER INFO', user);
+      socket.set("userAdmin", user, function(){
+        rooms[room] = {
+          members: {},
+          talkRequests: {},
+          isOpen: true,
+          socketIds: {},
+          adminSocketId: socket.id
+        }; 
+      });
     } else {
+      console.log('SET SOCKET WITH CLIENT USER INFO', user);
       socket.set("userClient", user, function(){
-        console.log('SET SOCKET WITH USER INFO', user);
         rooms[room].members[user.name] = true;
+        rooms[room]["socketIds"][user.name] = socket.id;
         socket.broadcast.to(room).emit('new:joinRoom', user);
       });
     }
@@ -133,6 +172,12 @@ app.io.sockets.on('connection', function(socket){
 
   socket.on('broadcast:join', function(data){
     socket.join(data.room);
+  });
+
+  socket.on('broadcast:setTalker', function(data) {
+    console.log('SET TALKER MESSAGE RECEIVED ON SERVER SIDE!!!!');
+    var room = data.roomName;
+    rooms[room]["talker"] = data.talker;
   });
 
   socket.on('broadcast:leave', function(data){
@@ -153,9 +198,9 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(room).emit('new:microphoneClickedOnClientSide', user.name);
   });
 
-  socket.on('broadcast:establishClientConnection', function() {
-    socket.broadcast.emit('new:establishClientConnection');
-  });
+  // socket.on('broadcast:establishClientConnection', function() {
+  //   socket.broadcast.emit('new:establishClientConnection');
+  // });
 
   socket.on('broadcast:closeRequest', function(data) {
     try{
