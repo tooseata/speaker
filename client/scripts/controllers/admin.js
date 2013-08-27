@@ -27,9 +27,15 @@ angular.module('speakerApp')
       $location.path('/');
     };
     $scope.fillRequest = function(name){
+      // socket broadcast to set talker on server
       Room.setTalkRequests($scope.talkRequests);
       Room.setMemberCount($scope.memberCount);
       Room.setTalker(name);
+      var data = {
+        talker: Room.getTalker(),
+        roomName: $scope.user.room
+      }
+      socket.emit('broadcast:setTalker', data);
       $location.path('/listen/');
     };
 
@@ -38,11 +44,9 @@ angular.module('speakerApp')
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
 
-    //              Listeners
-
     socket.on('new:talkRequest', function (user) {
       $scope.talkRequests[user.name] = user;
-      socket.emit('broadcast:clientIsChannelReady');
+      // socket.emit('broadcast:clientIsChannelReady'); // Cut out. No listner  
       socketService.isChannelReady = true;
     });
 
@@ -62,7 +66,8 @@ angular.module('speakerApp')
       $scope.memberCount++;
     });
 
-    socket.on('new:microphoneClickedOnClientSide', function() {
+    socket.on('new:microphoneClickedOnClientSide', function(data) {
+      console.log("************new:microphoneClickedOnClientSide", data);
       socketService.ready = true;
     });
   });

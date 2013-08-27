@@ -250,7 +250,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
         }
       }();
     },
-        setLocalAndSendMessage: setLocalAndSendMessage,
+    setLocalAndSendMessage: setLocalAndSendMessage,
     requestTurn: function (turn_url) {
       turnExists = false;
       for (var i in pcConfig.iceServers) {
