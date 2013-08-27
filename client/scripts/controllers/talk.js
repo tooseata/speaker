@@ -26,6 +26,7 @@ angular.module('speakerApp')
 
     // Event to notify the client that the admin closed their connection 
     socket.on('new:closeRequest', function(){
+      console.log('NEW CLOSE REQUEST');
       $scope.sentRequest = false;
       $scope.localstream.stop();
     });
@@ -55,7 +56,6 @@ angular.module('speakerApp')
         $scope.localstream = stream;
         handleUserMedia(stream, {video: true});
       };
-
       getUserMedia(constraints, onVideoStream, onStreamError);
     };
 
@@ -85,8 +85,9 @@ angular.module('speakerApp')
       var getMicrophoneInput = function (source) {
         getUserMedia({audio: true}, onStream, onStreamError);
       };
+
       var onStream = function(stream) {
-        socket.emit('broadcast:microphoneClickedOnClientSide');
+        socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
         var input = context.createMediaStreamSource(stream);
         var filter = context.createBiquadFilter();
         filter.frequency.value = 6600.0;

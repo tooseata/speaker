@@ -115,7 +115,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
         type: 'candidate',
         label: event.candidate.sdpMLineIndex,
         id: event.candidate.sdpMid,
-        candidate: event.candiƒdate.candidate
+        candidate: event.candidate.candidate
       });
     }
   };
@@ -135,7 +135,6 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
     // Set Opus as the preferred codec in SDP if Opus is present.
     sessionDescription.sdp = preferOpus(sessionDescription.sdp);
     socketService.pc.setLocalDescription(sessionDescription);
-    debugger;
     sendMessage(sessionDescription);
   };
 

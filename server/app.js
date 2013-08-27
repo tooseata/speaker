@@ -64,11 +64,29 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 }));
 
 app.io.sockets.on('connection', function(socket){
+
+  socket.on('message', function(message) {
+    try{
+      var clientRoomSource = socket.store.data.userClient.room;
+      console.log('Sending SOCKET DATA to room ' + clientRoomSource);
+      var clientNameSource = socket.store.data.userClient.name;
+      console.log('Joining SOCKET DATA to name ' + clientNameSource);
+      var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
+      console.log('Socket ID for ADMIN ' + roomAdminSocketId);
+      socket.join(clientNameSource);
+      app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
+      socket.to(clientRoomSource).emit('message', message);
+    } catch(err){
+      console.log(err);
+    }
+    //socket.broadcast.emit('message', message);
+  });
   
   socket.on('broadcast:talkRequest', function(data){
     var user = data;
     var room = user.room;
     rooms[room].talkRequests[user.name] = user;
+    rooms[room].talkRequests[user.id] = socket.id;
     if (rooms[room].isOpen){
       socket.broadcast.to(room).emit('new:talkRequest', user);
       socket.to(room).emit('new:clientIsChannelReady');
@@ -82,8 +100,11 @@ app.io.sockets.on('connection', function(socket){
     try{
       var user = data;
       var room = user.room;
+      var roomAdminSocketId = rooms[room].adminSocketId;
+      app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest');
+      // socket.broadcast.to(room).emit('new:cancelTalkRequest');
       delete rooms[room].talkRequests[user.name];
-      socket.broadcast.to(room).emit('new:cancelTalkRequest', user);
+      delete rooms[room].talkRequests[user.id];
     } catch(err){
       console.log(err);
     }
@@ -97,11 +118,15 @@ app.io.sockets.on('connection', function(socket){
       rooms[room] = {
         members: {},
         talkRequests: {},
-        isOpen: true
-      };
+        isOpen: true,
+        "adminSocketId": socket.id
+      }; 
     } else {
-      rooms[room].members[user.name] = true;
-      socket.broadcast.to(room).emit('new:joinRoom', user);
+      socket.set("userClient", user, function(){
+        console.log('SET SOCKET WITH USER INFO', user);
+        rooms[room].members[user.name] = true;
+        socket.broadcast.to(room).emit('new:joinRoom', user);
+      });
     }
     socket.join(room);
   });
@@ -114,10 +139,6 @@ app.io.sockets.on('connection', function(socket){
     socket.leave(data.room);
   });
 
-  socket.on('message', function(message) {
-     socket.broadcast.emit('message', message);
-  });
-
   socket.on('broadcast:closeRoom', function(data){
     var user = data;
     var room = user.room;
@@ -126,16 +147,27 @@ app.io.sockets.on('connection', function(socket){
     socket.leave(room);
   });
 
-  socket.on('broadcast:microphoneClickedOnClientSide', function() {
-    socket.broadcast.emit('new:microphoneClickedOnClientSide');
+  socket.on('broadcast:microphoneClickedOnClientSide', function(data) {
+    var user = data;
+    var room = user.room;
+    socket.broadcast.to(room).emit('new:microphoneClickedOnClientSide', user.name);
   });
 
   socket.on('broadcast:establishClientConnection', function() {
     socket.broadcast.emit('new:establishClientConnection');
   });
 
-  socket.on('broadcast:closeRequest', function() {
-    socket.broadcast.emit('new:closeRequest');
+  socket.on('broadcast:closeRequest', function(data) {
+    try{
+      var user = data.talker;
+      var roomName = data.room;
+      var clientId = rooms[roomName].talkRequests[user.id]
+      app.io.sockets.sockets[clientId].emit('new:closeRequest');
+    } catch(err){
+      console.log(err);
+    }
+    // Find the associated CLient and kill them
+    //socket.broadcast.emit('new:closeRequest');
   });
 
   socket.on('broadcast:leaveRoom', function(data){

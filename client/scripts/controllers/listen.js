@@ -9,22 +9,24 @@ angular.module('speakerApp')
     var turnExists = WebRtcService.turnExists;
 
     $scope.talker = Room.get().talker;
+    $scope.room = Room.get().talkRequests[$scope.talker].room;
     if ($scope.talker === ''){
       $location.path('/admin');
     }
     Session.user($scope);
 
     $scope.closeRequest = function() {
+      socket.emit('broadcast:closeRequest', {"talker": $scope.talker + "", "room": $scope.room + ""});
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
       var talkRequests = Room.get().talkRequests;
       delete talkRequests[$scope.talker];
       Room.setTalkRequests(talkRequests);
-      socket.emit('broadcast:closeRequest');
       $location.path('/admin/');
     };
 
     socket.on('new:cancelTalkRequest', function () {
+      console.log('new:cancelTalkRequest');
       $scope.closeRequest();
     });
 

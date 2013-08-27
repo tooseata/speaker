@@ -38,8 +38,6 @@ angular.module('speakerApp')
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
 
-    //              Listeners
-
     socket.on('new:talkRequest', function (user) {
       $scope.talkRequests[user.name] = user;
       // socket.emit('broadcast:clientIsChannelReady'); // Cut out. No listner  
@@ -62,7 +60,8 @@ angular.module('speakerApp')
       $scope.memberCount++;
     });
 
-    socket.on('new:microphoneClickedOnClientSide', function() {
+    socket.on('new:microphoneClickedOnClientSide', function(data) {
+      console.log("************new:microphoneClickedOnClientSide", data);
       socketService.ready = true;
     });
   });
