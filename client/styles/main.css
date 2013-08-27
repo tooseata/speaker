@@ -20,6 +20,15 @@ body {
     line-height: 1;
     letter-spacing: -1px;
 }
+.upVote_button {
+    height: 25px;
+    width:26px;
+    background:url('upVote.jpeg')  center no-repeat;
+    display:block;
+}
+.downVote_button {
+    
+}
 #request_list_header{
     text-align: center;
 }

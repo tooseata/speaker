@@ -2,14 +2,15 @@
 
 angular.module('speakerApp')
 
-  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http) {
-    
+  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService) {
+
     Session.user($scope);
     $scope.user = User.get();
     $scope.sentRequest = false;
     $scope.joined = false;
-    $scope.canTalk = true;
+    $scope.canTalk = false;
     $scope.sentQuestion = false;
+    $scope.question = '';
 
     socket.on('new:clientIsChannelReady', function(){
       console.log('received client is channel ready from server');
@@ -33,6 +34,11 @@ angular.module('speakerApp')
       $location.path('/');
       window.alert('The admin closed the room.');
     });
+    $scope.submitQuestion = function(){
+      console.log($scope.question);
+      socket.emit('question:new', {question: $scope.question, user: $scope.user});
+      $scope.sentQuestion = true;
+    };
 
     $scope.requestAudio = function(){
       var sample = new MicrophoneSample();

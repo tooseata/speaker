@@ -97,12 +97,7 @@ app.io.sockets.on('connection', function(socket){
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
-      rooms[room] = {
-        members: {},
-        questions: {},
-        talkRequests: {},
-        isOpen: true
-      };
+      rooms[room] = new Room();
     } else {
       rooms[room].members[user.name] = true;
       socket.broadcast.to(room).emit('new:joinRoom', user);
@@ -141,7 +136,16 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(room).emit('new:closeRoom');
     socket.leave(room);
   });
-
+  socket.on('question:new', function(data){
+    console.log(data);
+    var user = data.user;
+    var room = user.room;
+    var question = new Question(data.question);
+    var key = randomKey();
+    rooms[room].questions[key] = question;
+    socket.to(room).emit('question:update', {key: key, question: question});
+    socket.broadcast.to(room).emit('question:update', {key: key, question: question});
+  });
   socket.on('broadcast:microphoneClickedOnClientSide', function() {
     socket.broadcast.emit('new:microphoneClickedOnClientSide');
   });
@@ -165,4 +169,17 @@ app.io.sockets.on('connection', function(socket){
   });
 });
 
+var Room = function(){
+  this.members = {};
+  this.questions = {};
+  this.talkRequests = {};
+  this.isOpen = true;
+};
+var Question = function(message){
+  this.upvotes = 0;
+  this.message = message;
+};
+var randomKey = function(){
+  return Math.floor(Math.random() * 1000000000).toString();
+};
 // module.exports = app;

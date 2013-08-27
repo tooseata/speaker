@@ -2,6 +2,9 @@
   <h3>Questions</h3>
   <div ng-repeat="request in questions">
     <p>{{request.question.message}}</p>
-    <button class="upvote_button" ng-click="upVote(request)"></button>
+    <div ng-switch on="upVoted[request.key]">
+      <button class="upvote_button" ng-switch="false" ng-click="upVote(request)"></button>
+      <button class="upvote_button" ng-switch="false" ng-click="upVote(request)"></button>
+    </div>
   </div>
 </div>
