@@ -103,9 +103,11 @@ app.service('Session', function($http, $location, User, Room, socket){
     },
     questions: function(scope){
       $http.get('/messages').success(function(data){
-        if (data.length){
-          scope.questions = data;
-          console.log(scope.questions);
+        if (Object.keys(data).length){
+          _.each(data, function(question, key){
+            scope.questions.push({key: key, question: question});
+            scope.upVoted[key] = false;
+          });
         }
       });
     }
