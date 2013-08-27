@@ -126,12 +126,24 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:joinRoom', function(data){
+    console.log(data, rooms);
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
+<<<<<<< HEAD
+      rooms[room] = new Room();
+=======
+      console.log('SET SOCKET WITH ADMIN USER INFO', user);
       socket.set("userAdmin", user, function(){
-        rooms[room] = new Room(socket.id);
+        rooms[room] = {
+          members: {},
+          talkRequests: {},
+          isOpen: true,
+          socketIds: {},
+          adminSocketId: socket.id
+        }; 
       });
+>>>>>>> newMaster
     } else {
       console.log('SET SOCKET WITH CLIENT USER INFO', user);
       socket.set("userClient", user, function(){
@@ -152,6 +164,11 @@ app.io.sockets.on('connection', function(socket){
     rooms[room]["talker"] = data.talker;
   });
 
+<<<<<<< HEAD
+  socket.on('message', function(message) {
+    socket.broadcast.emit('message', message);
+  });
+
   socket.on('question:upVote', function(data){
     var room = data.room;
     var request = data.request;
@@ -162,10 +179,10 @@ app.io.sockets.on('connection', function(socket){
     var room = data.room;
     var request = data.request;
     socket.broadcast.to(room).emit('question:downVoted', request);
-  });
-
+=======
   socket.on('broadcast:leave', function(data){
     socket.leave(data.room);
+>>>>>>> newMaster
   });
 
   socket.on('broadcast:closeRoom', function(data){
@@ -175,6 +192,7 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(room).emit('new:closeRoom');
     socket.leave(room);
   });
+<<<<<<< HEAD
   socket.on('question:new', function(data){
     console.log(data);
     var user = data.user;
@@ -185,16 +203,19 @@ app.io.sockets.on('connection', function(socket){
     socket.to(room).emit('question:update', {key: key, question: question});
     socket.broadcast.to(room).emit('question:update', {key: key, question: question});
   });
+  socket.on('broadcast:microphoneClickedOnClientSide', function() {
+    socket.broadcast.emit('new:microphoneClickedOnClientSide');
+  });
 
-  // Do we need this?
   socket.on('broadcast:establishClientConnection', function() {
     socket.broadcast.emit('new:establishClientConnection');
-  });
+=======
 
   socket.on('broadcast:microphoneClickedOnClientSide', function(data) {
     var user = data;
     var room = user.room;
     socket.broadcast.to(room).emit('new:microphoneClickedOnClientSide', user.name);
+>>>>>>> newMaster
   });
 
   socket.on('broadcast:closeRequest', function(data) {
@@ -223,15 +244,12 @@ app.io.sockets.on('connection', function(socket){
   });
 });
 
-var Room = function(socketId){
+var Room = function(){
   this.members = {};
   this.questions = {};
   this.talkRequests = {};
   this.isOpen = true;
-  this.adminSocketId = socketId;
-  this.socketIds = {};
 };
-
 var Question = function(message){
   this.upvotes = 0;
   this.message = message;

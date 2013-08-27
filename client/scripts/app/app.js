@@ -29,6 +29,10 @@ app.config(function ($routeProvider, $httpProvider) {
         templateUrl: 'views/listen.html',
         controller: 'ListenCtrl'
       })
+      .when('/questions', {
+        templateUrl: 'views/questions.html',
+        controller: 'QuestionsCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

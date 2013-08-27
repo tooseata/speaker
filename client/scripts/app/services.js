@@ -52,6 +52,9 @@ app.service('Room', function() {
     },
     setTalker: function(talker) {
       room.talker = talker;
+    },
+    getTalker: function() {
+      return room.talker;
     }
   };
 });
@@ -102,6 +105,16 @@ app.service('Session', function($http, $location, User, Room, socket){
         if (data.type === 'admin'){
           User.set(data);
           window.confirm('You are the admin of a room, would you like to return to it?') ? $location.path('/admin') : socket.emit('broadcast:closeRoom', User.get());
+        }
+      });
+    },
+    questions: function(scope){
+      $http.get('/messages').success(function(data){
+        if (Object.keys(data).length){
+          _.each(data, function(question, key){
+            scope.questions.push({key: key, question: question});
+            scope.upVoted[key] = false;
+          });
         }
       });
     }
