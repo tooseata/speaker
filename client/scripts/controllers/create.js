@@ -23,7 +23,3 @@ angular.module('speakerApp')
       return !$scope.existingRooms[room];
     };
   });
-
-// in fill request, we set the talker on the server
-// in the message socket listener on the server, if the message is from an admin 
-// we grab the latest talker
