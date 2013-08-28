@@ -18,6 +18,10 @@ angular.module('speakerApp')
       socketService.isChannelReady = true;
     });
 
+    $scope.logTest  = function(){
+      console.log('You touched Me');
+    };
+
     $scope.cancelTalkRequest = function(){
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
@@ -179,4 +183,6 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
     };
+
+
   });
