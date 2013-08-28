@@ -80,19 +80,20 @@ app.service('Session', function($http, $location, User, Room, socket){
             },
             user: function(scope){
             if (User.get().type === ''){
-            $http.get('/session').success(function(data){
-                                          if (data.type !== ''){
-                                          User.set(data);
-                                          scope.user = User.get();
-                                          } else {
-                                          $location.path('/');
-                                          }
-                                          });
+            $http({method: 'GET',
+                  url: 'http://127.0.0.1:3000/session'}).success(function(data){
+                if (data.type !== ''){
+                  User.set(data);
+                  scope.user = User.get();
+              } else {
+              $location.path('/');
+              }
+              });
             }
             },
             userRoom: function(scope){
             if (User.get().type === ''){
-            $http.get('10.0.1.29:3000/session').success(function(data){
+            $http({method: 'GET', url: 'http://127.0.0.1:3000/session'}).success(function(data){
                                           if (data.type !== ''){
                                           User.set(data);
                                           scope.user = User.get();
@@ -112,7 +113,7 @@ app.service('Session', function($http, $location, User, Room, socket){
             }
             },
             isAdmin: function(){
-            $http.get('/session').success(function(data){
+            $http({method: 'GET', url: 'http://127.0.0.1:3000/session'}).success(function(data){
                                           if (data.type === 'admin'){
                                           User.set(data);
                                           window.confirm('You are the admin of a room, would you like to return to it?') ? $location.path('/admin') : socket.emit('broadcast:closeRoom', User.get());
@@ -120,7 +121,7 @@ app.service('Session', function($http, $location, User, Room, socket){
                                           });
             },
             questions: function(scope){
-            $http.get('/messages').success(function(data){
+            $http({method: 'GET', url: 'http://127.0.0.1:3000/messages'}).success(function(data){
                                            if (Object.keys(data).length){
                                            _.each(data, function(question, key){
                                                   scope.questions.push({key: key, question: question});
