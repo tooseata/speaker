@@ -177,7 +177,7 @@ angular.module('speakerApp')
       socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
     };
 
-    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
     $window.onbeforeunload = function(e) {
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
