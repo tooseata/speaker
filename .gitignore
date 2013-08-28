@@ -5,3 +5,5 @@ dist
 test-results.xml
 tmp
 npm-debug.log
+speaker-phonegap/platforms/ios/Speaker.xcodeproj/project.xcworkspace/xcuserdata/hackreactor.xcuserdatad/UserInterfaceState.xcuserstate
+speaker-phonegap/platforms/ios/Speaker.xcodeproj/project.pbxproj
