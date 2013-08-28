@@ -1,8 +1,9 @@
+'use strict';
+
 var express = require('express'),
   http = require('http'),
   path = require('path'),
   io = require('socket.io'),
-  appConfig = require( './../app-config.json' ),
   OpenTok = require('../node_modules/opentok');
 
 var app = express();
@@ -15,7 +16,22 @@ var opentok = new OpenTok.OpenTokSDK(key, secret);
 var sessionId,
     token;
 
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:8000');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  // intercept OPTIONS method
+  if ('OPTIONS' === req.method) {
+    res.send(200);
+  }
+  else {
+    next();
+  }
+};
+
 app.configure(function(){
+  app.use(allowCrossDomain);
   app.set( 'views', path.join( __dirname, './../client' ) );
   app.set( 'view engine', 'html' );
   app.set('port', process.env.PORT || 3000);
@@ -24,6 +40,7 @@ app.configure(function(){
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
   app.get('/rooms', function(req, res){
+    console.log("*********** rooms were requested!!!!");
     res.send(rooms);
   });
   app.get('/room/:room', function(req, res){
