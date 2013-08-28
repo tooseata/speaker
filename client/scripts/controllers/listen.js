@@ -54,6 +54,6 @@ angular.module('speakerApp')
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
     };
-    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
     WebRtcService.maybeStart();
   });

@@ -3,18 +3,18 @@
 var express = require('express'),
   http = require('http'),
   path = require('path'),
-  io = require('socket.io'),
-  OpenTok = require('../node_modules/opentok');
+  io = require('socket.io');
+  //OpenTok = require('../node_modules/opentok');
 
 var app = express();
 var rooms = {};
 var sessions = {};
 
-var key = '39238222';
-var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
-var opentok = new OpenTok.OpenTokSDK(key, secret);
-var sessionId,
-    token;
+// var key = '39238222';
+// var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
+// var opentok = new OpenTok.OpenTokSDK(key, secret);
+// var sessionId,
+//     token;
 
 var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', 'http://localhost:8000');
