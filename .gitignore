@@ -4,3 +4,4 @@ dist
 .sass-cache
 test-results.xml
 tmp
+npm-debug.log
