@@ -9,22 +9,24 @@ angular.module('speakerApp')
     var turnExists = WebRtcService.turnExists;
 
     $scope.talker = Room.get().talker;
+    $scope.room = Room.get().talkRequests[$scope.talker].room;
     if ($scope.talker === ''){
       $location.path('/admin');
     }
     Session.user($scope);
 
     $scope.closeRequest = function() {
+      socket.emit('broadcast:closeRequest', {"talker": $scope.talker + "", "room": $scope.room + ""});
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
       var talkRequests = Room.get().talkRequests;
       delete talkRequests[$scope.talker];
       Room.setTalkRequests(talkRequests);
-      socket.emit('broadcast:closeRequest');
       $location.path('/admin/');
     };
 
     socket.on('new:cancelTalkRequest', function () {
+      console.log('new:cancelTalkRequest');
       $scope.closeRequest();
     });
 
@@ -32,28 +34,26 @@ angular.module('speakerApp')
       console.log('Received message: ', message);
       if (message.type === 'offer') {
         if (!socketService.isAdmin && !socketService.isStarted) {
-          maybeStart();
+          WebRtcService.maybeStart();
         }
         socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
         doAnswer();
       } else if (message.type === 'answer' && socketService.isStarted) {
         socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
       } else if (message.type === 'candidate' && socketService.isStarted) {
+        console.log('I am running from Admin RTCIceCandidate - candidate');
         var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
           candidate:message.candidate});
-        console.log('candidate: ', candidate);
-        console.log('CANDIDATE MESSAGE', message);
+        console.log('Candidate on Admin: ', candidate);
         socketService.pc.addIceCandidate(candidate);
       } else if (message === 'bye' && socketService.isStarted) {
         WebRtcService.handleRemoteHangup();
       }
     });
-
-    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
-
     $window.onbeforeunload = function(e) {
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
     };
+    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
     WebRtcService.maybeStart();
   });

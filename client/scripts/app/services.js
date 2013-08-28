@@ -52,6 +52,9 @@ app.service('Room', function() {
     },
     setTalker: function(talker) {
       room.talker = talker;
+    },
+    getTalker: function() {
+      return room.talker;
     }
   };
 });

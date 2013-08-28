@@ -6,7 +6,6 @@ var express = require('express'),
   OpenTok = require('../node_modules/opentok');
 
 var app = express();
-
 var rooms = {};
 var sessions = {};
 
@@ -75,52 +74,89 @@ app.configure( 'production', function() {
     app.use( express.errorHandler() );
 } );
 
-
-
 var getCookieId = function(string){
   return string.slice(string.indexOf('=') + 1);
 };
 
-// Start server - hook in sockets instance
+
 app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
     console.log( 'Express server listening on ' + app.get( 'port' ) );
 }));
 
 app.io.sockets.on('connection', function(socket){
+
+  socket.on('message', function(message) {
+    try{
+      if (socket.store.data.userClient){
+        console.log('Message from Client to Admin');
+        var clientRoomSource = socket.store.data.userClient.room;
+        // Get socket ID of Admin for the room that the client belongs to
+        var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
+        // Route the message to the admin of the room
+        app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
+      } else {
+        try {
+          var room = socket.store.data.userAdmin.room;
+          var talker = rooms[room]['talker']
+          var talkerSocketId = rooms[room]["socketIds"][talker];
+          var adminRoomSource = socket.store.data.userAdmin.room;
+          // Send the message to the correct client that made the request 
+          app.io.sockets.sockets[talkerSocketId].emit('message', message);
+        } catch(e){
+            console.log("message", e);
+        }
+      }
+    } catch (e){
+        console.log("message", e);
+    }
+  });
   
   socket.on('broadcast:talkRequest', function(data){
-    var user = data;
-    var room = user.room;
-    rooms[room].talkRequests[user.name] = user;
-    if (rooms[room].isOpen){
-      socket.broadcast.to(room).emit('new:talkRequest', user);
-      socket.to(room).emit('new:clientIsChannelReady');
-    } else {
-      socket.join(user.name);
-      socket.to(user.name).emit('new:queueIsClosed', user);
+    try{
+      var user = data;
+      var room = user.room;
+      rooms[room].talkRequests[user.name] = user;
+      rooms[room].talkRequests[user.id] = socket.id;
+      if (rooms[room].isOpen){
+        socket.broadcast.to(room).emit('new:talkRequest', user);
+        socket.to(room).emit('new:clientIsChannelReady');
+      } else {
+        socket.join(user.name);
+        socket.to(user.name).emit('new:queueIsClosed', user);
+      }
+    } catch(e){
+      console.log("broadcast:talkRequest", e);
     }
+
   });
 
   socket.on('broadcast:cancelTalkRequest', function(data){
     try{
       var user = data;
       var room = user.room;
+      var roomAdminSocketId = rooms[room].adminSocketId;
+      app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest');
       delete rooms[room].talkRequests[user.name];
-      socket.broadcast.to(room).emit('new:cancelTalkRequest', user);
-    } catch(err){
-      console.log(err);
+      delete rooms[room].talkRequests[user.id];
+    } catch(e){
+      console.log("broadcast:cancelTalkRequest", e);
     }
   });
 
   socket.on('broadcast:joinRoom', function(data){
-    console.log(data, rooms);
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
-      rooms[room] = new Room();
+      socket.set("userAdmin", user, function(){
+        rooms[room] = new Room(socket.id);
+      });
     } else {
-      rooms[room].members[user.name] = true;
-      socket.broadcast.to(room).emit('new:joinRoom', user);
+      console.log('SET SOCKET WITH CLIENT USER INFO', user);
+      socket.set("userClient", user, function(){
+        rooms[room].members[user.name] = true;
+        rooms[room]["socketIds"][user.name] = socket.id;
+        socket.broadcast.to(room).emit('new:joinRoom', user);
+      });
     }
     socket.join(room);
   });
@@ -129,12 +165,9 @@ app.io.sockets.on('connection', function(socket){
     socket.join(data.room);
   });
 
-  socket.on('broadcast:leave', function(data){
-    socket.leave(data.room);
-  });
-
-  socket.on('message', function(message) {
-    socket.broadcast.emit('message', message);
+  socket.on('broadcast:setTalker', function(data) {
+    var room = data.roomName;
+    rooms[room]["talker"] = data.talker;
   });
 
   socket.on('question:upVote', function(data){
@@ -147,6 +180,10 @@ app.io.sockets.on('connection', function(socket){
     var room = data.room;
     var request = data.request;
     socket.broadcast.to(room).emit('question:downVoted', request);
+  });
+
+  socket.on('broadcast:leave', function(data){
+    socket.leave(data.room);
   });
 
   socket.on('broadcast:closeRoom', function(data){
@@ -166,16 +203,27 @@ app.io.sockets.on('connection', function(socket){
     socket.to(room).emit('question:update', {key: key, question: question});
     socket.broadcast.to(room).emit('question:update', {key: key, question: question});
   });
-  socket.on('broadcast:microphoneClickedOnClientSide', function() {
-    socket.broadcast.emit('new:microphoneClickedOnClientSide');
-  });
 
+  // Do we need this?
   socket.on('broadcast:establishClientConnection', function() {
     socket.broadcast.emit('new:establishClientConnection');
   });
 
-  socket.on('broadcast:closeRequest', function() {
-    socket.broadcast.emit('new:closeRequest');
+  socket.on('broadcast:microphoneClickedOnClientSide', function(data) {
+    var user = data;
+    var room = user.room;
+    socket.broadcast.to(room).emit('new:microphoneClickedOnClientSide', user.name);
+  });
+
+  socket.on('broadcast:closeRequest', function(data) {
+    try{
+      var user = data.talker;
+      var roomName = data.room;
+      var clientId = rooms[roomName].talkRequests[user.id]
+      app.io.sockets.sockets[clientId].emit('new:closeRequest');
+    } catch(e){
+      console.log("broadcast:closeRequest", e);
+    }
   });
 
   socket.on('broadcast:leaveRoom', function(data){
@@ -193,12 +241,15 @@ app.io.sockets.on('connection', function(socket){
   });
 });
 
-var Room = function(){
+var Room = function(socketId){
   this.members = {};
   this.questions = {};
   this.talkRequests = {};
   this.isOpen = true;
+  this.adminSocketId = socketId;
+  this.socketIds = {};
 };
+
 var Question = function(message){
   this.upvotes = 0;
   this.message = message;
