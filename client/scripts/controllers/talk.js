@@ -43,11 +43,6 @@ angular.module('speakerApp')
       $location.path('/');
       window.alert('The admin closed the room.');
     });
-    $scope.submitQuestion = function(){
-      console.log($scope.question);
-      socket.emit('question:new', {question: $scope.question, user: $scope.user});
-      $scope.sentQuestion = true;
-    };
 
     $scope.requestVideo = function() {
       console.log('trigger video');

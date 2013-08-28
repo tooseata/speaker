@@ -176,14 +176,13 @@ app.io.sockets.on('connection', function(socket){
     socket.leave(room);
   });
   socket.on('question:new', function(data){
-    console.log(data);
     var user = data.user;
     var room = user.room;
     var question = new Question(data.question);
     var key = randomKey();
-    rooms[room].questions[key] = question;
-    socket.to(room).emit('question:update', {key: key, question: question});
-    socket.broadcast.to(room).emit('question:update', {key: key, question: question});
+    rooms[room].questions[key] = {question: question, user: user};
+    socket.to(room).emit('question:update', {key: key, question: question, user: user});
+    socket.broadcast.to(room).emit('question:update', {key: key, question: question, user: user});
   });
 
   // Do we need this?
