@@ -16,7 +16,7 @@ app.directive('questions', function(){
                   </div>\
                 </div>\
                 <form>\
-                  <input type="text" ng-model="question" placeholder="Questions?"></input>\
+                  <input type="text" ng-model="question" maxLength="100" placeholder="Questions?"></input>\
                   <a class="btn btn-small btn-success" ng-click="submitQuestion()">Submit</a>\
                 </form>\
               </div>'
