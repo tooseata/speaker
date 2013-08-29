@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http, $window) {
+  .controller('TalkCtrl', function ($document, $scope, $location, User, Session, socketService, socket, WebRtcService, $http, $window) {
 
     Session.user($scope);
     $scope.user = User.get();
@@ -12,6 +12,7 @@ angular.module('speakerApp')
     $scope.sentQuestion = false;
     $scope.question = '';
     $scope.localstream;
+    var localVideo;
 
 
     socket.on('new:clientIsChannelReady', function(){
@@ -27,6 +28,7 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
+      $('#localVideo').remove();
     };
 
     socket.on('new:queueIsClosed', function(user) {
@@ -59,7 +61,16 @@ angular.module('speakerApp')
     $scope.requestVideo = function() {
       console.log('trigger video');
       WebRtcService.sendMessage({type: 'media type', value: 'video'});
-      var localVideo = document.querySelector('localVideo');
+      localVideo = document.querySelector('#localVideo');
+      console.log('is there any video??????, ', localVideo);
+      if (!localVideo) {
+        localVideo = document.createElement('video');
+        document.body.appendChild(localVideo);
+        localVideo.setAttribute('id', 'localVideo');
+        localVideo.setAttribute('autoplay', 'true');
+        localVideo = document.querySelector('#localVideo');
+        console.log(localVideo);
+      }
       var constraints = {audio: true, video: true};
 
       var onStreamError = function(e) {
@@ -185,6 +196,7 @@ angular.module('speakerApp')
     // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
     $window.onbeforeunload = function(e) {
+      socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
