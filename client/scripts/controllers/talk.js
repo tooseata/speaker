@@ -12,7 +12,10 @@ angular.module('speakerApp')
     $scope.sentQuestion = false;
     $scope.question = '';
     $scope.localstream;
+    $scope.pendingRequest = false;
+    $scope.liveAudioRequest = false;
     var localVideo;
+
 
 
     socket.on('new:clientIsChannelReady', function(){
@@ -89,6 +92,7 @@ angular.module('speakerApp')
       var onVideoStream = function(stream) {
         socket.emit('broadcast:talkRequest', $scope.user);
         $scope.sentVideoRequest = true;
+        $scope.pendingRequest = true;
         $scope.localstream = stream;
         handleUserMedia(stream, {video: true});
       };
@@ -135,6 +139,7 @@ angular.module('speakerApp')
         // requestAnimFrame(visualize.bind(analyser));
         socket.emit('broadcast:talkRequest', $scope.user);
         $scope.sentAudioRequest = true;
+        $scope.pendingRequest = true;
         handleUserMedia(stream);
       };
 
@@ -199,6 +204,8 @@ angular.module('speakerApp')
 
     var doAnswer = function() {
       console.log('Sending answer to peer.');
+      $scope.liveAudioRequest = true;
+      $scope.pendingRequest = false;
       socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
     };
 
