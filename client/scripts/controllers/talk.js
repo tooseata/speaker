@@ -176,6 +176,7 @@ angular.module('speakerApp')
     // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
     $window.onbeforeunload = function(e) {
+      socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
     };
