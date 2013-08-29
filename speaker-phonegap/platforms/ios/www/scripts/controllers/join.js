@@ -12,6 +12,7 @@ angular.module('speakerApp')
             User.setName(userName);
             User.setRoom(room);
             $scope.user = User.get();
+            console.log($scope.user);
             socket.emit('broadcast:joinRoom', $scope.user);
             $http({method: 'POST', url: 'http://127.0.0.1:3000/session', data: JSON.stringify($scope.user)});
             $location.path('/talk');

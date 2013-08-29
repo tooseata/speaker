@@ -5,7 +5,6 @@ angular.module('speakerApp')
             $scope.user = User.get();
             $scope.questions = [];
             $scope.upVoted = {};
-            Session.user($scope);
             Session.questions($scope);
             
             $scope.upVote = function(request){

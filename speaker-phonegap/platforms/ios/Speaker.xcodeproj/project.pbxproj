@@ -45,8 +45,9 @@
 		5AEE5B35173C68D80009041E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5AEE5B34173C68D80009041E /* CoreLocation.framework */; };
 		5B1594DD16A7569C00FEF299 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */; };
 		950F8CF417CD716B009728DF /* main.html in Resources */ = {isa = PBXBuildFile; fileRef = 950F8CF317CD716B009728DF /* main.html */; };
-		957BD1E017C96F3E007C95EE /* OpenTokPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 957BD1DF17C96F3E007C95EE /* OpenTokPlugin.m */; };
-		95FDDD9E17C9852000780646 /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95FDDD9C17C9852000780646 /* Opentok.framework */; };
+		95D2B37517CEFE8300638939 /* Opentok.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95D2B37417CEFE8300638939 /* Opentok.framework */; };
+		95D2B37717CEFE9400638939 /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 95D2B37617CEFE9400638939 /* opentok.bundle */; };
+		95D2B37D17CEFF3D00638939 /* OpenTokPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 95D2B37C17CEFF3D00638939 /* OpenTokPlugin.m */; };
 		95FDDD9F17C9852000780646 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95FDDD9D17C9852000780646 /* CoreTelephony.framework */; };
 		95FDDDA117C9852900780646 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95FDDDA017C9852900780646 /* Security.framework */; };
 		95FDDDA717C9853400780646 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95FDDDA217C9853400780646 /* CoreAudio.framework */; };
@@ -54,7 +55,6 @@
 		95FDDDA917C9853400780646 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95FDDDA417C9853400780646 /* OpenGLES.framework */; };
 		95FDDDAA17C9853400780646 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95FDDDA517C9853400780646 /* libz.dylib */; };
 		95FDDDAB17C9853400780646 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 95FDDDA617C9853400780646 /* libstdc++.dylib */; };
-		95FDDDAD17C9855800780646 /* opentok.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 95FDDDAC17C9855800780646 /* opentok.bundle */; };
 		D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */ = {isa = PBXBuildFile; fileRef = D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */; };
 		F840E1F1165FE0F500CFE078 /* config.xml in Resources */ = {isa = PBXBuildFile; fileRef = F840E1F0165FE0F500CFE078 /* config.xml */; };
 /* End PBXBuildFile section */
@@ -121,9 +121,10 @@
 		5B1594DC16A7569C00FEF299 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* Speaker-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Speaker-Info.plist"; path = "../Speaker-Info.plist"; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 		950F8CF317CD716B009728DF /* main.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = main.html; path = www/views/main.html; sourceTree = "<group>"; };
-		957BD1DE17C96F3E007C95EE /* OpenTokPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenTokPlugin.h; sourceTree = "<group>"; };
-		957BD1DF17C96F3E007C95EE /* OpenTokPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenTokPlugin.m; sourceTree = "<group>"; };
-		95FDDD9C17C9852000780646 /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = "../../../OpenTok-iOS-Hello-World/Opentok.framework"; sourceTree = "<group>"; };
+		95D2B37417CEFE8300638939 /* Opentok.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Opentok.framework; path = "../../../../OpenTok-iOS-Hello-World/Opentok.framework"; sourceTree = "<group>"; };
+		95D2B37617CEFE9400638939 /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = "../../../../../../OpenTok-iOS-Hello-World/opentok-ios-sdk/Opentok.framework/Versions/A/Resources/opentok.bundle"; sourceTree = "<group>"; };
+		95D2B37B17CEFF3D00638939 /* OpenTokPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenTokPlugin.h; sourceTree = "<group>"; };
+		95D2B37C17CEFF3D00638939 /* OpenTokPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpenTokPlugin.m; sourceTree = "<group>"; };
 		95FDDD9D17C9852000780646 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		95FDDDA017C9852900780646 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		95FDDDA217C9853400780646 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -131,7 +132,6 @@
 		95FDDDA417C9853400780646 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		95FDDDA517C9853400780646 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		95FDDDA617C9853400780646 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
-		95FDDDAC17C9855800780646 /* opentok.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = opentok.bundle; path = "../../../../../OpenTok-iOS-Hello-World/opentok-ios-sdk/Opentok.framework/Versions/A/Resources/opentok.bundle"; sourceTree = "<group>"; };
 		D4A0D8751607E02300AEF8BB /* Default-568h@2x~iphone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x~iphone.png"; sourceTree = "<group>"; };
 		F840E1F0165FE0F500CFE078 /* config.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = config.xml; path = Speaker/config.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,7 +160,6 @@
 				305D5FD1115AB8F900A74A75 /* MobileCoreServices.framework in Frameworks */,
 				30E5649213A7FCAF007403D8 /* CoreMedia.framework in Frameworks */,
 				5AEE5B35173C68D80009041E /* CoreLocation.framework in Frameworks */,
-				95FDDD9E17C9852000780646 /* Opentok.framework in Frameworks */,
 				95FDDD9F17C9852000780646 /* CoreTelephony.framework in Frameworks */,
 				95FDDDA117C9852900780646 /* Security.framework in Frameworks */,
 				95FDDDA717C9853400780646 /* CoreAudio.framework in Frameworks */,
@@ -168,6 +167,7 @@
 				95FDDDA917C9853400780646 /* OpenGLES.framework in Frameworks */,
 				95FDDDAA17C9853400780646 /* libz.dylib in Frameworks */,
 				95FDDDAB17C9853400780646 /* libstdc++.dylib in Frameworks */,
+				95D2B37517CEFE8300638939 /* Opentok.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,7 +241,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				95FDDDAC17C9855800780646 /* opentok.bundle */,
+				95D2B37617CEFE9400638939 /* opentok.bundle */,
 				30A0434214DC770100060A13 /* de.lproj */,
 				30A0434514DC770100060A13 /* se.lproj */,
 				1F766FDB13BBADB100FB74C0 /* en.lproj */,
@@ -257,13 +257,13 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				95D2B37417CEFE8300638939 /* Opentok.framework */,
 				95FDDDA217C9853400780646 /* CoreAudio.framework */,
 				95FDDDA317C9853400780646 /* CoreVideo.framework */,
 				95FDDDA417C9853400780646 /* OpenGLES.framework */,
 				95FDDDA517C9853400780646 /* libz.dylib */,
 				95FDDDA617C9853400780646 /* libstdc++.dylib */,
 				95FDDDA017C9852900780646 /* Security.framework */,
-				95FDDD9C17C9852000780646 /* Opentok.framework */,
 				95FDDD9D17C9852000780646 /* CoreTelephony.framework */,
 				5AEE5B34173C68D80009041E /* CoreLocation.framework */,
 				5AA0E66E1729F460000DC89A /* ImageIO.framework */,
@@ -298,8 +298,8 @@
 		307C750510C5A3420062BCA9 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
-				957BD1DE17C96F3E007C95EE /* OpenTokPlugin.h */,
-				957BD1DF17C96F3E007C95EE /* OpenTokPlugin.m */,
+				95D2B37B17CEFF3D00638939 /* OpenTokPlugin.h */,
+				95D2B37C17CEFF3D00638939 /* OpenTokPlugin.m */,
 			);
 			name = Plugins;
 			path = Speaker/Plugins;
@@ -437,8 +437,8 @@
 				3088BBC2154F3926009F9C59 /* Default~iphone.png in Resources */,
 				D4A0D8761607E02300AEF8BB /* Default-568h@2x~iphone.png in Resources */,
 				30FC414916E50CA1004E6F35 /* icon-72@2x.png in Resources */,
-				95FDDDAD17C9855800780646 /* opentok.bundle in Resources */,
 				950F8CF417CD716B009728DF /* main.html in Resources */,
+				95D2B37717CEFE9400638939 /* opentok.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -469,7 +469,7 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* AppDelegate.m in Sources */,
 				302D95F114D2391D003F00A1 /* MainViewController.m in Sources */,
-				957BD1E017C96F3E007C95EE /* OpenTokPlugin.m in Sources */,
+				95D2B37D17CEFF3D00638939 /* OpenTokPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,12 +522,15 @@
 		1D6058940D05DD3E006BFB54 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../OpenTok-iOS-Hello-World\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../../opentok-ios-sdk\"",
+					"\"$(SRCROOT)/../../../../OpenTok-iOS-Hello-World\"",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -552,7 +555,9 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = Speaker;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				"USER_HEADER_SEARCH_PATHS[arch=*]" = "";
 				VALID_ARCHS = "armv7s armv7";
 			};
 			name = Debug;
@@ -560,12 +565,15 @@
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../../OpenTok-iOS-Hello-World\"",
+					"\"$(SRCROOT)\"",
+					"\"$(SRCROOT)/../../../../opentok-ios-sdk\"",
+					"\"$(SRCROOT)/../../../../OpenTok-iOS-Hello-World\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Speaker/Speaker-Prefix.pch";
@@ -588,6 +596,7 @@
 					"-ObjC",
 				);
 				PRODUCT_NAME = Speaker;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALID_ARCHS = "armv7s armv7";
 			};

@@ -37,48 +37,5 @@ var gapApp = {
         angular.element(document).ready(function () {
             angular.bootstrap(document);
         })
-
-//        var apiKey = "39238222";
-//
-//        $.ajax({
-//            url: 'http://10.0.1.29:3000/testPost',
-//            type: 'GET',
-//            success: function(data) {
-//                var parsed = JSON.parse(data);
-//                var sessionId = parsed.sessionId;
-//                var token = parsed.token;
-//               
-//                // Enable console logs for debugging
-//                TB.setLogLevel(TB.DEBUG);
-//
-//                // Initialize session, set up event listeners, and connect
-//                var session = TB.initSession(sessionId);
-//                session.addEventListener('sessionConnected', sessionConnectedHandler);
-//                session.addEventListener('streamCreated', streamCreatedHandler);
-//                session.connect(apiKey, token);
-//                function sessionConnectedHandler(event) {
-//                    var publisher = TB.initPublisher(apiKey);
-//                    session.publish(publisher);
-//                }
-//            
-//                function streamCreatedHandler(event) {
-//
-//                }
-//            }
-//        });
-        
-//        gapApp.receivedEvent('deviceready');
     }
-    // Update DOM on a Received Event
-//    receivedEvent: function(id) {
-//        var parentElement = document.getElementById(id);
-//        var listeningElement = parentElement.querySelector('.listening');
-//        var receivedElement = parentElement.querySelector('.received');
-//
-//        listeningElement.setAttribute('style', 'display:none;');
-//        receivedElement.setAttribute('style', 'display:block;');
-//
-//        console.log('Received Event: ' + id);
-//    }
 };
-

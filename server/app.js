@@ -3,21 +3,21 @@
 var express = require('express'),
   http = require('http'),
   path = require('path'),
-  io = require('socket.io');
-  //OpenTok = require('../node_modules/opentok');
+  io = require('socket.io'),
+  OpenTok = require('../node_modules/opentok');
 
 var app = express();
 var rooms = {};
 var sessions = {};
 
-// var key = '39238222';
-// var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
-// var opentok = new OpenTok.OpenTokSDK(key, secret);
-// var sessionId,
-//     token;
+var key = '39238222';
+var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
+var opentok = new OpenTok.OpenTokSDK(key, secret);
+var sessionId,
+    token;
 
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:8000');
+  res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8000');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -161,6 +161,7 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:joinRoom', function(data){
+    console.log(data);
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
