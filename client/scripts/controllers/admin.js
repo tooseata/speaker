@@ -52,14 +52,34 @@ angular.module('speakerApp')
 
     socket.on('message', function(message) {
       console.log('Received message: ', message);
-      if (message.type === 'media type') {
+      if (message.type === 'offer') {
+        if (!socketService.isAdmin && !socketService.isStarted) {
+          WebRtcService.maybeStart();
+        }
+        socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+        doAnswer();
+      } else if (message.type === 'media type') {
+        console.log('SETTING MEDIA TYPE ON ADMIN SIDE TO', message.value);
         User.setMediaType(message.value);
+        console.log('DOUBLE CHECKING TO MAKE SURE MEDIA TYPE IS', User.get().mediaType);
+      } else if (message.type === 'answer' && socketService.isStarted) {
+        socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
+      } else if (message.type === 'candidate' && socketService.isStarted) {
+        console.log('I am running from Admin RTCIceCandidate - candidate');
+        var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
+          candidate:message.candidate});
+        console.log('Candidate on Admin: ', candidate);
+        socketService.pc.addIceCandidate(candidate);
+      } else if (message === 'bye' && socketService.isStarted) {
+        WebRtcService.handleRemoteHangup();
       }
     });
 
     socket.on('new:leaveRoom', function (user) {
       delete $scope.talkRequests[user.name];
-      $scope.memberCount--;
+      if ($scope.memberCount > 0) {
+        $scope.memberCount--;
+      }
     });
 
     socket.on('new:joinRoom', function () {

@@ -30,30 +30,10 @@ angular.module('speakerApp')
       $scope.closeRequest();
     });
 
-    socket.on('message', function(message) {
-      console.log('Received message: ', message);
-      if (message.type === 'offer') {
-        if (!socketService.isAdmin && !socketService.isStarted) {
-          WebRtcService.maybeStart();
-        }
-        socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
-        doAnswer();
-      } else if (message.type === 'answer' && socketService.isStarted) {
-        socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
-      } else if (message.type === 'candidate' && socketService.isStarted) {
-        console.log('I am running from Admin RTCIceCandidate - candidate');
-        var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
-          candidate:message.candidate});
-        console.log('Candidate on Admin: ', candidate);
-        socketService.pc.addIceCandidate(candidate);
-      } else if (message === 'bye' && socketService.isStarted) {
-        WebRtcService.handleRemoteHangup();
-      }
-    });
     $window.onbeforeunload = function(e) {
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
     };
-    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
     WebRtcService.maybeStart();
   });
