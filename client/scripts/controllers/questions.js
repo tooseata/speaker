@@ -2,24 +2,29 @@
 
 angular.module('speakerApp')
   .controller('QuestionsCtrl', function ($scope, socket, User, Session) {
+    Session.user($scope);
     $scope.user = User.get();
     $scope.questions = [];
     $scope.upVoted = {};
-    Session.user($scope);
     Session.questions($scope);
 
-    $scope.upVote = function(request){
-      request.question.upvotes++;
-      sortQuestions();
-      socket.emit('question:upVote', {room: $scope.user.room, request: request});
-      $scope.upVoted[request.key] = true;
+    $scope.submitQuestion = function(){
+      socket.emit('question:new', {question: $scope.question, user: $scope.user});
     };
-    $scope.downVote = function(request){
-      request.question.upvotes--;
+    $scope.vote = function(request){
+      if ($scope.upVoted[request.key]){
+        console.log('downvoted');
+        request.question.upvotes--;
+        socket.emit('question:downVote', request);
+        $scope.upVoted[request.key] = false;
+      } else {
+        console.log('upvoted');
+        request.question.upvotes++;
+        socket.emit('question:upVote', request);
+        $scope.upVoted[request.key] = true;
+      }
       sortQuestions();
-      socket.emit('question:downVote', {room: $scope.user.room, request: request});
-      $scope.upVoted[request.key] = false;
-    };
+    }
     socket.on('question:upVoted', function(request){
       _.each($scope.questions, function(value){
         if (value.key === request.key){
@@ -42,7 +47,6 @@ angular.module('speakerApp')
       $scope.questions.push(request);
       $scope.upVoted[request.key] = false;
       sortQuestions();
-      console.log($scope.upVoted);
     });
     var sortQuestions = function(){
       $scope.questions.sort(function(a,b){
