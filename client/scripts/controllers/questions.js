@@ -2,22 +2,23 @@
 
 angular.module('speakerApp')
   .controller('QuestionsCtrl', function ($scope, socket, User, Session) {
+    Session.user($scope);
     $scope.user = User.get();
     $scope.questions = [];
     $scope.upVoted = {};
-    Session.user($scope);
     Session.questions($scope);
 
     $scope.submitQuestion = function(){
       socket.emit('question:new', {question: $scope.question, user: $scope.user});
     };
     $scope.vote = function(request){
-      console.log(request);
       if ($scope.upVoted[request.key]){
+        console.log('downvoted');
         request.question.upvotes--;
         socket.emit('question:downVote', request);
         $scope.upVoted[request.key] = false;
       } else {
+        console.log('upvoted');
         request.question.upvotes++;
         socket.emit('question:upVote', request);
         $scope.upVoted[request.key] = true;

@@ -4,8 +4,7 @@ var express = require('express'),
   http = require('http'),
   path = require('path'),
   io = require('socket.io');
-  // OpenTok = require('../node_modules/opentok');
-
+  //OpenTok = require('../node_modules/opentok');
 
 var app = express();
 var rooms = {};
@@ -41,6 +40,7 @@ app.configure(function(){
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
   app.get('/rooms', function(req, res){
+    console.log("*********** rooms were requested!!!!");
     res.send(rooms);
   });
   app.get('/room/:room', function(req, res){
@@ -119,7 +119,6 @@ app.io.sockets.on('connection', function(socket){
           var adminRoomSource = socket.store.data.userAdmin.room;
           // Send the message to the correct client that made the request 
           app.io.sockets.sockets[talkerSocketId].emit('message', message);
-          // socket.broadcast.emit('message', message);
         } catch(e){
             console.log("message", e);
         }
@@ -190,12 +189,14 @@ app.io.sockets.on('connection', function(socket){
 
   socket.on('question:upVote', function(data){
     var room = data.user.room;
+    rooms[room].questions[data.key].question.upvotes++;
     rooms[room].karma[data.user.name]++;
     socket.broadcast.to(room).emit('question:upVoted', data);
   });
 
   socket.on('question:downVote', function(data){
     var room = data.user.room;
+    rooms[room].questions[data.key].question.upvotes--;
     rooms[room].karma[data.user.name]++;
     socket.broadcast.to(room).emit('question:downVoted', data);
   });

@@ -15,7 +15,7 @@ app.directive('questions', function(){
                     </div>\
                   </div>\
                 </div>\
-                <form ng-show="!canTalk || !sentQuestion">\
+                <form>\
                   <input type="text" ng-model="question" placeholder="Questions?"></input>\
                   <a class="btn btn-small btn-success" ng-click="submitQuestion()">Submit</a>\
                 </form>\

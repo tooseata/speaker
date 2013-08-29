@@ -30,6 +30,7 @@ app.service('User', function(){
       user.type = '';
       user.name = '';
       user.room = '';
+      user.mediaType = '';
     }
   };
 });
