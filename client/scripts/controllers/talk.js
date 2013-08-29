@@ -8,7 +8,7 @@ angular.module('speakerApp')
     $scope.sentRequest = false;
     $scope.joined = false;
     $scope.canTalk = true;
-    $scope.sentQuestion = false;
+    $scope.sentQuestion = true;
     $scope.question = '';
     $scope.localstream;
 

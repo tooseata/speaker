@@ -189,18 +189,14 @@ app.io.sockets.on('connection', function(socket){
 
   socket.on('question:upVote', function(data){
     var room = data.user.room;
-    var request = data.request;
-    rooms[room].questions[data.key].question.upvotes++;
     rooms[room].karma[data.user.name]++;
-    socket.broadcast.to(room).emit('question:upVoted', request);
+    socket.broadcast.to(room).emit('question:upVoted', data);
   });
 
   socket.on('question:downVote', function(data){
     var room = data.user.room;
-    var request = data.request;
-    rooms[room].questions[data.key].question.upvotes--;
     rooms[room].karma[data.user.name]++;
-    socket.broadcast.to(room).emit('question:downVoted', request);
+    socket.broadcast.to(room).emit('question:downVoted', data);
   });
 
   socket.on('broadcast:leave', function(data){
