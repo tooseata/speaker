@@ -2,11 +2,11 @@
 /*jshint multistr: true */
 
 var app = angular.module('speakerApp');
-app.directive('questions', function(){
-              return {
-              restrict: 'E',
-              require: 'ng-controller',
-              template: '<div id="questions_list">\
+app.directive('questions', function () {
+  return {
+    restrict: 'E',
+    require: 'ng-controller',
+    template: '<div id="questions_list">\
               <h3>Questions</h3>\
               <div ng-repeat="request in questions">\
               <p>{{request.question.message}}</p>\
@@ -16,5 +16,5 @@ app.directive('questions', function(){
               </div>\
               </div>\
               </div>'
-              };
-              });
+  };
+});
