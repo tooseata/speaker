@@ -97,6 +97,27 @@ angular.module('speakerApp')
 
     $scope.requestAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
+<<<<<<< HEAD
+      var MicrophoneSample = function() {
+        this._width = 640;
+        this._height = 480;
+        this.canvas = document.querySelector('canvas');
+      };
+      var sample = new MicrophoneSample();
+      var context = new webkitAudioContext();
+      var analyser = context.createAnalyser();
+      // shim layer with setTimeout fallback
+      var requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                window.oRequestAnimationFrame      ||
+                window.msRequestAnimationFrame     ||
+          function( callback ){
+          window.setTimeout(callback, 1000 / 60);
+        };
+      })();
+=======
       // var MicrophoneSample = function() {
       //   this._width = 640;
       //   this._height = 480;
@@ -116,6 +137,7 @@ angular.module('speakerApp')
       //     window.setTimeout(callback, 1000 / 60);
       //     };
       // })();
+>>>>>>> talkPagebuttons
 
       // getUserMedia(constraints, handleUserMedia, )
       // var getMicrophoneInput = function (source) {
@@ -204,7 +226,11 @@ angular.module('speakerApp')
 
     // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
+<<<<<<< HEAD
     $window.onbeforeunload = function() {
+=======
+    $window.onbeforeunload = function(e) {
+>>>>>>> talkPagebuttons
       socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentAudioRequest = false;

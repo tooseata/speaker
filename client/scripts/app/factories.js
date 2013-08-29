@@ -59,9 +59,9 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
   var pcConfig = webrtcDetectedBrowser === 'firefox' ? {'iceServers':[{'url':'stun:23.21.150.121'}]} :{'iceServers': [{'url': 'stun:stun.l.google.com:19302'}]};
   var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
   var sdpConstraints = {'mandatory': {'OfferToReceiveAudio':true, 'OfferToReceiveVideo': true}};
+  var turnExists;
   var remoteAudio = $document[0].getElementById('remoteAudio');
   var remoteVideo = $document[0].getElementById('remoteVideo');
-  var turnExists;
 
   var sendMessage = function(message){
     console.log('Sending message: ', message);
@@ -121,8 +121,15 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
   };
 
   var handleRemoteStreamAdded = function(event) {
-    console.log('remote stream added.');
+    console.log('************************************************remote stream added.');
+    console.log('THIS LINE OF CODE ALSO FUCKING RUNSS!!!!!!!!')
+    console.log('THIS IS USER.get()', User.get());
+    console.log('WHY DOESNT THIS SHIT WORK?!')
+    console.log('DOES THE USERS MEDIA TYPE EQUAL VVIDEO???', User.get().mediaType === 'video');
     var type = (User.get().mediaType === 'video' ? remoteVideo : remoteAudio);
+
+    console.log('*********************************************type of media being set!', type);
+    type = remoteVideo;
     attachMediaStream(type, event.stream);
     socketService.remoteStream = event.stream;
   };
