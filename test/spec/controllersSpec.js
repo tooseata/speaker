@@ -1,7 +1,9 @@
 'use strict';
 
 describe('Controllers', function () {
-  var $scope, ctrl;
+  var $scope,
+      ctrl;
+
   beforeEach(module('speakerApp'));
   beforeEach(function () {
     this.addMatchers({
@@ -11,9 +13,12 @@ describe('Controllers', function () {
     });
   });
 
-  it('should attach a list of awesomeThings to the scope', function () {
-    expect(true).toBe(true);
+  describe('MainCtrl', function () {
+    it('should do stuff to things', function () {
+      expect(true).toBe(true);
+    });
   });
+
 
 // this
 

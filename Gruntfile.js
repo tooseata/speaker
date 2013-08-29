@@ -352,6 +352,7 @@ module.exports = function (grunt) {
     'karma:chromeUnit'
   ]);
 
+  // run ```grunt phantom``` to use PhantomJS instead of Chrome debugger
   grunt.registerTask('phantom', [
     'clean:server',
     'express:dev',

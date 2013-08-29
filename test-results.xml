@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <testsuites>
-  <testsuite name="PhantomJS 1.9.1 (Mac OS X)" package="unit" timestamp="2013-08-29T18:49:07" id="0" hostname="MathBook Pro" tests="1" errors="0" failures="0" time="0.004">
+  <testsuite name="PhantomJS 1.9.1 (Mac OS X)" package="unit" timestamp="2013-08-29T19:09:42" id="0" hostname="MathBook Pro" tests="1" errors="0" failures="0" time="0.006">
     <properties>
       <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.1 Safari/534.34"/>
     </properties>
-    <testcase name="should attach a list of awesomeThings to the scope" time="0.004" classname="unit PhantomJS 1.9.1 (Mac OS X).Controllers"/>
+    <testcase name="should do stuff to things" time="0.006" classname="unit PhantomJS 1.9.1 (Mac OS X).Controllers MainCtrl"/>
     <system-out><![CDATA[PhantomJS 1.9.1 (Mac OS X) LOG: LOG
  'Browser does not appear to be WebRTC-capable'
 ]]></system-out>
