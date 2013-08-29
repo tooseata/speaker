@@ -25,10 +25,6 @@
       <span class="quetionPage">
         <div class="hero-unit">
           <questions ng-controller="QuestionsCtrl"></questions>
-          <form ng-show="!canTalk || !sentQuestion">
-            <input type='text' ng-model="question" placeholder="type your questions here."></input>
-            <a class="btn btn-small btn-success" ng-click="submitQuestion()">Submit</a>
-          </form>
         </div>
       </span>
     </div>
