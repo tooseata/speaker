@@ -2,25 +2,50 @@
     <div class="slideScreen">
       <span class="talkPage">
         <div class="hero-unit">
-          <div id="container_button">
-            <div id="hole">
-              <div id="button" ng-class="{on: sentRequest==true}">
-                <div id="mic"></div>
-              </div>
-            </div>
+          <div id="leave_room_container">
+            <a class="btn btn-small btn-success" ng-click="leaveRoom()">Leave this room</a>
           </div>
           <div id='media' ng-class="{true:'showMedia', false:'hideMedia', '':'hidden'}[sentRequest]">
-            <p><canvas style="background: white;"></canvas></p>
+            <!-- <p><canvas style="background: white;"></canvas></p> -->
             <video id='localVideo' autoplay></video>
           </div>
-          <div id="request_button_container" ng-switch on="sentRequest" ng-show="canTalk && sentQuestion">
-            <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="requestAudio()">Request to Speak</a>
-            <a class="btn btn-large btn-success" ng-switch-when="true" ng-click="cancelTalkRequest()">Cancel Request</a>
-          </div>
-          <div id="request_button_container" ng-switch on="sentRequest" ng-show="canTalk && sentQuestion">
-            <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="requestVideo()">Request to Speak with Video</a>
+
+          <!-- ng-show="canTalk && sentQuestion" -->
+          <div id="request_button_container_wrapper">
+            <div id="request_button_container" ng-switch on="sentAudioRequest" >
+              <div id="container_button" ng-switch-when="false" hm-tap="requestAudio()">
+                <div id="hole">
+                  <div id="button">
+                    <div id="mic"></div>
+                  </div>
+                </div>
+              </div>
+              <div id="container_button" ng-switch-when="true" hm-tap="cancelTalkRequest()">
+                <div id="hole">
+                  <div id="button" ng-class="{on: liveAudioRequest==true}">
+                    <div id="mic" ng-class="{blinkRequest:pendingRequest==true,pendingMic:pendingRequest==true}"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="request_button_container" ng-switch on="sentVideoRequest" >
+              <div id="container_button" ng-switch-when="false" hm-tap="requestVideo()">
+                <div id="hole">
+                  <div id="button">
+                    <div id="video"></div>
+                  </div>
+                </div>
+              </div>
+              <div id="container_button" ng-switch-when="true" hm-tap="cancelTalkRequest()">
+                <div id="hole">
+                  <div id="button" ng-class="{on: liveAudioRequest==true}">
+                    <div id="video" ng-class="{blinkRequest:pendingRequest==true,pendingVideo:pendingRequest==true}"></div>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
+        </div> <!-- Hero Close -->
       </span>
       <span class="quetionPage">
         <div class="hero-unit">

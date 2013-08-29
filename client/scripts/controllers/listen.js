@@ -82,4 +82,10 @@ angular.module('speakerApp')
         session.subscribe(streams[i], div.id);
       }
     }
+    $window.onbeforeunload = function(e) {
+      WebRtcService.stop();
+      WebRtcService.sendMessage('bye');
+    };
+    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    WebRtcService.maybeStart();
   });

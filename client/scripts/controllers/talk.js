@@ -1,16 +1,21 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('TalkCtrl', function ($scope, $location, User, Session, socketService, socket, WebRtcService, $http, $window) {
+  .controller('TalkCtrl', function ($document, $scope, $location, User, Session, socketService, socket, WebRtcService, $http, $window) {
 
     Session.user($scope);
     $scope.user = User.get();
-    $scope.sentRequest = false;
+    $scope.sentAudioRequest = false;
+    $scope.sentVideoRequest = false;
     $scope.joined = false;
     $scope.canTalk = true;
     $scope.sentQuestion = false;
     $scope.question = '';
     $scope.localstream;
+    $scope.pendingRequest = false;
+    $scope.liveAudioRequest = false;
+    var localVideo;
+
 
 
     socket.on('new:clientIsChannelReady', function(){
@@ -18,24 +23,35 @@ angular.module('speakerApp')
       socketService.isChannelReady = true;
     });
 
+    $scope.leaveRoom = function(){
+      alert('TODO:: we need an "are you sure?" here');
+      socket.emit('broadcast:leaveRoom', $scope.user);
+      socket.emit('broadcast:cancelTalkRequest', $scope.user);
+      $scope.sentRequest = false;
+      $location.path('/');
+    };
+
     $scope.logTest  = function(){
       console.log('You touched Me');
     };
 
     $scope.cancelTalkRequest = function(){
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
-      $scope.sentRequest = false;
+      $scope.sentAudioRequest = false;
+      $scope.sentVideoRequest = false;
+      $('#localVideo').remove();
     };
 
     socket.on('new:queueIsClosed', function(user) {
-      $scope.sentRequest = false;
+      $scope.canTalk = false;
       window.alert('The admin is not accepting talk requests right now.', user);
     });
 
     // Event to notify the client that the admin closed their connection 
     socket.on('new:closeRequest', function(){
       console.log('NEW CLOSE REQUEST');
-      $scope.sentRequest = false;
+      $scope.sentAudioRequest = false;
+      $scope.sentVideoRequest = false;
       $scope.localstream.stop();
     });
 
@@ -47,6 +63,7 @@ angular.module('speakerApp')
       $location.path('/');
       window.alert('The admin closed the room.');
     });
+
     $scope.submitQuestion = function(){
       console.log($scope.question);
       socket.emit('question:new', {question: $scope.question, user: $scope.user});
@@ -56,7 +73,16 @@ angular.module('speakerApp')
     $scope.requestVideo = function() {
       console.log('trigger video');
       WebRtcService.sendMessage({type: 'media type', value: 'video'});
-      var localVideo = document.querySelector('localVideo');
+      localVideo = document.querySelector('#localVideo');
+      console.log('is there any video??????, ', localVideo);
+      if (!localVideo) {
+        localVideo = document.createElement('video');
+        document.body.appendChild(localVideo);
+        localVideo.setAttribute('id', 'localVideo');
+        localVideo.setAttribute('autoplay', 'true');
+        localVideo = document.querySelector('#localVideo');
+        console.log(localVideo);
+      }
       var constraints = {audio: true, video: true};
 
       var onStreamError = function(e) {
@@ -65,7 +91,8 @@ angular.module('speakerApp')
 
       var onVideoStream = function(stream) {
         socket.emit('broadcast:talkRequest', $scope.user);
-        $scope.sentRequest = true;
+        $scope.sentVideoRequest = true;
+        $scope.pendingRequest = true;
         $scope.localstream = stream;
         handleUserMedia(stream, {video: true});
       };
@@ -74,44 +101,45 @@ angular.module('speakerApp')
 
     $scope.requestAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
-      var MicrophoneSample = function() {
-        this._width = 640;
-        this._height = 480;
-        this.canvas = document.querySelector('canvas');
-      };
-      var sample = new MicrophoneSample();
-      var context = new webkitAudioContext();
-      var analyser = context.createAnalyser();
-      // shim layer with setTimeout fallback
-      var requestAnimFrame = (function(){
-        return  window.requestAnimationFrame       ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame    ||
-                window.oRequestAnimationFrame      ||
-                window.msRequestAnimationFrame     ||
-          function( callback ){
-          window.setTimeout(callback, 1000 / 60);
-          };
-      })();
+      // var MicrophoneSample = function() {
+      //   this._width = 640;
+      //   this._height = 480;
+      //   this.canvas = document.querySelector('canvas');
+      // };
+      // var sample = new MicrophoneSample();
+      // var context = new webkitAudioContext();
+      // var analyser = context.createAnalyser();
+      // // shim layer with setTimeout fallback
+      // var requestAnimFrame = (function(){
+      //   return  window.requestAnimationFrame       ||
+      //           window.webkitRequestAnimationFrame ||
+      //           window.mozRequestAnimationFrame    ||
+      //           window.oRequestAnimationFrame      ||
+      //           window.msRequestAnimationFrame     ||
+      //     function( callback ){
+      //     window.setTimeout(callback, 1000 / 60);
+      //     };
+      // })();
 
       // getUserMedia(constraints, handleUserMedia, )
-      var getMicrophoneInput = function (source) {
-        getUserMedia({audio: true}, onStream, onStreamError);
-      };
+      // var getMicrophoneInput = function (source) {
+      //   getUserMedia({audio: true}, onStream, onStreamError);
+      // };
 
       var onStream = function(stream) {
         socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
-        var input = context.createMediaStreamSource(stream);
-        var filter = context.createBiquadFilter();
-        filter.frequency.value = 6600.0;
-        filter.type = filter.NOTCH;
-        filter.Q = 10.0;
-        // Connect graph.
-        input.connect(filter);
-        filter.connect(analyser);
-        requestAnimFrame(visualize.bind(analyser));
+        // var input = context.createMediaStreamSource(stream);
+        // var filter = context.createBiquadFilter();
+        // filter.frequency.value = 6600.0;
+        // filter.type = filter.NOTCH;
+        // filter.Q = 10.0;
+        // // Connect graph.
+        // input.connect(filter);
+        // filter.connect(analyser);
+        // requestAnimFrame(visualize.bind(analyser));
         socket.emit('broadcast:talkRequest', $scope.user);
-        $scope.sentRequest = true;
+        $scope.sentAudioRequest = true;
+        $scope.pendingRequest = true;
         handleUserMedia(stream);
       };
 
@@ -119,26 +147,28 @@ angular.module('speakerApp')
         console.error('Error getting microphone', e);
       };
 
-      var visualize = function() {
-        sample.canvas.width = sample._width;
-        sample.canvas.height = sample._height;
-        var drawContext = sample.canvas.getContext('2d');
+      // var visualize = function() {
+      //   sample.canvas.width = sample._width;
+      //   sample.canvas.height = sample._height;
+      //   var drawContext = sample.canvas.getContext('2d');
 
-        var times = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteTimeDomainData(times);
-        for (var i = 0; i < times.length; i++) {
-          var value = times[i];
-          var percent = value / 256;
-          var height = sample._height * percent;
-          var offset = sample._height - height - 1;
-          var barWidth = sample._width/times.length;
-          drawContext.fillStyle = 'black';
-          drawContext.fillRect(i * barWidth, offset, 1, 1);
-        }
-        requestAnimFrame(visualize.bind(analyser));
-      };
+      //   var times = new Uint8Array(analyser.frequencyBinCount);
+      //   analyser.getByteTimeDomainData(times);
+      //   for (var i = 0; i < times.length; i++) {
+      //     var value = times[i];
+      //     var percent = value / 256;
+      //     var height = sample._height * percent;
+      //     var offset = sample._height - height - 1;
+      //     var barWidth = sample._width/times.length;
+      //     drawContext.fillStyle = 'black';
+      //     drawContext.fillRect(i * barWidth, offset, 1, 1);
+      //   }
+      //   requestAnimFrame(visualize.bind(analyser));
+      // };
 
-      getMicrophoneInput(sample);
+      getUserMedia({audio: true}, onStream, onStreamError);
+
+      // getMicrophoneInput(sample);
     };
 
     var handleUserMedia = function(stream, type) {
@@ -174,145 +204,144 @@ angular.module('speakerApp')
 
     var doAnswer = function() {
       console.log('Sending answer to peer.');
+      $scope.liveAudioRequest = true;
+      $scope.pendingRequest = false;
       socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
     };
 
-    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
-    $window.onbeforeunload = function(e) {
+    $window.onbeforeunload = function() {
+      socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
-      $scope.sentRequest = false;
+      $scope.sentAudioRequest = false;
+      $scope.sentVideoRequest = false;
     };
 
-    function Carousel(element)
-      {
-          var self = this;
-          element = $(element);
+    function Carousel(element) {
+      var self = this;
+      element = $(element);
 
-          var container = $(">div.slideScreen", element);
-          var panes = $(">div.slideScreen>span", element);
+      var container = $('>div.slideScreen', element);
+      var panes = $('>div.slideScreen>span', element);
 
-          var pane_width = 0;
-          var pane_count = panes.length;
+      var paneWidth = 0;
+      var paneCount = panes.length;
 
-          var current_pane = 0;
-
-
-          /**
-           * initial
-           */
-          this.init = function() {
-              setPaneDimensions();
-
-              $(window).on("load resize orientationchange", function() {
-                  setPaneDimensions();
-                  //updateOffset();
-              })
-          };
+      var currentPane = 0;
 
 
-          /**
-           * set the pane dimensions and scale the container
-           */
-          function setPaneDimensions() {
-              pane_width = element.width();
-              panes.each(function() {
-                  $(this).width(pane_width);
-              });
-              container.width(pane_width*pane_count);
-          };
+      /**
+       * initial
+       */
+      this.init = function() {
+        setPaneDimensions();
+
+        $(window).on('load resize orientationchange', function() {
+          setPaneDimensions();
+            //updateOffset();
+        });
+      };
 
 
-          /**
-           * show pane by index
-           * @param   {Number}    index
-           */
-          this.showPane = function( index ) {
-              // between the bounds
-              index = Math.max(0, Math.min(index, pane_count-1));
-              current_pane = index;
-
-              var offset = -((100/pane_count)*current_pane);
-              setContainerOffset(offset, true);
-          };
+      /**
+       * set the pane dimensions and scale the container
+       */
+      function setPaneDimensions() {
+        paneWidth = element.width();
+        panes.each(function() {
+          $(this).width(paneWidth);
+        });
+        container.width(paneWidth*paneCount);
+      }
 
 
-          function setContainerOffset(percent, animate) {
-              container.removeClass("animate");
+      /**
+       * show pane by index
+       * @param   {Number}    index
+       */
+      this.showPane = function( index ) {
+        // between the bounds
+        index = Math.max(0, Math.min(index, paneCount-1));
+        currentPane = index;
 
-              if(animate) {
-                  container.addClass("animate");
-              }
+        var offset = -((100/paneCount)*currentPane);
+        setContainerOffset(offset, true);
+      };
 
-              if(Modernizr.csstransforms3d) {
-                  container.css("transform", "translate3d("+ percent +"%,0,0) scale3d(1,1,1)");
-              }
-              else if(Modernizr.csstransforms) {
-                  container.css("transform", "translate("+ percent +"%,0)");
-              }
-              else {
-                  var px = ((pane_width*pane_count) / 100) * percent;
-                  container.css("left", px+"px");
-              }
-          }
 
-          this.next = function() { return this.showPane(current_pane+1, true); };
-          this.prev = function() { return this.showPane(current_pane-1, true); };
+      function setContainerOffset(percent, animate) {
+        container.removeClass('animate');
+
+        if(animate) {
+          container.addClass('animate');
+        }
+
+        if(Modernizr.csstransforms3d) {
+          container.css('transform', 'translate3d('+ percent +'%,0,0) scale3d(1,1,1)');
+        }
+        else if(Modernizr.csstransforms) {
+          container.css('transform', 'translate('+ percent +'%,0)');
+        }
+        else {
+          var px = ((paneWidth*paneCount) / 100) * percent;
+          container.css('left', px+'px');
+        }
+      }
+
+      this.next = function() { return this.showPane(currentPane+1, true); };
+      this.prev = function() { return this.showPane(currentPane-1, true); };
 
 
 
       function handleHammer(ev) {
-            console.log(ev);
-            // disable browser scrolling
-            ev.gesture.preventDefault();
+        console.log(ev);
+        // disable browser scrolling
+        ev.gesture.preventDefault();
 
-            switch(ev.type) {
-                case 'dragright':
-                case 'dragleft':
-                    // stick to the finger
-                    var pane_offset = -(100/pane_count)*current_pane;
-                    var drag_offset = ((100/pane_width)*ev.gesture.deltaX) / pane_count;
+        switch(ev.type) {
+        case 'dragright':
+        case 'dragleft':
+          // stick to the finger
+          var paneOffset = -(100/paneCount)*currentPane;
+          var dragOffset = ((100/paneWidth)*ev.gesture.deltaX) / paneCount;
 
-                    // slow down at the first and last pane
-                    if((current_pane == 0 && ev.gesture.direction == Hammer.DIRECTION_RIGHT) ||
-                        (current_pane == pane_count-1 && ev.gesture.direction == Hammer.DIRECTION_LEFT)) {
-                        drag_offset *= .4;
-                    }
+          // slow down at the first and last pane
+          if((currentPane === 0 && ev.gesture.direction === Hammer.DIRECTION_RIGHT) ||
+            (currentPane === paneCount-1 && ev.gesture.direction === Hammer.DIRECTION_LEFT)) {
+            dragOffset *= 0.4;
+          }
 
-                    setContainerOffset(drag_offset + pane_offset);
-                    break;
+          setContainerOffset(dragOffset + paneOffset);
+          break;
 
-                case 'swipeleft':
-                    self.next();
-                    ev.gesture.stopDetect();
-                    break;
+        case 'swipeleft':
+          self.next();
+          ev.gesture.stopDetect();
+          break;
 
-                case 'swiperight':
-                    self.prev();
-                    ev.gesture.stopDetect();
-                    break;
+        case 'swiperight':
+          self.prev();
+          ev.gesture.stopDetect();
+          break;
 
-                case 'release':
-                    // more then 50% moved, navigate
-                    if(Math.abs(ev.gesture.deltaX) > pane_width/2) {
-                        if(ev.gesture.direction == 'right') {
-                            self.prev();
-                        } else {
-                            self.next();
-                        }
-                    }
-                    else {
-                        self.showPane(current_pane, true);
-                    }
-                    break;
+        case 'release':
+          // more then 50% moved, navigate
+          if(Math.abs(ev.gesture.deltaX) > paneWidth/2) {
+            if(ev.gesture.direction === 'right') {
+              self.prev();
+            } else {
+              self.next();
             }
+          } else {
+            self.showPane(currentPane, true);
+          }
+          break;
         }
-
-        element.hammer({ drag_lock_to_axis: true })
-            .on("release dragleft dragright swipeleft swiperight", handleHammer);
+      }
+      element.hammer({ drag_lock_to_axis: true })
+      .on('release dragleft dragright swipeleft swiperight', handleHammer);
     }
-
-    var carousel = new Carousel("#transistion-screen");
+    var carousel = new Carousel('#transistion-screen');
     carousel.init();
-
   });
