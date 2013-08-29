@@ -8,6 +8,7 @@ angular.module('speakerApp')
     $scope.memberCount = Room.get().memberCount;
     $scope.user = User.get();
     $scope.queueStatus = true;
+    $scope.localstream;
     socketService.isAdmin = true;
 
 

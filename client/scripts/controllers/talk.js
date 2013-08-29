@@ -39,7 +39,8 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
-      $('#localVideo').remove();
+      $scope.localstream.stop();
+      $('#localVideo').hide();
     };
 
     socket.on('new:queueIsClosed', function(user) {
@@ -53,6 +54,7 @@ angular.module('speakerApp')
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
       $scope.localstream.stop();
+      $('#localVideo').hide();
     });
 
     socket.on('new:closeRoom', function() {
@@ -74,15 +76,15 @@ angular.module('speakerApp')
       console.log('trigger video');
       WebRtcService.sendMessage({type: 'media type', value: 'video'});
       localVideo = document.querySelector('#localVideo');
-      console.log('is there any video??????, ', localVideo);
-      if (!localVideo) {
-        localVideo = document.createElement('video');
-        document.body.appendChild(localVideo);
-        localVideo.setAttribute('id', 'localVideo');
-        localVideo.setAttribute('autoplay', 'true');
-        localVideo = document.querySelector('#localVideo');
-        console.log(localVideo);
-      }
+      // if (localVideo.src)
+      // if (!localVideo) {
+      //   localVideo = document.createElement('video');
+      //   document.body.appendChild(localVideo);
+      //   localVideo.setAttribute('id', 'localVideo');
+      //   localVideo.setAttribute('autoplay', 'true');
+      //   localVideo = document.querySelector('#localVideo');
+      //   console.log(localVideo);
+      // }
       var constraints = {audio: true, video: true};
 
       var onStreamError = function(e) {
@@ -177,6 +179,9 @@ angular.module('speakerApp')
       // If a type was passed into handleUserMedia call attachMediaStream on the localVideo node
 
       if (arguments[1]) {
+        if (localVideo.src) {
+          $('#localVideo').show();
+        }
         attachMediaStream(localVideo, stream);
       }
       WebRtcService.maybeStart();

@@ -237,8 +237,11 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:closeRequest', function(data) {
     try{
       var user = data.talker;
+      console.log('user', user);
       var roomName = data.room;
+      console.log('roomName', roomName);
       var clientId = rooms[roomName].talkRequests[user.id]
+      console.log('clientId', clientId);
       app.io.sockets.sockets[clientId].emit('new:closeRequest');
     } catch(e){
       console.log("broadcast:closeRequest", e);
@@ -257,6 +260,7 @@ app.io.sockets.on('connection', function(socket){
     }
     socket.leave(room);
     socket.broadcast.to(room).emit('new:leaveRoom', user);
+    console.log('someone just left the room!');
   });
 });
 
