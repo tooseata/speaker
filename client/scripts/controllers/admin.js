@@ -59,7 +59,9 @@ angular.module('speakerApp')
 
     socket.on('new:leaveRoom', function (user) {
       delete $scope.talkRequests[user.name];
-      $scope.memberCount--;
+      if ($scope.memberCount > 0) {
+        $scope.memberCount--;
+      }
     });
 
     socket.on('new:joinRoom', function () {

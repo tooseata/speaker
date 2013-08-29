@@ -4,10 +4,14 @@
         <div class="hero-unit">
           <div id="container_button">
             <div id="hole">
+
               <div id="button" ng-class="{on: sentRequest==true}">
                 <div id="mic"></div>
               </div>
             </div>
+          </div>
+          <div id="leave_room_container">
+            <a class="btn btn-small btn-success" ng-click="leaveRoom()">Leave this room</a>
           </div>
           <div id='media' ng-class="{true:'showMedia', false:'hideMedia', '':'hidden'}[sentRequest]">
             <p><canvas style="background: white;"></canvas></p>
