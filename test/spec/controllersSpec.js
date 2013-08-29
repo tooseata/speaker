@@ -11,7 +11,10 @@ describe('Controllers', function () {
     });
   });
 
+  it('should attach a list of awesomeThings to the scope', function () {
+    expect(true).toBe(true);
+  });
 
+// this
 
-
-})
+});

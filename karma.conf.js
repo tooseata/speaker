@@ -12,7 +12,6 @@ module.exports = function (config) {
     files: [
       'client/bower_components/angular/angular.js',
       'client/bower_components/angular-mocks/angular-mocks.js',
-      'client/scripts/*.js',
       'client/scripts/**/*.js',
       'test/spec/**/*.js'
     ],
@@ -30,7 +29,7 @@ module.exports = function (config) {
     },
 
     // web server port
-    port: 8080,
+    port: 8079,
 
     // cli runner port
     runnerPort: 9100,
@@ -53,19 +52,21 @@ module.exports = function (config) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    browsers: ['Chrome'],
+    // browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
     // If browser does not capture in given timeout [ms], kill it
     captureTimeout: 5000,
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: true,
+    singleRun: false,
 
     plugins: [
       'karma-jasmine',
       'karma-chrome-launcher',
-      'karma-junit-reporter'
+      'karma-junit-reporter',
+      'karma-phantomjs-launcher'
       // 'karma-firefox-launcher',
     ]
   });

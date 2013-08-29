@@ -252,16 +252,14 @@ module.exports = function (grunt) {
       ]
     },
     karma: {
-      unit: {
+      chromeUnit: {
         configFile: 'karma.conf.js',
-        // singleRun: false
-      }
-    },
-    nodemon: {
-      dev: {
-        options: {
-          file: 'server/app.js'
-        }
+        browsers: ['Chrome']
+        // singleRun: false,
+      },
+      phantomUnit: {
+        configFile: 'karma.conf.js',
+        browsers: ['PhantomJS']
       }
     },
     cdnify: {
@@ -349,8 +347,16 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', [
     'clean:server',
+    'express:dev',
     // 'connect:test',
-    'karma'
+    'karma:chromeUnit'
+  ]);
+
+  grunt.registerTask('phantom', [
+    'clean:server',
+    'express:dev',
+    // 'connect:test',
+    'karma:phantomUnit'
   ]);
 
   grunt.registerTask('build', [
