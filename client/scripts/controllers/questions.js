@@ -15,12 +15,12 @@ angular.module('speakerApp')
       if ($scope.upVoted[request.key]){
         console.log('downvoted');
         request.question.upvotes--;
-        socket.emit('question:downVote', {room: $scope.user.room, request: request});
+        socket.emit('question:downVote', request);
         $scope.upVoted[request.key] = false;
       } else {
         console.log('upvoted');
         request.question.upvotes++;
-        socket.emit('question:upVote', {room: $scope.user.room, request: request});
+        socket.emit('question:upVote', request);
         $scope.upVoted[request.key] = true;
       }
       sortQuestions();

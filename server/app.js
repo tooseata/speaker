@@ -188,14 +188,18 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('question:upVote', function(data){
-    var room = data.room;
+    var room = data.user.room;
     var request = data.request;
+    rooms[room].questions[data.key].question.upvotes++;
+    rooms[room].karma[data.user.name]++;
     socket.broadcast.to(room).emit('question:upVoted', request);
   });
 
   socket.on('question:downVote', function(data){
-    var room = data.room;
+    var room = data.user.room;
     var request = data.request;
+    rooms[room].questions[data.key].question.upvotes--;
+    rooms[room].karma[data.user.name]++;
     socket.broadcast.to(room).emit('question:downVoted', request);
   });
 
@@ -215,9 +219,10 @@ app.io.sockets.on('connection', function(socket){
     var room = user.room;
     var question = new Question(data.question);
     var key = randomKey();
-    rooms[room].questions[key] = {question: question, user: user};
-    socket.to(room).emit('question:update', {key: key, question: question, user: user});
-    socket.broadcast.to(room).emit('question:update', {key: key, question: question, user: user});
+    rooms[room].karma[user.name] = rooms[room].karma[user.name] || 0;
+    rooms[room].questions[key] = {key: key, question: question, user: user};
+    socket.to(room).emit('question:update', rooms[room].questions[key]);
+    socket.broadcast.to(room).emit('question:update', rooms[room].questions[key]);
   });
 
   // Do we need this?
@@ -264,6 +269,7 @@ var Room = function(socketId){
   this.isOpen = true;
   this.adminSocketId = socketId;
   this.socketIds = {};
+  this.karma = {};
 };
 
 var Question = function(message){
