@@ -119,6 +119,7 @@ app.io.sockets.on('connection', function(socket){
           var adminRoomSource = socket.store.data.userAdmin.room;
           // Send the message to the correct client that made the request 
           app.io.sockets.sockets[talkerSocketId].emit('message', message);
+          // socket.broadcast.emit('message', message);
         } catch(e){
             console.log("message", e);
         }

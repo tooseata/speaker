@@ -5,7 +5,8 @@ angular.module('speakerApp')
 
     Session.user($scope);
     $scope.user = User.get();
-    $scope.sentRequest = false;
+    $scope.sentAudioRequest = false;
+    $scope.sentVideoRequest = false;
     $scope.joined = false;
     $scope.canTalk = true;
     $scope.sentQuestion = false;
@@ -24,18 +25,20 @@ angular.module('speakerApp')
 
     $scope.cancelTalkRequest = function(){
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
-      $scope.sentRequest = false;
+      $scope.sentAudioRequest = false;
+      $scope.sentVideoRequest = false;
     };
 
     socket.on('new:queueIsClosed', function(user) {
-      $scope.sentRequest = false;
+      $scope.canTalk = false;
       window.alert('The admin is not accepting talk requests right now.', user);
     });
 
     // Event to notify the client that the admin closed their connection 
     socket.on('new:closeRequest', function(){
       console.log('NEW CLOSE REQUEST');
-      $scope.sentRequest = false;
+      $scope.sentAudioRequest = false;
+      $scope.sentVideoRequest = false;
       $scope.localstream.stop();
     });
 
@@ -65,7 +68,7 @@ angular.module('speakerApp')
 
       var onVideoStream = function(stream) {
         socket.emit('broadcast:talkRequest', $scope.user);
-        $scope.sentRequest = true;
+        $scope.sentVideoRequest = true;
         $scope.localstream = stream;
         handleUserMedia(stream, {video: true});
       };
@@ -74,44 +77,44 @@ angular.module('speakerApp')
 
     $scope.requestAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
-      var MicrophoneSample = function() {
-        this._width = 640;
-        this._height = 480;
-        this.canvas = document.querySelector('canvas');
-      };
-      var sample = new MicrophoneSample();
-      var context = new webkitAudioContext();
-      var analyser = context.createAnalyser();
-      // shim layer with setTimeout fallback
-      var requestAnimFrame = (function(){
-        return  window.requestAnimationFrame       ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame    ||
-                window.oRequestAnimationFrame      ||
-                window.msRequestAnimationFrame     ||
-          function( callback ){
-          window.setTimeout(callback, 1000 / 60);
-          };
-      })();
+      // var MicrophoneSample = function() {
+      //   this._width = 640;
+      //   this._height = 480;
+      //   this.canvas = document.querySelector('canvas');
+      // };
+      // var sample = new MicrophoneSample();
+      // var context = new webkitAudioContext();
+      // var analyser = context.createAnalyser();
+      // // shim layer with setTimeout fallback
+      // var requestAnimFrame = (function(){
+      //   return  window.requestAnimationFrame       ||
+      //           window.webkitRequestAnimationFrame ||
+      //           window.mozRequestAnimationFrame    ||
+      //           window.oRequestAnimationFrame      ||
+      //           window.msRequestAnimationFrame     ||
+      //     function( callback ){
+      //     window.setTimeout(callback, 1000 / 60);
+      //     };
+      // })();
 
       // getUserMedia(constraints, handleUserMedia, )
-      var getMicrophoneInput = function (source) {
-        getUserMedia({audio: true}, onStream, onStreamError);
-      };
+      // var getMicrophoneInput = function (source) {
+      //   getUserMedia({audio: true}, onStream, onStreamError);
+      // };
 
       var onStream = function(stream) {
         socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
-        var input = context.createMediaStreamSource(stream);
-        var filter = context.createBiquadFilter();
-        filter.frequency.value = 6600.0;
-        filter.type = filter.NOTCH;
-        filter.Q = 10.0;
-        // Connect graph.
-        input.connect(filter);
-        filter.connect(analyser);
-        requestAnimFrame(visualize.bind(analyser));
+        // var input = context.createMediaStreamSource(stream);
+        // var filter = context.createBiquadFilter();
+        // filter.frequency.value = 6600.0;
+        // filter.type = filter.NOTCH;
+        // filter.Q = 10.0;
+        // // Connect graph.
+        // input.connect(filter);
+        // filter.connect(analyser);
+        // requestAnimFrame(visualize.bind(analyser));
         socket.emit('broadcast:talkRequest', $scope.user);
-        $scope.sentRequest = true;
+        $scope.sentAudioRequest = true;
         handleUserMedia(stream);
       };
 
@@ -119,26 +122,28 @@ angular.module('speakerApp')
         console.error('Error getting microphone', e);
       };
 
-      var visualize = function() {
-        sample.canvas.width = sample._width;
-        sample.canvas.height = sample._height;
-        var drawContext = sample.canvas.getContext('2d');
+      // var visualize = function() {
+      //   sample.canvas.width = sample._width;
+      //   sample.canvas.height = sample._height;
+      //   var drawContext = sample.canvas.getContext('2d');
 
-        var times = new Uint8Array(analyser.frequencyBinCount);
-        analyser.getByteTimeDomainData(times);
-        for (var i = 0; i < times.length; i++) {
-          var value = times[i];
-          var percent = value / 256;
-          var height = sample._height * percent;
-          var offset = sample._height - height - 1;
-          var barWidth = sample._width/times.length;
-          drawContext.fillStyle = 'black';
-          drawContext.fillRect(i * barWidth, offset, 1, 1);
-        }
-        requestAnimFrame(visualize.bind(analyser));
-      };
+      //   var times = new Uint8Array(analyser.frequencyBinCount);
+      //   analyser.getByteTimeDomainData(times);
+      //   for (var i = 0; i < times.length; i++) {
+      //     var value = times[i];
+      //     var percent = value / 256;
+      //     var height = sample._height * percent;
+      //     var offset = sample._height - height - 1;
+      //     var barWidth = sample._width/times.length;
+      //     drawContext.fillStyle = 'black';
+      //     drawContext.fillRect(i * barWidth, offset, 1, 1);
+      //   }
+      //   requestAnimFrame(visualize.bind(analyser));
+      // };
 
-      getMicrophoneInput(sample);
+      getUserMedia({audio: true}, onStream, onStreamError);
+
+      // getMicrophoneInput(sample);
     };
 
     var handleUserMedia = function(stream, type) {
@@ -177,11 +182,12 @@ angular.module('speakerApp')
       socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
     };
 
-    WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
+    // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
 
     $window.onbeforeunload = function(e) {
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
-      $scope.sentRequest = false;
+      $scope.sentAudioRequest = false;
+      $scope.sentVideoRequest = false;
     };
 
     function Carousel(element)
