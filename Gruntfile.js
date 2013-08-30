@@ -356,8 +356,8 @@ module.exports = function (grunt) {
   grunt.registerTask('chrome', [
     'clean:server',
     'express:dev',
-    // 'connect:test',
-    'karma:chrome'
+    'karma:chrome',
+    'watch:test'
   ]);
 
   // run ```grunt phantom``` to use PhantomJS instead of Chrome debugger
@@ -365,7 +365,7 @@ module.exports = function (grunt) {
     'clean:server',
     'express',
     'karma:phantomUnit',
-    'watch'
+    'watch:test'
   ]);
 
   grunt.registerTask('build', [

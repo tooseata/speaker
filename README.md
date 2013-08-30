@@ -53,6 +53,17 @@ The e2e tests require the server to be started and also one or more browsers ope
 ### Continuous testing
 You can have grunt (karma) continuously watch for file changes and automatically run all the tests on every change, without rebuilding the distribution files.  This can make the test run faster when you are doing test driven development and don't need to actually run the application itself.
 
+Syntax of the tests is Jasmine.
+
+Commands:
+``` grunt phantom ```
+runs tests with PhantomJS, a headless browser. Output to command line. Edit ```logLevel``` inside karm.conf.js to ```LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG``` for varying degrees of feedback.
+
+Kill with ^C twice.
+
+``` grunt chrome ```
+runs karma tests in a new instance of Chrome, complete with a nice debugger inside the Chrome dev tools panel. Kill with ^C x 2.
+
 * `cd app`
 * Run `grunt test-watch`.
 * Open one or more browsers and point them to [http://localhost:8080/__test/].
