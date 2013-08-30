@@ -213,7 +213,6 @@ app.io.sockets.on('connection', function(socket){
     var room = user.room;
     var question = new Question(data.question);
     var key = randomKey();
-    rooms[room].karma[user.name] = rooms[room].karma[user.name] || 0;
     rooms[room].questions[key] = {key: key, question: question, user: user};
     socket.to(room).emit('question:update', rooms[room].questions[key]);
     socket.broadcast.to(room).emit('question:update', rooms[room].questions[key]);
