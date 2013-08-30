@@ -1,6 +1,6 @@
 'use strict';
 
-app.service('User', function(){
+app.service('User', function($http){
   var user = {
     type:'',
     name:'',
@@ -40,10 +40,12 @@ app.service('User', function(){
       user.karma = 0;
     },
     incrementKarma: function(){
-
+      user.karma++;
+      $http.post('/session', JSON.stringify(user));
     },
     decrementKarma: function(){
-      
+      user.karma--;
+      $http.post('/session', JSON.stringify(user));
     }
   };
 });
