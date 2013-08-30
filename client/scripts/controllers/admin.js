@@ -34,7 +34,7 @@ angular.module('speakerApp')
       var data = {
         talker: Room.getTalker(),
         roomName: $scope.user.room
-      }
+      };
       socket.emit('broadcast:setTalker', data);
       $location.path('/listen/');
     };
@@ -43,6 +43,12 @@ angular.module('speakerApp')
     var toggleQueueOnServer = function(bool){
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
+
+    socket.on('new:adminOpentokInfo', function(data) {
+      User.setSessionId(data.sessionId);
+      User.setToken(data.token);
+      $scope.user = User.get();
+    });
 
     socket.on('new:talkRequest', function (user) {
       $scope.talkRequests[user.name] = user;

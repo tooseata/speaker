@@ -13,11 +13,9 @@ var sessions = {};
 var key = '39238222';
 var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
 var opentok = new OpenTok.OpenTokSDK(key, secret);
-var sessionId,
-    token;
 
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://127.0.0.1:8000');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
   res.header('Access-Control-Allow-Credentials', 'true');
@@ -69,13 +67,11 @@ app.configure(function(){
     rooms[req.body.room].isOpen = req.body.bool;
     res.send(200);
   });
-  app.get('/testPost', function(req, res) {
-    var location = '10.0.1.29';
-    opentok.createSession(location, function(result) {
-      sessionId = result;
-      token = opentok.generateToken({session_id:sessionId});
-      res.send(JSON.stringify({sessionId: sessionId, token: token}));
-    });
+  app.get('/opentok/:room', function(req, res) {
+    var room = req.params.room;
+    var sessionId = rooms[room].sessionId;
+    var token = opentok.generateToken({session_id:sessionId});
+    res.send(JSON.stringify({sessionId: sessionId, token: token}));
   });
   // app.get('/', function (req, res) {
   //   res.sendFile(__dirname + './../client/index.html');
@@ -91,7 +87,7 @@ app.configure( 'production', function() {
 } );
 
 var getCookieId = function(string){
-  return string.slice(string.indexOf('=') + 1);
+  // return string.slice(string.indexOf('=') + 1);
 };
 
 
@@ -118,7 +114,6 @@ app.io.sockets.on('connection', function(socket){
           var adminRoomSource = socket.store.data.userAdmin.room;
           // Send the message to the correct client that made the request 
           app.io.sockets.sockets[talkerSocketId].emit('message', message);
-          // socket.broadcast.emit('message', message);
         } catch(e){
             console.log("message", e);
         }
@@ -167,13 +162,18 @@ app.io.sockets.on('connection', function(socket){
     if (user.type === 'admin'){
       socket.set("userAdmin", user, function(){
         rooms[room] = new Room(socket.id);
+        opentok.createSession('10.0.1.29', function(result) {
+          var token = opentok.generateToken({session_id:result});
+          rooms[room].sessionId = result;
+          var roomAdminSocketId = rooms[room].adminSocketId;
+          app.io.sockets.sockets[roomAdminSocketId].emit('new:adminOpentokInfo', {sessionId: result, token: token});
+        });
       });
     } else {
-      console.log('SET SOCKET WITH CLIENT USER INFO', user);
-      socket.set("userClient", user, function(){
+       socket.set("userClient", user, function(){
         rooms[room].members[user.name] = true;
         rooms[room]["socketIds"][user.name] = socket.id;
-        socket.broadcast.to(room).emit('new:joinRoom', user);
+        socket.broadcast.to(room).emit('new:joinRoom');
       });
     }
     socket.join(room);
@@ -266,6 +266,7 @@ var Room = function(socketId){
   this.isOpen = true;
   this.adminSocketId = socketId;
   this.socketIds = {};
+  this.sessionId = '';
 };
 
 var Question = function(message){

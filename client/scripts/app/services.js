@@ -5,7 +5,9 @@ app.service('User', function(){
     type:'',
     name:'',
     room:'',
-    mediaType:''
+    mediaType:'',
+    sessionId: '',
+    token: ''
   };
   return {
     get: function(){
@@ -22,6 +24,12 @@ app.service('User', function(){
     },
     setType: function(type){
       user.type = type;
+    },
+    setSessionId: function(string) {
+      user.sessionId = string;
+    },
+    setToken: function(string) {
+      user.token = string;
     },
     set: function(userObj){
       user = userObj;
