@@ -1,0 +1,10 @@
+#!upstart
+author      "CS/KG/TC/MM/ZZ"
+description "speaker"
+setuid      "nonrootuser"
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+respawn
+console log
+env NODE_ENV=production
+exec /usr/bin/node /speaker/server/app.js

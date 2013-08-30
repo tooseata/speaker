@@ -13,7 +13,7 @@ presentations and media on your mobile device via WebRTC
 * If you don't have Bower/Grunt command line tool installed, on the command line do: ```npm install -g yo grunt-cli bower```
 * Then, ```npm install``` in root dir.
 * ```npm start``` starts server. You can then view the app at http://localhost:3000
-* ```grunt watch``` runs testing on port 9000.
+<!-- * ```grunt watch``` runs testing on port 9000. -->
 * If you want live reloading of the app as front end changes are made, run ```grunt server``` (this doesn't start the node server -- so the actual app may not work...?)
 
 _If you have port conflicts when running grunt try the following:_
@@ -63,7 +63,11 @@ Starts local server on port 3000, continually runs tests with PhantomJS, a a hea
 Edit ```logLevel``` inside karm.conf.js to ```LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG``` for varying degrees of feedback.
 
 ``` grunt chrome ```
-Similar to above, but in a new instance of Chrome that includes a debugger inside the dev tools panel.
+
+Similar to above, but opens a new instance of Chrome that includes a debugger inside the dev tools panel.
 
 Great examples of tests in the repo for Ch. 4 of the Angular O'Reilly book:
 [https://github.com/shyamseshadri/angularjs-book/tree/master/chapter4/guthub/test/spec]
+
+#### Server
+run ```/etc/init.d/nginx reload```
