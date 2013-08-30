@@ -1,5 +1,11 @@
 <div id="transistion-screen">
     <div class="slideScreen">
+      <span class="quetionPage">
+        <div class="hero-unit">
+          <questions ng-controller="QuestionsCtrl"></questions>
+          <button ng-click="next()" class="btn btn-large btn-block btn-primary" type="button">Request to Speak</button>
+        </div> <!-- Hero Close -->
+      </span>
       <span class="talkPage">
         <div class="hero-unit">
           <div id="message_center">
@@ -50,13 +56,7 @@
               </div>
           </div>
         </div>
-        <button ng-click="next()" class="btn btn-large btn-block btn-primary" type="button">Go to Questions</button>
-        </div> <!-- Hero Close -->
-      </span>
-      <span class="quetionPage">
-        <div class="hero-unit">
-          <questions ng-controller="QuestionsCtrl"></questions>
-          <button ng-click="prev()" class="btn btn-large btn-block btn-primary" type="button">Return to Talk</button>
+        <button ng-click="prev()" class="btn btn-large btn-block btn-primary" type="button">Ask a Questions</button>
         </div> <!-- Hero Close -->
       </span>
     </div>

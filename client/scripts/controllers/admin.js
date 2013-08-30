@@ -4,7 +4,7 @@ angular.module('speakerApp')
   .controller('AdminCtrl', function ($scope, $location, User, Session, Room, socket, $http, socketService) {
     // Scope
     Session.userRoom($scope);
-    $scope.talkRequests = Room.get().talkRequests;
+    $scope.talkRequests = Room.getTalkRequests();
     $scope.memberCount = Room.get().memberCount;
     $scope.user = User.get();
     $scope.queueStatus = true;
@@ -29,7 +29,6 @@ angular.module('speakerApp')
     };
     $scope.fillRequest = function(name){
       // socket broadcast to set talker on server
-      Room.setTalkRequests($scope.talkRequests);
       Room.setMemberCount($scope.memberCount);
       Room.setTalker(name);
       var data = {
@@ -39,14 +38,23 @@ angular.module('speakerApp')
       socket.emit('broadcast:setTalker', data);
       $location.path('/listen/');
     };
-
+    var addUser = function(talkRequests, user){
+      debugger;
+      var i = 0;
+      while (talkRequests[i] && talkRequests[i].karma > user.karma){
+        i++;
+      }
+      talkRequests.splice(i, 0, user);
+    };
     // Private Variables and Page load Logic.
     var toggleQueueOnServer = function(bool){
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
 
     socket.on('new:talkRequest', function (user) {
-      $scope.talkRequests[user.name] = user;
+      debugger;
+      Room.addTalkRequest(user);
+      addUser($scope.talkRequests, user);
       // socket.emit('broadcast:clientIsChannelReady'); // Cut out. No listner  
       socketService.isChannelReady = true;
     });
@@ -77,7 +85,8 @@ angular.module('speakerApp')
     });
 
     socket.on('new:leaveRoom', function (user) {
-      delete $scope.talkRequests[user.name];
+      Room.removeTalkRequest(user.name);
+      $scope.talkRequests = Room.getTalkRequests();
       if ($scope.memberCount > 0) {
         $scope.memberCount--;
       }
