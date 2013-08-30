@@ -5,7 +5,8 @@ app.service('User', function(){
     type:'',
     name:'',
     room:'',
-    mediaType:''
+    mediaType:'',
+    browserProfile: {}
   };
   return {
     get: function(){
@@ -26,10 +27,15 @@ app.service('User', function(){
     set: function(userObj){
       user = userObj;
     },
+    setProfile: function(type, value){
+      var userFeature = type + '';
+      user.browserProfile[userFeature] = value;
+    },
     kill: function(){
       user.type = '';
       user.name = '';
       user.room = '';
+      user.mediaType = '';
     }
   };
 });
@@ -112,7 +118,7 @@ app.service('Session', function($http, $location, User, Room, socket){
       $http.get('/messages').success(function(data){
         if (Object.keys(data).length){
           _.each(data, function(question, key){
-            scope.questions.push({key: key, question: question});
+            scope.questions.push({key: key, question: question.question, user: question.user});
             scope.upVoted[key] = false;
           });
         }
@@ -120,6 +126,7 @@ app.service('Session', function($http, $location, User, Room, socket){
     }
   };
 });
+
 var countMembers = function(members){
   var count = 0;
   _.each(members, function(){
@@ -127,3 +134,5 @@ var countMembers = function(members){
   });
   return count;
 };
+
+

@@ -1,10 +1,14 @@
-<!-- <div id="questions_list">
-  <h3>Questions</h3>
-  <div ng-repeat="request in questions">
-    <p>{{request.question.message}}</p>
-    <div ng-switch on="upVoted[request.key]">
-      <button class="upvote_button" ng-switch="false" ng-click="upVote(request)"></button>
-      <button class="upvote_button" ng-switch="false" ng-click="upVote(request)"></button>
+<div class="hero-unit">
+  <div id="questions_list">
+    <h3>Questions</h3>
+    <div ng-repeat="request in questions">
+      <div ng-click=vote(request) ng-class="{true: 'upVoted', false: 'downVoted'}[upVoted[request.key]]">
+        <label>{{request.user.name}}</label><p>{{request.question.message}}</p><h6>{{request.question.upvotes}}</h6>
+      </div>
     </div>
   </div>
-</div> -->
+  <form ng-show="!canTalk || !sentQuestion">
+    <input type='text' ng-model="question" placeholder="Questions?"></input>
+    <a class="btn btn-small btn-success" ng-click="submitQuestion()">Submit</a>
+  </form>
+</div>

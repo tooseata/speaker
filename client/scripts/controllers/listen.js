@@ -7,6 +7,7 @@ angular.module('speakerApp')
     var pcConstraints = WebRtcService.pcConstraints;
     var sdpConstraints = WebRtcService.sdpConstraints;
     var turnExists = WebRtcService.turnExists;
+    var localVideo;
 
     $scope.talker = Room.get().talker;
     $scope.room = Room.get().talkRequests[$scope.talker].room;
@@ -16,6 +17,8 @@ angular.module('speakerApp')
     Session.user($scope);
 
     $scope.closeRequest = function() {
+      socketService.remoteStream.stop();
+      $('#remoteVideo').hide();
       socket.emit('broadcast:closeRequest', {"talker": $scope.talker + "", "room": $scope.room + ""});
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
@@ -26,7 +29,6 @@ angular.module('speakerApp')
     };
 
     socket.on('new:cancelTalkRequest', function () {
-      console.log('new:cancelTalkRequest');
       $scope.closeRequest();
     });
 
