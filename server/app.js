@@ -155,6 +155,12 @@ app.io.sockets.on('connection', function(socket){
     }
   });
 
+  socket.on('broadcast:openTokStreaming', function(user) {
+    var room = user.room;
+    var socketId = rooms[room].adminSocketId;
+    app.io.sockets.sockets[socketId].emit('new:openTokStreaming');
+  });
+
   socket.on('broadcast:joinRoom', function(data){
     var user = data;
     var room = user.room;
@@ -185,6 +191,8 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:setTalker', function(data) {
     var room = data.roomName;
     rooms[room]["talker"] = data.talker;
+    var talkerSocketId = rooms[room]["socketIds"][data.talker];
+    app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream');
   });
 
   socket.on('question:upVote', function(data){
