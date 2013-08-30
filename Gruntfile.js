@@ -35,20 +35,23 @@ module.exports = function (grunt) {
     yeoman: yeomanConfig,
     watch: {
       test: {
-        files: ['{,*/}*.js'],
-        tasks: ['test']
-      },
-      livereload: {
+        files: ['**/*.js'],
+        tasks: ['express:dev'],
         options: {
-          livereload: LIVERELOAD_PORT
-        },
-        files: [
-          '<%= yeoman.app %>/{,*/}*.html',
-          '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ]
-      }
+          nospawn: true
+        }
+      },
+      // livereload: {
+      //   options: {
+      //     livereload: LIVERELOAD_PORT
+      //   },
+      //   files: [
+      //     '<%= yeoman.app %>/{,*/}*.html',
+      //     '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
+      //     '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
+      //     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+      //   ]
+      // }
     },
     connect: {
       options: {
@@ -244,24 +247,27 @@ module.exports = function (grunt) {
           logConcurrentOutput: true
         }
       },
+      phantom: {
+        tasks: ['karma:phantomUnit','watch'],
+        options: {
+          logConcurrentOutput: true
+        }
+      },
       dist: [
-        'coffee',
         'imagemin',
         'svgmin',
         'htmlmin'
       ]
     },
     karma: {
-      unit: {
+      chrome: {
         configFile: 'karma.conf.js',
-        // singleRun: false
-      }
-    },
-    nodemon: {
-      dev: {
-        options: {
-          file: 'server/app.js'
-        }
+        browsers: ['Chrome']
+        // singleRun: false,
+      },
+      phantomUnit: {
+        configFile: 'karma.conf.js',
+        browsers: ['PhantomJS']
       }
     },
     cdnify: {
@@ -347,10 +353,19 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', [
+  grunt.registerTask('chrome', [
     'clean:server',
-    // 'connect:test',
-    'karma'
+    'express:dev',
+    'karma:chrome',
+    'watch:test'
+  ]);
+
+  // run ```grunt phantom``` to use PhantomJS instead of Chrome debugger
+  grunt.registerTask('phantom', [
+    'clean:server',
+    'express',
+    'karma:phantomUnit',
+    'watch:test'
   ]);
 
   grunt.registerTask('build', [

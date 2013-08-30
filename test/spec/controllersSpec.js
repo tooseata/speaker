@@ -1,7 +1,9 @@
 'use strict';
 
 describe('Controllers', function () {
-  var $scope, ctrl;
+  var $scope,
+      ctrl;
+
   beforeEach(module('speakerApp'));
   beforeEach(function () {
     this.addMatchers({
@@ -11,7 +13,13 @@ describe('Controllers', function () {
     });
   });
 
+  describe('MainCtrl', function () {
+    it('should do stuff to things', function () {
+      expect(true).toBe(true);
+    });
+  });
 
 
+// this
 
-})
+});
