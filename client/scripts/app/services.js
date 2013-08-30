@@ -38,6 +38,12 @@ app.service('User', function(){
       user.room = '';
       user.mediaType = '';
       user.karma = 0;
+    },
+    incrementKarma: function(){
+
+    },
+    decrementKarma: function(){
+      
     }
   };
 });
@@ -66,10 +72,16 @@ app.service('Room', function() {
     },
     getTalkRequests: function(){
       var requests = [];
-      _.each(talkRequests, function(value){
+      _.each(room.talkRequests, function(value){
         requests.push(value);
       });
       return requests;
+    },
+    removeTalkRequest: function(name){
+      delete room.talkRequests[name];
+    },
+    addTalkRequest: function(user){
+      room.talkRequests[user.name] = user;
     }
   };
 });
@@ -103,7 +115,8 @@ app.service('Session', function($http, $location, User, Room, socket){
             socket.emit('broadcast:join', scope.user);
             $http.get('/room/' + scope.user.room + '').success(function(room){
               if (room.talkRequests){
-                scope.talkRequests = room.talkRequests;
+                Room.setTalkRequests(room.talkRequests);
+                scope.talkRequests = Room.getTalkRequests();
                 scope.memberCount = countMembers(room.members);
               } else {
                 $location.path('/');
