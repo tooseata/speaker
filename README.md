@@ -55,21 +55,15 @@ You can have grunt (karma) continuously watch for file changes and automatically
 
 Syntax of the tests is Jasmine.
 
-Commands:
+###### Commands:
 ``` grunt phantom ```
-runs tests with PhantomJS, a headless browser. Output to command line. Edit ```logLevel``` inside karm.conf.js to ```LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG``` for varying degrees of feedback.
 
-Kill with ^C twice.
+Starts local server on port 3000, continually runs tests with PhantomJS, a a headless browser. Open one or more browsers and point them to [http://localhost:8080/__test/]. Phantom is useful for certain types of tasks, but isn't compatible with WebRTC. Outputs to command line.
+
+Edit ```logLevel``` inside karm.conf.js to ```LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG``` for varying degrees of feedback.
 
 ``` grunt chrome ```
-runs karma tests in a new instance of Chrome, complete with a nice debugger inside the Chrome dev tools panel. Kill with ^C x 2.
+Similar to above, but in a new instance of Chrome that includes a debugger inside the dev tools panel.
 
-* `cd app`
-* Run `grunt test-watch`.
-* Open one or more browsers and point them to [http://localhost:8080/__test/].
-* Each time a file changes the tests will be run against each browser.
-
-### Initial Seed
-* Yeoman used to scaffold out seed Angular app with Bower, NPM, and Grunt.
-
-
+Great examples of tests in the repo for Ch. 4 of the Angular O'Reilly book:
+[https://github.com/shyamseshadri/angularjs-book/tree/master/chapter4/guthub/test/spec]
