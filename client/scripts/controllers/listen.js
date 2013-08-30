@@ -18,9 +18,11 @@ angular.module('speakerApp')
     Session.user($scope);
 
     $scope.closeRequest = function() {
+      socketService.remoteStream.stop();
+      $('#remoteVideo').hide();
       socket.emit('broadcast:closeRequest', {"talker": $scope.talker + "", "room": $scope.room + ""});
-      WebRtcService.stop();
-      WebRtcService.sendMessage('bye');
+      // WebRtcService.stop();
+      // WebRtcService.sendMessage('bye');
       var talkRequests = Room.get().talkRequests;
       delete talkRequests[$scope.talker];
       Room.setTalkRequests(talkRequests);
@@ -28,7 +30,6 @@ angular.module('speakerApp')
     };
 
     socket.on('new:cancelTalkRequest', function () {
-      console.log('new:cancelTalkRequest');
       $scope.closeRequest();
     });
 

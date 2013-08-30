@@ -2,6 +2,11 @@
     <div class="slideScreen">
       <span class="talkPage">
         <div class="hero-unit">
+          <div id="message_center">
+            <div id="alert_message_container">
+              <h3 id="alert_message">{{updateMessage}}</h3>
+            </div>
+          </div>
           <div id="leave_room_container">
             <a class="btn btn-small btn-success" ng-click="leaveRoom()">Leave this room</a>
           </div>
@@ -45,16 +50,14 @@
               </div>
           </div>
         </div>
+        <button ng-click="next()" class="btn btn-large btn-block btn-primary" type="button">Go to Questions</button>
         </div> <!-- Hero Close -->
       </span>
       <span class="quetionPage">
         <div class="hero-unit">
           <questions ng-controller="QuestionsCtrl"></questions>
-          <form ng-show="!canTalk || !sentQuestion">
-            <input type='text' ng-model="question" placeholder="type your questions here."></input>
-            <a class="btn btn-small btn-success" ng-click="submitQuestion()">Submit</a>
-          </form>
-        </div>
+          <button ng-click="prev()" class="btn btn-large btn-block btn-primary" type="button">Return to Talk</button>
+        </div> <!-- Hero Close -->
       </span>
     </div>
 </div>

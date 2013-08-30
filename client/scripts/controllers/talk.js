@@ -9,11 +9,12 @@ angular.module('speakerApp')
     $scope.sentVideoRequest = false;
     $scope.joined = false;
     $scope.canTalk = true;
-    $scope.sentQuestion = false;
+    $scope.sentQuestion = true;
     $scope.question = '';
     $scope.localstream;
     $scope.pendingRequest = false;
     $scope.liveAudioRequest = false;
+    $scope.updateMessage = 'Hello.'; // TUHIN! CHANGE THIS APPROPRIATELY!
     var localVideo;
 
 
@@ -39,12 +40,13 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
-      $('#localVideo').remove();
+      $scope.localstream.stop();
+      $('#localVideo').hide();
     };
 
     socket.on('new:queueIsClosed', function(user) {
       $scope.canTalk = false;
-      window.alert('The admin is not accepting talk requests right now.', user);
+      $scope.updateMessage = 'The admin is not accepting talk requests right now.';
     });
 
     // Event to notify the client that the admin closed their connection 
@@ -53,6 +55,7 @@ angular.module('speakerApp')
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
       $scope.localstream.stop();
+      $('#localVideo').hide();
     });
 
     socket.on('new:closeRoom', function() {
@@ -74,15 +77,15 @@ angular.module('speakerApp')
       console.log('trigger video');
       WebRtcService.sendMessage({type: 'media type', value: 'video'});
       localVideo = document.querySelector('#localVideo');
-      console.log('is there any video??????, ', localVideo);
-      if (!localVideo) {
-        localVideo = document.createElement('video');
-        document.body.appendChild(localVideo);
-        localVideo.setAttribute('id', 'localVideo');
-        localVideo.setAttribute('autoplay', 'true');
-        localVideo = document.querySelector('#localVideo');
-        console.log(localVideo);
-      }
+      // if (localVideo.src)
+      // if (!localVideo) {
+      //   localVideo = document.createElement('video');
+      //   document.body.appendChild(localVideo);
+      //   localVideo.setAttribute('id', 'localVideo');
+      //   localVideo.setAttribute('autoplay', 'true');
+      //   localVideo = document.querySelector('#localVideo');
+      //   console.log(localVideo);
+      // }
       var constraints = {audio: true, video: true};
 
       var onStreamError = function(e) {
@@ -91,6 +94,7 @@ angular.module('speakerApp')
 
       var onVideoStream = function(stream) {
         socket.emit('broadcast:talkRequest', $scope.user);
+        $scope.updateMessage = 'what upppp.';
         $scope.sentVideoRequest = true;
         $scope.pendingRequest = true;
         $scope.localstream = stream;
@@ -177,6 +181,9 @@ angular.module('speakerApp')
       // If a type was passed into handleUserMedia call attachMediaStream on the localVideo node
 
       if (arguments[1]) {
+        if (localVideo.src) {
+          $('#localVideo').show();
+        }
         attachMediaStream(localVideo, stream);
       }
       WebRtcService.maybeStart();
@@ -344,4 +351,13 @@ angular.module('speakerApp')
     }
     var carousel = new Carousel('#transistion-screen');
     carousel.init();
+
+    $scope.next = function(){
+      carousel.next();
+    };
+
+    $scope.prev = function(){
+      carousel.prev();
+    };
+    
   });

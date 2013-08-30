@@ -38,6 +38,7 @@ app.configure(function(){
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
   app.get('/rooms', function(req, res){
+    console.log("*********** rooms were requested!!!!");
     res.send(rooms);
   });
   app.get('/room/:room', function(req, res){
@@ -189,15 +190,17 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('question:upVote', function(data){
-    var room = data.room;
-    var request = data.request;
-    socket.broadcast.to(room).emit('question:upVoted', request);
+    var room = data.user.room;
+    rooms[room].questions[data.key].question.upvotes++;
+    rooms[room].karma[data.user.name]++;
+    socket.broadcast.to(room).emit('question:upVoted', data);
   });
 
   socket.on('question:downVote', function(data){
-    var room = data.room;
-    var request = data.request;
-    socket.broadcast.to(room).emit('question:downVoted', request);
+    var room = data.user.room;
+    rooms[room].questions[data.key].question.upvotes--;
+    rooms[room].karma[data.user.name]++;
+    socket.broadcast.to(room).emit('question:downVoted', data);
   });
 
   socket.on('broadcast:leave', function(data){
@@ -212,14 +215,14 @@ app.io.sockets.on('connection', function(socket){
     socket.leave(room);
   });
   socket.on('question:new', function(data){
-    console.log(data);
     var user = data.user;
     var room = user.room;
     var question = new Question(data.question);
     var key = randomKey();
-    rooms[room].questions[key] = question;
-    socket.to(room).emit('question:update', {key: key, question: question});
-    socket.broadcast.to(room).emit('question:update', {key: key, question: question});
+    rooms[room].karma[user.name] = rooms[room].karma[user.name] || 0;
+    rooms[room].questions[key] = {key: key, question: question, user: user};
+    socket.to(room).emit('question:update', rooms[room].questions[key]);
+    socket.broadcast.to(room).emit('question:update', rooms[room].questions[key]);
   });
 
   // Do we need this?
@@ -236,8 +239,11 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:closeRequest', function(data) {
     try{
       var user = data.talker;
+      console.log('user', user);
       var roomName = data.room;
+      console.log('roomName', roomName);
       var clientId = rooms[roomName].talkRequests[user.id]
+      console.log('clientId', clientId);
       app.io.sockets.sockets[clientId].emit('new:closeRequest');
     } catch(e){
       console.log("broadcast:closeRequest", e);
@@ -256,6 +262,7 @@ app.io.sockets.on('connection', function(socket){
     }
     socket.leave(room);
     socket.broadcast.to(room).emit('new:leaveRoom', user);
+    console.log('someone just left the room!');
   });
 });
 
@@ -267,6 +274,7 @@ var Room = function(socketId){
   this.adminSocketId = socketId;
   this.socketIds = {};
   this.sessionId = '';
+  this.karma = {};
 };
 
 var Question = function(message){

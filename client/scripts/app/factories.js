@@ -60,8 +60,9 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
   var pcConstraints = {'optional': [{'DtlsSrtpKeyAgreement': true}]};
   var sdpConstraints = {'mandatory': {'OfferToReceiveAudio':true, 'OfferToReceiveVideo': true}};
   var turnExists;
-  var remoteAudio = $document[0].getElementById('remoteAudio');
-  var remoteVideo = $document[0].getElementById('remoteVideo');
+  var adminLocalStream;
+  var remoteAudio;
+  var remoteVideo;
 
   var sendMessage = function(message){
     console.log('Sending message: ', message);
@@ -121,15 +122,14 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
   };
 
   var handleRemoteStreamAdded = function(event) {
-    console.log('************************************************remote stream added.');
-    console.log('THIS LINE OF CODE ALSO FUCKING RUNSS!!!!!!!!')
-    console.log('THIS IS USER.get()', User.get());
-    console.log('WHY DOESNT THIS SHIT WORK?!')
-    console.log('DOES THE USERS MEDIA TYPE EQUAL VVIDEO???', User.get().mediaType === 'video');
+    if (socketService.isAdmin) {
+      remoteAudio = $document[0].getElementById('remoteAudio');
+      remoteVideo = $document[0].getElementById('remoteVideo');
+    }
     var type = (User.get().mediaType === 'video' ? remoteVideo : remoteAudio);
-
     console.log('*********************************************type of media being set!', type);
-    type = remoteVideo;
+    var localVideo = document.querySelector('#remoteVideo');
+    adminLocalStream = event.stream;
     attachMediaStream(type, event.stream);
     socketService.remoteStream = event.stream;
   };
@@ -242,6 +242,7 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
     handleRemoteHangup: handleRemoteHangup,
     sendMessage: sendMessage,
     stop: stop,
+    adminLocalStream: adminLocalStream,
     maybeStart: function() {
       console.log('maybe start is running on admin side');
       console.log('i am admin: ', socketService.isAdmin);

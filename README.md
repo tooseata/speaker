@@ -53,12 +53,17 @@ The e2e tests require the server to be started and also one or more browsers ope
 ### Continuous testing
 You can have grunt (karma) continuously watch for file changes and automatically run all the tests on every change, without rebuilding the distribution files.  This can make the test run faster when you are doing test driven development and don't need to actually run the application itself.
 
-* `cd app`
-* Run `grunt test-watch`.
-* Open one or more browsers and point them to [http://localhost:8080/__test/].
-* Each time a file changes the tests will be run against each browser.
+We use Jasmine for testing.
 
-### Initial Seed
-* Yeoman used to scaffold out seed Angular app with Bower, NPM, and Grunt.
+###### Commands:
+``` grunt phantom ```
 
+Starts local server on port 3000, continually runs tests with PhantomJS, a a headless browser. Open one or more browsers and point them to [http://localhost:8080/__test/]. Phantom is useful for certain types of tasks, but isn't compatible with WebRTC. Outputs to command line.
 
+Edit ```logLevel``` inside karm.conf.js to ```LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG``` for varying degrees of feedback.
+
+``` grunt chrome ```
+Similar to above, but in a new instance of Chrome that includes a debugger inside the dev tools panel.
+
+Great examples of tests in the repo for Ch. 4 of the Angular O'Reilly book:
+[https://github.com/shyamseshadri/angularjs-book/tree/master/chapter4/guthub/test/spec]
