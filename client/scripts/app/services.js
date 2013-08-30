@@ -6,7 +6,7 @@ app.service('User', function(){
     name:'',
     room:'',
     mediaType:'',
-    karma: 0
+    karma: 0,
     browserProfile: {}
   };
   return {
