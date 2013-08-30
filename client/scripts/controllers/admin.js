@@ -39,7 +39,6 @@ angular.module('speakerApp')
       $location.path('/listen/');
     };
     var addUser = function(talkRequests, user){
-      debugger;
       var i = 0;
       while (talkRequests[i] && talkRequests[i].karma > user.karma){
         i++;
@@ -52,7 +51,6 @@ angular.module('speakerApp')
     };
 
     socket.on('new:talkRequest', function (user) {
-      debugger;
       Room.addTalkRequest(user);
       addUser($scope.talkRequests, user);
       // socket.emit('broadcast:clientIsChannelReady'); // Cut out. No listner  
