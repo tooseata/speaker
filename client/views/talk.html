@@ -45,12 +45,14 @@
               </div>
           </div>
         </div>
+        <button ng-click="next()" class="btn btn-large btn-block btn-primary" type="button">Go to Questions</button>
         </div> <!-- Hero Close -->
       </span>
       <span class="quetionPage">
         <div class="hero-unit">
           <questions ng-controller="QuestionsCtrl"></questions>
-        </div>
+          <button ng-click="prev()" class="btn btn-large btn-block btn-primary" type="button">Return to Talk</button>
+        </div> <!-- Hero Close -->
       </span>
     </div>
 </div>

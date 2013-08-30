@@ -5,7 +5,8 @@ app.service('User', function(){
     type:'',
     name:'',
     room:'',
-    mediaType:''
+    mediaType:'',
+    browserProfile: {}
   };
   return {
     get: function(){
@@ -25,6 +26,10 @@ app.service('User', function(){
     },
     set: function(userObj){
       user = userObj;
+    },
+    setProfile: function(type, value){
+      var userFeature = type + '';
+      user.browserProfile[userFeature] = value;
     },
     kill: function(){
       user.type = '';
@@ -121,6 +126,7 @@ app.service('Session', function($http, $location, User, Room, socket){
     }
   };
 });
+
 var countMembers = function(members){
   var count = 0;
   _.each(members, function(){
@@ -128,3 +134,5 @@ var countMembers = function(members){
   });
   return count;
 };
+
+

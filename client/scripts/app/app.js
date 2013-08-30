@@ -2,7 +2,7 @@
 
 var app = angular.module('speakerApp', ['ui.validate', 'ngCookies']);
 
-app.config(function ($routeProvider, $httpProvider) {
+  app.config(function ($routeProvider, $httpProvider) {
 
     $routeProvider
       .when('/', {
@@ -32,6 +32,10 @@ app.config(function ($routeProvider, $httpProvider) {
       .when('/questions', {
         templateUrl: 'views/questions.html',
         controller: 'QuestionsCtrl'
+      })
+      .when('/browsersupport', {
+        templateUrl: 'views/browsersupport.html',
+        controller: 'BrowserSupport'
       })
       .otherwise({
         redirectTo: '/'

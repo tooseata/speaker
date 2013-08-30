@@ -349,4 +349,13 @@ angular.module('speakerApp')
     }
     var carousel = new Carousel('#transistion-screen');
     carousel.init();
+
+    $scope.next = function(){
+      carousel.next();
+    };
+
+    $scope.prev = function(){
+      carousel.prev();
+    };
+    
   });
