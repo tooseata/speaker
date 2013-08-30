@@ -5,11 +5,11 @@ body {
 }
 
 .hero-unit {
-  margin: 60px 0;
+  margin: 0px 0;
   text-align: center;
   background-color: #eee;
   border-radius: 6px;
-  padding: 60px;
+  padding: 30px;
   font-size: 18px;
   font-weight: 200;
   line-height: 30px;
@@ -176,6 +176,10 @@ animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final ite
 .hideMedia{visibility: hidden}
 
 /*talk Page CSS*/
+
+ul.thumbnails{
+    list-style: none;
+}
 
 #transistion-screen{
   min-height: 100%;

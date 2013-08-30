@@ -7,13 +7,23 @@ app.directive('questions', function(){
     restrict: 'E',
     require: 'ng-controller',
     template: '<div class="hero-unit">\
-                <div id="questions_list">\
+                <div style="questions_list">\
                   <h3>Questions</h3>\
-                  <div ng-repeat="request in questions">\
-                    <div ng-click=vote(request) ng-class="{true: "upVoted", false: "downVoted"}[upVoted[request.key]]">\
-                      <label>{{request.user.name}}</label><p>{{request.question.message}}</p><h6>{{request.question.upvotes}}</h6>\
-                    </div>\
-                  </div>\
+                  <ul class="thumbnails">\
+                    <li class="span5 clearfix" ng-repeat="request in questions">\
+                      <div class="thumbnail clearfix">\
+                        <div class="caption" class="pull-left">\
+                          <a class="btn btn-primary icon  pull-right" ng-click=vote(request) ng-class="{true: "upVoted", false: "downVoted"}[upVoted[request.key]]">Vote <span class="badge badge-success">{{request.question.upvotes}}</span></a>\
+                          <h3>\
+                            {{request.user.name}}\
+                          </h3>\
+                          <h4>\
+                            <p>Quetion:{{request.question.message}}</p>\
+                          </h4>\
+                        </div>\
+                      </div>\
+                    </li>\
+                  </ul>\
                 </div>\
                 <form>\
                   <input type="text" ng-model="question" maxLength="100" placeholder="Questions?"></input>\
