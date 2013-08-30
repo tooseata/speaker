@@ -62,26 +62,17 @@ angular.module('speakerApp')
 
     var sessionId = $scope.user.sessionId;
     var token = $scope.user.token;
+
+    var sessionConnectedHandler = function(event) {
+      // Subscribe to the stream
+      session.subscribe(event.streams[0], 'remoteVideo');
+    };
+
     // Initialize session, set up event listeners, and connect
     var session = TB.initSession(sessionId);
     session.addEventListener('sessionConnected', sessionConnectedHandler);
     session.connect(apiKey, token);
-    function sessionConnectedHandler(event) {
-      // Subscribe to streams that were in the session when we connected
-      subscribeToStreams(event.streams);
-    }
 
-    function subscribeToStreams(streams) {
-      for (var i = 0; i < streams.length; i++) {
-        // Create the div to put the subscriber element in to
-        var div = document.createElement('div');
-        div.setAttribute('id', 'stream' + streams[i].streamId);
-        document.body.appendChild(div);
-
-        // Subscribe to the stream
-        session.subscribe(streams[i], div.id);
-      }
-    }
     // $window.onbeforeunload = function(e) {
     //   WebRtcService.stop();
     //   WebRtcService.sendMessage('bye');

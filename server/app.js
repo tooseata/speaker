@@ -38,7 +38,6 @@ app.configure(function(){
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
   app.get('/rooms', function(req, res){
-    console.log("*********** rooms were requested!!!!");
     res.send(rooms);
   });
   app.get('/room/:room', function(req, res){
@@ -157,7 +156,6 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:joinRoom', function(data){
-    console.log(data);
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
