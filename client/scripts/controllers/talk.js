@@ -14,6 +14,7 @@ angular.module('speakerApp')
     $scope.localstream;
     $scope.pendingRequest = false;
     $scope.liveAudioRequest = false;
+    $scope.updateMessage = 'Hello.'; // TUHIN! CHANGE THIS APPROPRIATELY!
     var localVideo;
 
 
@@ -45,7 +46,7 @@ angular.module('speakerApp')
 
     socket.on('new:queueIsClosed', function(user) {
       $scope.canTalk = false;
-      window.alert('The admin is not accepting talk requests right now.', user);
+      $scope.updateMessage = 'The admin is not accepting talk requests right now.';
     });
 
     // Event to notify the client that the admin closed their connection 
@@ -93,6 +94,7 @@ angular.module('speakerApp')
 
       var onVideoStream = function(stream) {
         socket.emit('broadcast:talkRequest', $scope.user);
+        $scope.updateMessage = 'what upppp.';
         $scope.sentVideoRequest = true;
         $scope.pendingRequest = true;
         $scope.localstream = stream;
