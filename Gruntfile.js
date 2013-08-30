@@ -260,7 +260,7 @@ module.exports = function (grunt) {
       ]
     },
     karma: {
-      chromeUnit: {
+      chrome: {
         configFile: 'karma.conf.js',
         browsers: ['Chrome']
         // singleRun: false,
@@ -353,21 +353,19 @@ module.exports = function (grunt) {
     ]);
   });
 
-  grunt.registerTask('test', [
+  grunt.registerTask('chrome', [
     'clean:server',
     'express:dev',
     // 'connect:test',
-    'karma:chromeUnit'
+    'karma:chrome'
   ]);
 
   // run ```grunt phantom``` to use PhantomJS instead of Chrome debugger
   grunt.registerTask('phantom', [
     'clean:server',
-    'concurrent:phantom',
-    // 'karma:phantomUnit'
-    // 'watch'
-    // 'express:dev',
-    // 'connect:test',
+    'express',
+    'karma:phantomUnit',
+    'watch'
   ]);
 
   grunt.registerTask('build', [
