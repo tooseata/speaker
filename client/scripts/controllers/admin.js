@@ -4,7 +4,7 @@ angular.module('speakerApp')
   .controller('AdminCtrl', function ($scope, $location, User, Session, Room, socket, $http, socketService) {
     // Scope
     Session.userRoom($scope);
-    $scope.talkRequests = Room.get().talkRequests;
+    $scope.talkRequests = Room.getTalkRequests();
     $scope.memberCount = Room.get().memberCount;
     $scope.user = User.get();
     $scope.queueStatus = true;

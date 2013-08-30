@@ -5,7 +5,8 @@ app.service('User', function(){
     type:'',
     name:'',
     room:'',
-    mediaType:''
+    mediaType:'',
+    karma: 0
   };
   return {
     get: function(){
@@ -31,6 +32,7 @@ app.service('User', function(){
       user.name = '';
       user.room = '';
       user.mediaType = '';
+      user.karma = 0;
     }
   };
 });
@@ -56,6 +58,13 @@ app.service('Room', function() {
     },
     getTalker: function() {
       return room.talker;
+    },
+    getTalkRequests: function(){
+      var requests = [];
+      _.each(talkRequests, function(value){
+        requests.push(value);
+      });
+      return requests;
     }
   };
 });
