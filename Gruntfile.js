@@ -35,20 +35,23 @@ module.exports = function (grunt) {
     yeoman: yeomanConfig,
     watch: {
       test: {
-        files: ['{,*/}*.js'],
-        tasks: ['test']
-      },
-      livereload: {
+        files: ['**/*.js'],
+        tasks: ['express:dev'],
         options: {
-          livereload: LIVERELOAD_PORT
-        },
-        files: [
-          '<%= yeoman.app %>/{,*/}*.html',
-          '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-          '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-          '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
-        ]
-      }
+          nospawn: true
+        }
+      },
+      // livereload: {
+      //   options: {
+      //     livereload: LIVERELOAD_PORT
+      //   },
+      //   files: [
+      //     '<%= yeoman.app %>/{,*/}*.html',
+      //     '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
+      //     '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
+      //     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
+      //   ]
+      // }
     },
     connect: {
       options: {
@@ -244,8 +247,13 @@ module.exports = function (grunt) {
           logConcurrentOutput: true
         }
       },
+      phantom: {
+        tasks: ['karma:phantomUnit','watch'],
+        options: {
+          logConcurrentOutput: true
+        }
+      },
       dist: [
-        'coffee',
         'imagemin',
         'svgmin',
         'htmlmin'
@@ -355,9 +363,11 @@ module.exports = function (grunt) {
   // run ```grunt phantom``` to use PhantomJS instead of Chrome debugger
   grunt.registerTask('phantom', [
     'clean:server',
-    'express:dev',
+    'concurrent:phantom',
+    // 'karma:phantomUnit'
+    // 'watch'
+    // 'express:dev',
     // 'connect:test',
-    'karma:phantomUnit'
   ]);
 
   grunt.registerTask('build', [

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <testsuites>
-  <testsuite name="PhantomJS 1.9.1 (Mac OS X)" package="unit" timestamp="2013-08-29T19:09:42" id="0" hostname="MathBook Pro" tests="1" errors="0" failures="0" time="0.006">
+  <testsuite name="PhantomJS 1.9.1 (Mac OS X)" package="unit" timestamp="2013-08-29T19:22:55" id="0" hostname="MathBook Pro" tests="1" errors="0" failures="0" time="0.006">
     <properties>
       <property name="browser.fullName" value="Mozilla/5.0 (Macintosh; Intel Mac OS X) AppleWebKit/534.34 (KHTML, like Gecko) PhantomJS/1.9.1 Safari/534.34"/>
     </properties>
