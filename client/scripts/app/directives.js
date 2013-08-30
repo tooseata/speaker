@@ -14,12 +14,10 @@ app.directive('questions', function(){
                       <div class="thumbnail clearfix">\
                         <div class="caption" class="pull-left">\
                           <a class="btn btn-primary icon  pull-right" ng-click=vote(request) ng-class="{true: "upVoted", false: "downVoted"}[upVoted[request.key]]">Vote <span class="badge badge-success">{{request.question.upvotes}}</span></a>\
-                          <h3>\
-                            {{request.user.name}}\
-                          </h3>\
-                          <h4>\
-                            <p>Quetion:{{request.question.message}}</p>\
-                          </h4>\
+                          <div class="pull-left">\
+                            <p>Quetion: {{request.question.message}}</p>\
+                            <p>Name: {{request.user.name}}</p>\
+                          </div>\
                         </div>\
                       </div>\
                     </li>\
