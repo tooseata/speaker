@@ -33,6 +33,9 @@ footer a:hover {
 .push {
     height: 50px;
 }
+.push2 {
+    height: 25%;
+}
 
 .lead.nexa-light{
     font-family: nexa_lightregular;
@@ -44,15 +47,63 @@ footer a:hover {
     font-family: nexa_boldregular;
 }
 
-.textLink{
+.textLink-adminCreate{
     font-family: arial;
     font-size: 16px;
     color: #6b5140;
+    margin-top:10px;
+    margin-top: 10px;
 }
 
+.textLink-adminCreate a{
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.textLink-adminCreate a:hover{
+  text-decoration: none;
+}
 
 h1#logo{
   padding-top: 20px;
+}
+
+input#room.enterRoomFieldHome{
+    border: 1px solid #ccc;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    -moz-box-shadow: 2px 2px 3px #666;
+    -webkit-box-shadow: 2px 2px 3px #666;
+    box-shadow: 2px 2px 3px #666;
+    color:#236068;
+    font-size:arial;
+    font-style: italic;
+    font-size: 17px;
+    padding: 10px 15px;
+    outline: 0;
+    -webkit-appearance: none;
+}
+
+input#room.enterRoomFieldHome:focus {
+    border-color: #6b5140;
+}
+
+.landingJoinButton{
+  font-family: nexa_lightregular;
+  color: #ffffff;
+  background-color: #236068;
+  border-color: none;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  padding: 15px 18px;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+.landingJoinButton:hover{
+  background-color: #51989c;
 }
 
 /*fonts*/
@@ -333,4 +384,29 @@ ul.thumbnails{
   overflow: hidden;
   -webkit-transform-style: preserve-3d;
   -webkit-transform: translate3d(0,0,0);
+}
+
+::-webkit-input-placeholder {
+color:#707070;
+font-size:arial;
+font-style: italic;
+font-size: 17px;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+color:#707070;
+font-size:arial;
+font-style: italic;
+font-size: 17px;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+color:#707070;
+font-size:arial;
+font-style: italic;
+font-size: 17px;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+color:#707070;
+font-size:arial;
+font-style: italic;
+font-size: 17px;
 }
