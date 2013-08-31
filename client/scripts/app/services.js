@@ -7,6 +7,8 @@ app.service('User', function($http){
     room:'',
     mediaType:'',
     karma: 0,
+    sessionId: '',
+    token: '',
     browserProfile: {}
   };
   return {
@@ -24,6 +26,12 @@ app.service('User', function($http){
     },
     setType: function(type){
       user.type = type;
+    },
+    setSessionId: function(string) {
+      user.sessionId = string;
+    },
+    setToken: function(string) {
+      user.token = string;
     },
     set: function(userObj){
       user = userObj;
@@ -84,7 +92,13 @@ app.service('Room', function() {
     },
     addTalkRequest: function(user){
       room.talkRequests[user.name] = user;
+    },
+    kill: function(){
+      room.talkRequests = {};
+      room.memberCount = 0;
+      room.talker = '';
     }
+
   };
 });
 app.service('Session', function($http, $location, User, Room, socket){

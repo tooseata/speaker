@@ -17,6 +17,7 @@ angular.module('speakerApp')
     }).error(function(){
       console.log('error on room collection.');
     });
+
     $scope.update = function(userName, room) {
       User.setType('user');
       User.setName(userName);

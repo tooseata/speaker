@@ -23,6 +23,7 @@ angular.module('speakerApp')
     $scope.closeRoom = function(){
       socket.emit('broadcast:closeRoom', $scope.user);
       User.kill();
+      Room.kill();
       $scope.user = User.get();
       $http.post('/session', JSON.stringify($scope.user));
       $location.path('/');
@@ -31,11 +32,6 @@ angular.module('speakerApp')
       // socket broadcast to set talker on server
       Room.setMemberCount($scope.memberCount);
       Room.setTalker(name);
-      var data = {
-        talker: Room.getTalker(),
-        roomName: $scope.user.room
-      }
-      socket.emit('broadcast:setTalker', data);
       $location.path('/listen/');
     };
     var addUser = function(talkRequests, user){
@@ -49,6 +45,12 @@ angular.module('speakerApp')
     var toggleQueueOnServer = function(bool){
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
+
+    socket.on('new:adminOpentokInfo', function(data) {
+      User.setSessionId(data.sessionId);
+      User.setToken(data.token);
+      $scope.user = User.get();
+    });
 
     socket.on('new:talkRequest', function (user) {
       Room.addTalkRequest(user);
