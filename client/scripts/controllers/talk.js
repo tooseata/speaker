@@ -14,7 +14,7 @@ angular.module('speakerApp')
     $scope.localstream;
     $scope.pendingRequest = false;
     $scope.liveAudioRequest = false;
-    $scope.updateMessage = 'Welcome to Speaker! <br> Submit and vote on questions below, then request the floor when you\'re ready!'; // TUHIN! CHANGE THIS APPROPRIATELY!
+    $scope.updateMessage = 'Welcome to Speaker! Submit and upvote questions below, then when you\'re ready, request the floor.'; // TUHIN! CHANGE THIS APPROPRIATELY!
     var localVideo;
 
     socket.on('new:clientIsChannelReady', function(){
@@ -23,7 +23,6 @@ angular.module('speakerApp')
     });
 
     $scope.leaveRoom = function(){
-      alert('TODO:: we need an "are you sure?" here');
       socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
