@@ -145,7 +145,8 @@ app.io.sockets.on('connection', function(socket){
       var user = data;
       var room = user.room;
       var roomAdminSocketId = rooms[room].adminSocketId;
-      app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest');
+      console.log(roomAdminSocketId);
+      app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
       delete rooms[room].talkRequests[user.name];
       delete rooms[room].talkRequests[user.id];
     } catch(e){
@@ -164,6 +165,7 @@ app.io.sockets.on('connection', function(socket){
     var room = user.room;
     var isMobile = user.isMobile;
     if (user.type === 'admin'){
+      console.log('******* AN ADMIN HAS JOINED THE ROOM ********')
       socket.set("userAdmin", user, function(){
         rooms[room] = new Room(socket.id);
         opentok.createSession('192.241.231.123', function(result) {
@@ -197,6 +199,7 @@ app.io.sockets.on('connection', function(socket){
     console.log('rooms', rooms);
     console.log('room', room);
     console.log('adminSocketId', rooms[room].adminSocketId);
+    console.log("isMobile", isMobile)
     if (isMobile) {
       app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream');
     } else {
