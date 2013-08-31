@@ -166,7 +166,7 @@ app.io.sockets.on('connection', function(socket){
     if (user.type === 'admin'){
       socket.set("userAdmin", user, function(){
         rooms[room] = new Room(socket.id);
-        opentok.createSession('10.0.1.29', function(result) {
+        opentok.createSession('192.241.231.123', function(result) {
           var token = opentok.generateToken({session_id:result});
           rooms[room].sessionId = result;
           var roomAdminSocketId = rooms[room].adminSocketId;
