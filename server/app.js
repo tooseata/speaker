@@ -162,6 +162,7 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:joinRoom', function(data){
     var user = data;
     var room = user.room;
+    var isMobile = user.isMobile;
     if (user.type === 'admin'){
       socket.set("userAdmin", user, function(){
         rooms[room] = new Room(socket.id);
@@ -176,6 +177,7 @@ app.io.sockets.on('connection', function(socket){
        socket.set("userClient", user, function(){
         rooms[room].members[user.name] = true;
         rooms[room]["socketIds"][user.name] = socket.id;
+        rooms[room].isMobile[user.name] = true;
         socket.broadcast.to(room).emit('new:joinRoom');
       });
     }
@@ -192,6 +194,9 @@ app.io.sockets.on('connection', function(socket){
     var isMobile = rooms[room]["isMobile"][data.talker];
     var talkerSocketId = rooms[room]["socketIds"][data.talker];
     var adminSocketId = rooms[room].adminSocketId;
+    console.log('rooms', rooms);
+    console.log('room', room);
+    console.log('adminSocketId', rooms[room].adminSocketId);
     if (isMobile) {
       app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream');
     } else {

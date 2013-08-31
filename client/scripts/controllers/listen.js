@@ -53,10 +53,10 @@ angular.module('speakerApp')
     });
 
     socket.on('new:beginWebRTC', function() {
-      beginWebRTC();
+      $scope.beginWebRTC();
     });
 
-    var beginWebRTC = function() {
+    $scope.beginWebRTC = function() {
       socket.on('message', function(message) {
         console.log('Received message: ', message);
         if (message.type === 'offer') {
@@ -84,4 +84,6 @@ angular.module('speakerApp')
       // WebRtcService.requestTurn('https://computeengineondemand.appspot.com/turn?username=41784574&key=4080218913');
       WebRtcService.maybeStart();
     };
+
+    socket.emit('broadcast:setTalker', {talker: Room.getTalker(), roomName: User.get().room});
   });
