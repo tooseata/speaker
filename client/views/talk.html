@@ -2,19 +2,20 @@
     <div class="slideScreen">
       <span class="quetionPage">
         <div class="hero-unit">
-          <div class="span1">
-            <a class="btn btn-primary" ng-click="leaveRoom()">
-              <i class="icon-pencil icon-white"></i>
-              <span><strong>Close</strong></span>
-            </a>
-          </div>
+          <div class="topControlBar">
+            <div class="span1 pull-left">
+              <a class="btn btn-primary" ng-click="leaveRoom()">
+                <span><strong>Leave Room</strong></span>
+              </a>
+            </div>
+        </div>
           <div id="message_center">
             <div id="alert_message_container">
-              <h3 id="alert_message">{{updateMessage}}</h3>
+              <p id="alert_message">{{updateMessage}}</p>
             </div>
           </div>
           <questions ng-controller="QuestionsCtrl"></questions>
-          <button ng-click="next()" class="btn btn-large btn-block btn-primary" type="button">Request to Speak</button>
+          <button ng-click="next()" class="btn btn-large btn-block btn-primary talkNavbtn" type="button">Request to Speak</button>
         </div> <!-- Hero Close -->
       </span>
       <span class="talkPage">
@@ -59,7 +60,7 @@
               </div>
           </div>
         </div>
-        <button ng-click="prev()" class="btn btn-large btn-block btn-primary" type="button">Ask a Questions</button>
+        <button ng-click="prev()" class="btn btn-large btn-block btn-primary talkNavbtn" type="button">Ask a Questions</button>
         </div> <!-- Hero Close -->
       </span>
     </div>

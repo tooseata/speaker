@@ -196,13 +196,23 @@ input#room.enterRoomFieldHome:focus {
   height: 130px;
 }
 #message_center{
-    min-width: 300px;
-    max-width: 800px;
-    height: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: white;
-    border: 2px solid;
+  min-width: 300px;
+  max-width: 100%;
+  min-height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+  background-color: #3f999c;
+  border: 2px #ccc solid;
+}
+
+video#localVideo{
+  width:321px;
+}
+
+.talkNavbtn{
+  margin-top: 20px;
+  float: left;
 }
 
 #question_container{
@@ -341,6 +351,18 @@ animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final ite
 
 /*talk Page CSS*/
 
+.topControlBar{
+  text-align: left;
+  margin-bottom: 15px;
+  width: auto;
+  height: 20px;
+}
+
+.topControlBar .btn{
+  padding: 0px 10px;
+}
+
+.topControlBar
 ul.thumbnails{
     list-style: none;
 }
