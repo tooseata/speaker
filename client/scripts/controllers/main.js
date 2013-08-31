@@ -7,6 +7,17 @@ angular.module('speakerApp')
     Session.isAdmin();
     Session.existingRooms($scope);
     $scope.user = User.get();
+    $scope.badInput = false;
+    $scope.validateRoom = function(room){
+      return $scope.existingRooms[room];
+    };
+    $scope.join = function(room){
+      if ($scope.validateRoom(room)){
+        $location.path('/join/' + room);
+      } else {
+        $scope.badInput = true;
+      }
+    }
     var browserCheck = function () {
       if(Modernizr.getusermedia){
         $location.path('/');

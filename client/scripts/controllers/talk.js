@@ -14,10 +14,8 @@ angular.module('speakerApp')
     $scope.localstream;
     $scope.pendingRequest = false;
     $scope.liveAudioRequest = false;
-    $scope.updateMessage = 'Hello.'; // TUHIN! CHANGE THIS APPROPRIATELY!
+    $scope.updateMessage = 'Welcome to Speaker! Submit and upvote questions below, then when you\'re ready, request the floor.'; // TUHIN! CHANGE THIS APPROPRIATELY!
     var localVideo;
-
-
 
     socket.on('new:clientIsChannelReady', function(){
       console.log('received client is channel ready from server');
@@ -25,7 +23,6 @@ angular.module('speakerApp')
     });
 
     $scope.leaveRoom = function(){
-      alert('TODO:: we need an "are you sure?" here');
       socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
@@ -46,7 +43,8 @@ angular.module('speakerApp')
 
     socket.on('new:queueIsClosed', function(user) {
       $scope.canTalk = false;
-      $scope.updateMessage = 'The admin is not accepting talk requests right now.';
+      alert('The presenter has not yet opened the floor for questions. Go back and vote!');
+      $scope.updateMessage = 'The presenter has not yet opened the floor for questions. Keep an eye up here and we\'ll keep you posted.';
     });
 
     // Event to notify the client that the admin closed their connection 
@@ -54,6 +52,7 @@ angular.module('speakerApp')
       console.log('NEW CLOSE REQUEST');
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
+      $scope.updateMessage = 'Thanks for asking your question!';
       $scope.localstream.stop();
       $('#localVideo').hide();
     });
