@@ -386,8 +386,7 @@ animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final ite
   padding: 0px 10px;
 }
 
-.topControlBar
-ul.thumbnails{
+#questions_list ul.thumbnails{
     list-style: none;
 }
 
