@@ -92,7 +92,13 @@ app.service('Room', function() {
     },
     addTalkRequest: function(user){
       room.talkRequests[user.name] = user;
+    },
+    kill: function(){
+      room.talkRequests = {};
+      room.memberCount = 0;
+      room.talker = '';
     }
+
   };
 });
 app.service('Session', function($http, $location, User, Room, socket){
@@ -147,7 +153,7 @@ app.service('Session', function($http, $location, User, Room, socket){
       $http.get('/session').success(function(data){
         if (data.type === 'admin'){
           User.set(data);
-          window.confirm('You are the admin of a room, would you like to return to it?') ? $location.path('/admin') : socket.emit('broadcast:closeRoom', User.get());
+          // window.confirm('You are the admin of a room, would you like to return to it?') ? $location.path('/admin') : socket.emit('broadcast:closeRoom', User.get());
         }
       });
     },

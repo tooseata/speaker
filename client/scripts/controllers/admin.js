@@ -23,6 +23,7 @@ angular.module('speakerApp')
     $scope.closeRoom = function(){
       socket.emit('broadcast:closeRoom', $scope.user);
       User.kill();
+      Room.kill();
       $scope.user = User.get();
       $http.post('/session', JSON.stringify($scope.user));
       $location.path('/');
