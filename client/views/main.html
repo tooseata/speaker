@@ -1,6 +1,10 @@
 <div class="hero-unit">
   <h1>Speaker</h1>
   <p class="lead">so much speaking</p>
+  <form name="joinForm" novalidate class="joinForm">
+    Room: <input name="room" id="room" type='text' required ng-model='room' ui-validate="{notOccupied : 'validateRoom($value)' }"><br>
+    <span ng-show="joinForm.room.$error.notOccupied">This room hasn't been made yet!</span><br>
+  </form>
   <a class="btn btn-large btn-success" href="#/join">Join Room</a>
   <a class="btn btn-large btn-success" href="#/create">Create Room</a>
 </div>

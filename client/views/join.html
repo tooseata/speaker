@@ -1,8 +1,6 @@
 <div class="hero-unit">
   <h2>Join a room</h2>
   <form name="joinForm" novalidate class="joinForm">
-    Room: <input name="room" id="room" type='text' required ng-model='room' ui-validate="{notOccupied : 'validateRoom($value)' }"><br>
-    <span ng-show="joinForm.room.$error.notOccupied">This room hasn't been made yet!</span><br>
     Name: <input name="name" id="userName" type='text' required ng-model='name' ui-validate="{inUse : 'validateName($value)' }"><br>
     <span ng-show="joinForm.name.$error.inUse">This name is already in use!</span><br>
     <button ng-disabled="joinForm.name.$error.inUse || joinForm.room.$error.notOccupied" class="btn btn-large btn-success" ng-click="update(name, room)">Join Room</button>
