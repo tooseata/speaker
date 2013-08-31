@@ -46,6 +46,11 @@ angular.module('speakerApp')
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
 
+    socket.on('new:cancelTalkRequest', function (username) {
+      Room.removeTalkRequest(username);
+      $scope.talkRequests = Room.getTalkRequests();
+    });
+
     socket.on('new:adminOpentokInfo', function(data) {
       User.setSessionId(data.sessionId);
       User.setToken(data.token);

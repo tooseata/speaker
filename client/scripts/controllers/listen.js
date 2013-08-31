@@ -36,10 +36,6 @@ angular.module('speakerApp')
       $location.path('/admin/');
     };
 
-    socket.on('new:cancelTalkRequest', function () {
-      $scope.closeRequest();
-    });
-
     socket.on('new:openTokStreaming', function() {
       $scope.talkerIsMobile = true;
       var sessionConnectedHandler = function(event) {
@@ -50,6 +46,15 @@ angular.module('speakerApp')
       var session = TB.initSession(sessionId);
       session.addEventListener('sessionConnected', sessionConnectedHandler);
       session.connect(apiKey, token);
+    });
+
+    socket.on('new:cancelTalkRequest', function (username) {
+      if (username === Room.get().talker) {
+        $scope.closeRequest();
+      } else {
+        Room.removeTalkRequest(username);
+        $scope.talkRequests = Room.getTalkRequests();
+      }
     });
 
     socket.on('new:beginWebRTC', function() {
