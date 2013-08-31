@@ -3,18 +3,16 @@
 var express = require('express'),
   http = require('http'),
   path = require('path'),
-  io = require('socket.io');
-  //OpenTok = require('../node_modules/opentok');
+  io = require('socket.io'),
+  OpenTok = require('../node_modules/opentok');
 
 var app = express();
 var rooms = {};
 var sessions = {};
 
-// var key = '39238222';
-// var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
-// var opentok = new OpenTok.OpenTokSDK(key, secret);
-// var sessionId,
-//     token;
+var key = '39238222';
+var secret = '9398fdcde52632420695daf73895fe7c0e55153c';
+var opentok = new OpenTok.OpenTokSDK(key, secret);
 
 var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -40,7 +38,6 @@ app.configure(function(){
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
   app.get('/rooms', function(req, res){
-    console.log("*********** rooms were requested!!!!");
     res.send(rooms);
   });
   app.get('/room/:room', function(req, res){
@@ -68,13 +65,11 @@ app.configure(function(){
     rooms[req.body.room].isOpen = req.body.bool;
     res.send(200);
   });
-  app.get('/testPost', function(req, res) {
-    var location = '10.0.1.29';
-    opentok.createSession(location, function(result) {
-      sessionId = result;
-      token = opentok.generateToken({session_id:sessionId});
-      res.send(JSON.stringify({sessionId: sessionId, token: token}));
-    });
+  app.get('/opentok/:room', function(req, res) {
+    var room = req.params.room;
+    var sessionId = rooms[room].sessionId;
+    var token = opentok.generateToken({session_id:sessionId});
+    res.send(JSON.stringify({sessionId: sessionId, token: token}));
   });
   // app.get('/', function (req, res) {
   //   res.sendFile(__dirname + './../client/index.html');
@@ -90,7 +85,7 @@ app.configure( 'production', function() {
 } );
 
 var getCookieId = function(string){
-  return string.slice(string.indexOf('=') + 1);
+  // return string.slice(string.indexOf('=') + 1);
 };
 
 
@@ -158,19 +153,30 @@ app.io.sockets.on('connection', function(socket){
     }
   });
 
+  socket.on('broadcast:openTokStreaming', function(user) {
+    var room = user.room;
+    var socketId = rooms[room].adminSocketId;
+    app.io.sockets.sockets[socketId].emit('new:openTokStreaming');
+  });
+
   socket.on('broadcast:joinRoom', function(data){
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
       socket.set("userAdmin", user, function(){
         rooms[room] = new Room(socket.id);
+        opentok.createSession('10.0.1.29', function(result) {
+          var token = opentok.generateToken({session_id:result});
+          rooms[room].sessionId = result;
+          var roomAdminSocketId = rooms[room].adminSocketId;
+          app.io.sockets.sockets[roomAdminSocketId].emit('new:adminOpentokInfo', {sessionId: result, token: token});
+        });
       });
     } else {
-      console.log('SET SOCKET WITH CLIENT USER INFO', user);
-      socket.set("userClient", user, function(){
+       socket.set("userClient", user, function(){
         rooms[room].members[user.name] = true;
         rooms[room]["socketIds"][user.name] = socket.id;
-        socket.broadcast.to(room).emit('new:joinRoom', user);
+        socket.broadcast.to(room).emit('new:joinRoom');
       });
     }
     socket.join(room);
@@ -183,6 +189,14 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:setTalker', function(data) {
     var room = data.roomName;
     rooms[room]["talker"] = data.talker;
+    var isMobile = rooms[room]["isMobile"][data.talker];
+    var talkerSocketId = rooms[room]["socketIds"][data.talker];
+    var adminSocketId = rooms[room].adminSocketId;
+    if (isMobile) {
+      app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream');
+    } else {
+      app.io.sockets.sockets[adminSocketId].emit('new:beginWebRTC');
+    }
   });
 
   socket.on('question:upVote', function(data){
@@ -266,6 +280,9 @@ var Room = function(socketId){
   this.isOpen = true;
   this.adminSocketId = socketId;
   this.socketIds = {};
+  this.sessionId = '';
+  this.karma = {};
+  this.isMobile = {};
 };
 
 var Question = function(message){
