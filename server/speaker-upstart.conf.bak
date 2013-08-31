@@ -1,10 +1,36 @@
 #!upstart
+
 author      "CS/KG/TC/MM/ZZ"
 description "speaker"
-setuid      "nonrootuser"
-start on (local-filesystems and net-device-up IFACE=eth0)
+
+#setuid      "nonrootuser"
+#start on (local-filesystems and net-device-up IFACE=eth0)
+#stop on shutdown
+#respawn
+#console log
+#env NODE_ENV=production
+#exec /usr/bin/node ~/speaker/server/app.js
+
+########
+
+start on startup
 stop on shutdown
 respawn
-console log
-env NODE_ENV=production
-exec /usr/bin/node /speaker/server/app.js
+
+script
+    echo $$ > /var/run/nginx.pid
+    exec sudo -u admin sh -c "/home/admin/.nvm/v0.10.17/bin/node /home/admin/speaker/server/app.js >> /var/log/speaker.log 2>&1"
+end script
+
+pre-start script
+    # Date format same as (new Date()).toISOString() for consistency
+    echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting" >> /var/log/speaker.log
+end script
+
+pre-stop script
+    rm /var/run/yourprogram.pid
+    echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping" >> /var/log/speaker.log
+end script
+
+
+
