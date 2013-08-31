@@ -48,8 +48,13 @@ angular.module('speakerApp')
       session.connect(apiKey, token);
     });
 
-    socket.on('new:cancelTalkRequest', function () {
-      $scope.closeRequest();
+    socket.on('new:cancelTalkRequest', function (username) {
+      if (username === Room.get().talker) {
+        $scope.closeRequest();
+      } else {
+        Room.removeTalkRequest(username);
+        $scope.talkRequests = Room.getTalkRequests();
+      }
     });
 
     socket.on('new:beginWebRTC', function() {
