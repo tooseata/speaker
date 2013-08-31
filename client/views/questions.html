@@ -1,14 +1,21 @@
-<div class="hero-unit">
+<div id="question_container">
   <div id="questions_list">
-    <h3>Questions</h3>
-    <div ng-repeat="request in questions">
-      <div ng-click=vote(request) ng-class="{true: 'upVoted', false: 'downVoted'}[upVoted[request.key]]">
-        <label>{{request.user.name}}</label><p>{{request.question.message}}</p><h6>{{request.question.upvotes}}</h6>
-      </div>
-    </div>
+    <ul class="thumbnails">
+      <li class="span5 clearfix" ng-repeat="request in questions">
+        <div class="thumbnail clearfix">
+          <div class="caption" class="pull-left">
+            <a class="btn btn-primary icon  pull-right" ng-click=vote(request) ng-class="{true: "upVoted", false: "downVoted"}[upVoted[request.key]]">Vote <span class="badge badge-success">{{request.question.upvotes}}</span></a>
+            <div class="pull-left">
+              <div class="span2 inliney"><h3 class="message_user_name">{{request.user.name}}</h3></div>
+              <div class="span3 inliney"><p class="message_message">{{request.question.message}}</p></div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
-  <form ng-show="!canTalk || !sentQuestion">
-    <input type='text' ng-model="question" placeholder="Questions?"></input>
-    <a class="btn btn-small btn-success" ng-click="submitQuestion()">Submit</a>
+  <form>
+    <input class="form-control" id="message_input"type="text" ng-model="question" maxLength="200" placeholder="Questions?"></input>
+    <button id="message_submit" ng-click="submitQuestion()">Submit</button>
   </form>
 </div>

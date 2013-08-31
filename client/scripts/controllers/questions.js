@@ -10,6 +10,7 @@ angular.module('speakerApp')
 
     $scope.submitQuestion = function(){
       socket.emit('question:new', {question: $scope.question, user: $scope.user});
+      $scope.question = '';
     };
     $scope.vote = function(request){
       if ($scope.upVoted[request.key]){

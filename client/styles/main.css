@@ -43,6 +43,30 @@ footer a:hover {
     color:#6b5140;
 }
 
+.message_user_name{
+  display: inline;
+}
+.message_message{
+  display: inline;
+  margin-left: 50px;
+}
+.inliney{
+  display: inline;
+}
+.user_name_container{
+  width:100px;
+}
+#message_input{
+  height:70px;
+}
+#message_submit{
+  background-color: transparent;
+  border: none !important;
+  font-size:0px;
+
+}
+.message_container{
+}
 .nexa-bold{
     font-family: nexa_boldregular;
 }
