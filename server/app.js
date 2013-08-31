@@ -177,7 +177,7 @@ app.io.sockets.on('connection', function(socket){
        socket.set("userClient", user, function(){
         rooms[room].members[user.name] = true;
         rooms[room]["socketIds"][user.name] = socket.id;
-        rooms[room].isMobile[user.name] = true;
+        rooms[room].isMobile[user.name] = isMobile;
         socket.broadcast.to(room).emit('new:joinRoom');
       });
     }
@@ -251,10 +251,11 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:closeRequest', function(data) {
     try{
       var user = data.talker;
-      console.log('user', user);
+      // console.log('userId', user.id);
+      // console.log('user', user);
       var roomName = data.room;
-      console.log('roomName', roomName);
-      var clientId = rooms[roomName].talkRequests[user.id]
+      // console.log('roomName', roomName);
+      var clientId = rooms[roomName].socketIds[user];
       console.log('clientId', clientId);
       app.io.sockets.sockets[clientId].emit('new:closeRequest');
     } catch(e){

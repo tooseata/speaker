@@ -44,7 +44,7 @@ angular.module('speakerApp')
       $scope.talkerIsMobile = true;
       var sessionConnectedHandler = function(event) {
         // Subscribe to the stream
-        session.subscribe(event.streams[0], 'media');
+        session.subscribe(event.streams[0], 'opentok');
       };
       // Initialize session, set up event listeners, and connect
       var session = TB.initSession(sessionId);
