@@ -6,6 +6,7 @@
     Room: <input name="room" id="room" type='text' required ng-model='room' ui-validate="{notOccupied : 'validateRoom($value)' }"><br>
     <span ng-show="joinForm.room.$error.notOccupied">This room hasn't been made yet!</span><br>
     </form>
+    <a class="btn btn-large btn-success" href="#/join">Join Room</a>
     <p class="textLink"> Want to create a room? <a href="#/create">Click Here</a></p>
   </div>
   <div class="push"><!--//--></div>
