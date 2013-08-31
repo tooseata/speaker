@@ -47,14 +47,24 @@ body {
   height: 130px;
 }
 #message_center{
-    min-width: 400px;
+    min-width: 300px;
     max-width: 800px;
-    height: 150px;
+    height: 100px;
     margin-left: auto;
     margin-right: auto;
     background-color: white;
     border: 2px solid;
 }
+
+/*#alert_message_container{
+      position: absolute;
+  top: 150px;
+  bottom: 0;
+  background: #999;
+  width: 100%;
+  overflow-y: auto;
+  border-top: 4px solid #2E2E2E;
+}*/
 #user-count {
     display: inline-block;
     position: relative;
