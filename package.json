@@ -1,7 +1,9 @@
 {
   "name": "speaker",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
+  "author": "CS/KG/TC/MM/ZZ",
+  "description": "WebRTC presentation app for mobile devices",
   "dependencies": {
     "express": "3.3.5",
     "socket.io": "~0.9.14",
