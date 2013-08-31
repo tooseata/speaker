@@ -139,7 +139,7 @@ app.service('Session', function($http, $location, User, Room, socket){
       $http.get('/session').success(function(data){
         if (data.type === 'admin'){
           User.set(data);
-          window.confirm('You are the admin of a room, would you like to return to it?') ? $location.path('/admin') : socket.emit('broadcast:closeRoom', User.get());
+          // window.confirm('You are the admin of a room, would you like to return to it?') ? $location.path('/admin') : socket.emit('broadcast:closeRoom', User.get());
         }
       });
     },

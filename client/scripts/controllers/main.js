@@ -1,12 +1,11 @@
 'use strict';
-
 angular.module('speakerApp')
-  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User) {
+  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http) {
     if (!$cookies.session){
       $cookies.session = Math.floor(Math.random() * 100000000000000).toString();
     }
     Session.isAdmin();
-
+    Session.existingRooms($scope);
     $scope.user = User.get();
     var browserCheck = function () {
       if(Modernizr.getusermedia){
@@ -47,6 +46,10 @@ angular.module('speakerApp')
       // Subscribe to streams that were in the session when we connected
       subscribeToStreams(event.streams);
     }
+
+    $scope.validateRoom = function(room){
+      return $scope.existingRooms[room];
+    };
 
     function subscribeToStreams(streams) {
       for (var i = 0; i < streams.length; i++) {
