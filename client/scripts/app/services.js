@@ -1,6 +1,6 @@
 'use strict';
 
-app.service('User', function(){
+app.service('User', function($http){
   var user = {
     type:'',
     name:'',
@@ -40,10 +40,12 @@ app.service('User', function(){
       user.karma = 0;
     },
     incrementKarma: function(){
-
+      user.karma++;
+      $http.post('/session', JSON.stringify(user));
     },
     decrementKarma: function(){
-      
+      user.karma--;
+      $http.post('/session', JSON.stringify(user));
     }
   };
 });
@@ -117,6 +119,11 @@ app.service('Session', function($http, $location, User, Room, socket){
               if (room.talkRequests){
                 Room.setTalkRequests(room.talkRequests);
                 scope.talkRequests = Room.getTalkRequests();
+                scope.talkRequests.sort(function(a,b){
+                  if (a.karma > b.karma){return 1;}
+                  else if (a.karma < b.karma){return -1;}
+                  else {return 0;}
+                });
                 scope.memberCount = countMembers(room.members);
               } else {
                 $location.path('/');
