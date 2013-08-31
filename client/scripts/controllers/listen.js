@@ -22,9 +22,7 @@ angular.module('speakerApp')
       socket.emit('broadcast:closeRequest', {"talker": $scope.talker + "", "room": $scope.room + ""});
       WebRtcService.stop();
       WebRtcService.sendMessage('bye');
-      var talkRequests = Room.get().talkRequests;
-      delete talkRequests[$scope.talker];
-      Room.setTalkRequests(talkRequests);
+      Room.removeTalkRequest($scope.talker);
       $location.path('/admin/');
     };
 

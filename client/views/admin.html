@@ -11,5 +11,5 @@
     <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="openQueue()">Open Queue</a>
     <a class="btn btn-large btn-danger" ng-switch-when="true" ng-click="closeQueue()">Close Queue</a>
   </div>
-  <button ng-repeat="user in talkRequests" ng-show="queueStatus" ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}}</button>
+  <button ng-repeat="user in talkRequests" ng-show="queueStatus" ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}} {{user.karma}}</button>
 </div>

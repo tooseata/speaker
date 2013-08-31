@@ -5,11 +5,11 @@ body {
 }
 
 .hero-unit {
-  margin: 60px 0;
+  margin: 0px 0;
   text-align: center;
   background-color: #eee;
   border-radius: 6px;
-  padding: 60px;
+  padding: 30px;
   font-size: 18px;
   font-weight: 200;
   line-height: 30px;
@@ -47,13 +47,28 @@ body {
   height: 130px;
 }
 #message_center{
-    min-width: 400px;
+    min-width: 300px;
     max-width: 800px;
-    height: 150px;
+    height: 100px;
     margin-left: auto;
     margin-right: auto;
     background-color: white;
     border: 2px solid;
+}
+
+#question_container{
+    margin: 0px 0;
+    text-align: center;
+    background-color: #eee;
+    border-radius: 6px;
+}
+#questions_list{ 
+  background: #ccc;
+  width: 100%;
+  height: 400px;
+  overflow-y: auto;
+  border-top: 2px solid #fff;
+  padding: 30px 30px 30px 0px;;
 }
 #user-count {
     display: inline-block;
@@ -176,6 +191,10 @@ animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final ite
 .hideMedia{visibility: hidden}
 
 /*talk Page CSS*/
+
+ul.thumbnails{
+    list-style: none;
+}
 
 #transistion-screen{
   min-height: 100%;

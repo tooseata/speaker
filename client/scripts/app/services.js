@@ -1,11 +1,12 @@
 'use strict';
 
-app.service('User', function(){
+app.service('User', function($http){
   var user = {
     type:'',
     name:'',
     room:'',
     mediaType:'',
+    karma: 0,
     browserProfile: {}
   };
   return {
@@ -36,6 +37,15 @@ app.service('User', function(){
       user.name = '';
       user.room = '';
       user.mediaType = '';
+      user.karma = 0;
+    },
+    incrementKarma: function(){
+      user.karma++;
+      $http.post('/session', JSON.stringify(user));
+    },
+    decrementKarma: function(){
+      user.karma--;
+      $http.post('/session', JSON.stringify(user));
     }
   };
 });
@@ -61,6 +71,19 @@ app.service('Room', function() {
     },
     getTalker: function() {
       return room.talker;
+    },
+    getTalkRequests: function(){
+      var requests = [];
+      _.each(room.talkRequests, function(value){
+        requests.push(value);
+      });
+      return requests;
+    },
+    removeTalkRequest: function(name){
+      delete room.talkRequests[name];
+    },
+    addTalkRequest: function(user){
+      room.talkRequests[user.name] = user;
     }
   };
 });
@@ -94,7 +117,13 @@ app.service('Session', function($http, $location, User, Room, socket){
             socket.emit('broadcast:join', scope.user);
             $http.get('/room/' + scope.user.room + '').success(function(room){
               if (room.talkRequests){
-                scope.talkRequests = room.talkRequests;
+                Room.setTalkRequests(room.talkRequests);
+                scope.talkRequests = Room.getTalkRequests();
+                scope.talkRequests.sort(function(a,b){
+                  if (a.karma > b.karma){return 1;}
+                  else if (a.karma < b.karma){return -1;}
+                  else {return 0;}
+                });
                 scope.memberCount = countMembers(room.members);
               } else {
                 $location.path('/');

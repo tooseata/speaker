@@ -1,18 +1,27 @@
 <div id="transistion-screen">
     <div class="slideScreen">
-      <span class="talkPage">
+      <span class="quetionPage">
         <div class="hero-unit">
+          <div class="span1">
+            <a class="btn btn-primary" ng-click="leaveRoom()">
+              <i class="icon-pencil icon-white"></i>
+              <span><strong>Close</strong></span>
+            </a>
+          </div>
           <div id="message_center">
             <div id="alert_message_container">
               <h3 id="alert_message">{{updateMessage}}</h3>
             </div>
           </div>
-          <div id="leave_room_container">
-            <a class="btn btn-small btn-success" ng-click="leaveRoom()">Leave this room</a>
-          </div>
+          <questions ng-controller="QuestionsCtrl"></questions>
+          <button ng-click="next()" class="btn btn-large btn-block btn-primary" type="button">Request to Speak</button>
+        </div> <!-- Hero Close -->
+      </span>
+      <span class="talkPage">
+        <div class="hero-unit">
           <div id='media' ng-class="{true:'showMedia', false:'hideMedia', '':'hidden'}[sentRequest]">
             <!-- <p><canvas style="background: white;"></canvas></p> -->
-            <video id='localVideo' autoplay></video>
+            <video id='localVideo' autoplay muted></video>
           </div>
 
           <!-- ng-show="canTalk && sentQuestion" -->
@@ -50,13 +59,7 @@
               </div>
           </div>
         </div>
-        <button ng-click="next()" class="btn btn-large btn-block btn-primary" type="button">Go to Questions</button>
-        </div> <!-- Hero Close -->
-      </span>
-      <span class="quetionPage">
-        <div class="hero-unit">
-          <questions ng-controller="QuestionsCtrl"></questions>
-          <button ng-click="prev()" class="btn btn-large btn-block btn-primary" type="button">Return to Talk</button>
+        <button ng-click="prev()" class="btn btn-large btn-block btn-primary" type="button">Ask a Questions</button>
         </div> <!-- Hero Close -->
       </span>
     </div>
