@@ -110,7 +110,7 @@ app.io.sockets.on('connection', function(socket){
           var talker = rooms[room]['talker']
           var talkerSocketId = rooms[room]["socketIds"][talker];
           var adminRoomSource = socket.store.data.userAdmin.room;
-          // Send the message to the correct client that made the request 
+          // Send the message to the correct client that made the request
           app.io.sockets.sockets[talkerSocketId].emit('message', message);
         } catch(e){
             console.log("message", e);
@@ -120,7 +120,7 @@ app.io.sockets.on('connection', function(socket){
         console.log("message", e);
     }
   });
-  
+
   socket.on('broadcast:talkRequest', function(data){
     try{
       var user = data;

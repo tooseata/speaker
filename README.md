@@ -13,7 +13,6 @@ presentations and media on your mobile device via WebRTC
 * If you don't have Bower/Grunt command line tool installed, on the command line do: ```npm install -g yo grunt-cli bower```
 * Then, ```npm install``` in root dir.
 * ```npm start``` starts server. You can then view the app at http://localhost:3000
-* ```grunt watch``` runs testing on port 9000.
 
 _If you have port conflicts when running grunt try the following:_
 * ```lsof -iTCP:35729``` lists all processes using port 35729 (the default LiveReload port)
@@ -62,7 +61,23 @@ Starts local server on port 3000, continually runs tests with PhantomJS, a a hea
 Edit ```logLevel``` inside karm.conf.js to ```LOG_DISABLE || LOG_ERROR || LOG_WARN || LOG_INFO || LOG_DEBUG``` for varying degrees of feedback.
 
 ``` grunt chrome ```
-Similar to above, but in a new instance of Chrome that includes a debugger inside the dev tools panel.
+
+Similar to above, but opens a new instance of Chrome that includes a debugger inside the dev tools panel.
 
 Great examples of tests in the repo for Ch. 4 of the Angular O'Reilly book:
 [https://github.com/shyamseshadri/angularjs-book/tree/master/chapter4/guthub/test/spec]
+
+#### (Site)[http://192.241.231.123/] on Digital Ocean
+```sudo start speaker```
+```monit -d 60 -c /etc/monit/monitrc```
+Start nginx (serves static content, protects Node app from malformed/evil HTTP requests) ```sudo nginx```
+<!-- ``` sudo /etc/init.d/nginx status ``` to check nginx status -->
+``` ps aux | grep nginx ``` checks running nginx processes
+``` netstat -tulpn ``` check which port nginx is running
+
+Forever persists the Node app ```forever start speaker/server/app.js```
+
+Upstart - deamonizes Node. Configuration file located at /etc/init/speaker.conf
+
+grep Upstart job list for nginx:
+```initctl list | grep nginx```

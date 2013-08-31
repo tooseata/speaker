@@ -1,0 +1,72 @@
+upstream speaker {
+        server 127.0.0.1:3000;
+}
+
+server {
+        listen  80;
+        server_name domain1.com;
+        index   index.html;
+        access_log /var/log/nginx/domain1.access.log;
+
+        location /  {
+                proxy_pass http://127.0.0.1:3000/;
+                proxy_set_header X-Real-IP  $remote_addr;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-NginX-Proxy true;
+                proxy_redirect off;
+
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+         }
+}
+
+
+###########################
+
+events {
+    worker_connections  1024;
+}
+
+http {
+
+
+        upstream speaker {
+                server localhost:3000;
+        }
+
+
+        server {
+                listen  80;
+                root ~/speaker/client;
+                server_name domain1.com;
+                index   index.html;
+
+                location /  {
+                        proxy_pass http://localhost:3000/;
+                        proxy_set_header X-Real-IP  $remote_addr;
+                        proxy_set_header X-Forwarded-For $remote_addr;
+                        proxy_set_header Host $http_host;
+                        proxy_set_header X-NginX-Proxy true;
+                        proxy_redirect off;
+
+                        proxy_http_version 1.1;
+                        proxy_set_header Upgrade $http_upgrade;
+                        proxy_set_header Connection "upgrade";
+                        proxy_set_header Host $host;
+                }
+
+                location /nginx_status {
+                        # Turn on stats
+                        stub_status on;
+                        access_log   off;
+                        # only allow access from 192.241.231.123 #
+                        allow 192.241.231.123;
+                        deny all;
+                }
+        }
+}
+
+
+

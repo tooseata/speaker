@@ -6,9 +6,9 @@ app.directive('questions', function(){
   return {
     restrict: 'E',
     require: 'ng-controller',
-    template: '<div class="hero-unit">\
-                <div style="questions_list">\
-                  <h3>Questions</h3>\
+    template: '<div id="question_container">\
+                <h3>Questions</h3>\
+                <div id="questions_list">\
                   <ul class="thumbnails">\
                     <li class="span5 clearfix" ng-repeat="request in questions">\
                       <div class="thumbnail clearfix">\

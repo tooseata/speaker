@@ -1,12 +1,11 @@
 'use strict';
-
 angular.module('speakerApp')
-  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User) {
+  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http) {
     if (!$cookies.session){
       $cookies.session = Math.floor(Math.random() * 100000000000000).toString();
     }
     Session.isAdmin();
-
+    Session.existingRooms($scope);
     $scope.user = User.get();
     var browserCheck = function () {
       if(Modernizr.getusermedia){
