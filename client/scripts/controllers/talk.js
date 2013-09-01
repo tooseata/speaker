@@ -18,7 +18,6 @@ angular.module('speakerApp')
     var localVideo;
 
     socket.on('new:clientIsChannelReady', function(){
-      console.log('received client is channel ready from server');
       socketService.isChannelReady = true;
     });
 
@@ -27,10 +26,6 @@ angular.module('speakerApp')
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
       $scope.sentRequest = false;
       $location.path('/');
-    };
-
-    $scope.logTest  = function(){
-      console.log('You touched Me');
     };
 
     $scope.cancelTalkRequest = function(){
@@ -47,9 +42,8 @@ angular.module('speakerApp')
       $scope.updateMessage = 'The presenter has not yet opened the floor for questions. Keep an eye up here and we\'ll keep you posted.';
     });
 
-    // Event to notify the client that the admin closed their connection 
+    // Event to notify the client that the admin closed their connection
     socket.on('new:closeRequest', function(){
-      console.log('NEW CLOSE REQUEST');
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
       $scope.updateMessage = 'Thanks for asking your question!';
@@ -73,7 +67,6 @@ angular.module('speakerApp')
     };
 
     $scope.requestVideo = function() {
-      console.log('trigger video');
       WebRtcService.sendMessage({type: 'media type', value: 'video'});
       localVideo = document.querySelector('#localVideo');
       // if (localVideo.src)
@@ -191,17 +184,14 @@ angular.module('speakerApp')
     socket.on('message', function(message) {
       console.log('Received message: ', message);
       if (message.type === 'offer') {
-        console.log('received offer on client side');
         WebRtcService.maybeStart();
         socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
         doAnswer();
       } else if (message.type === 'answer' && socketService.isStarted) {
         socketService.pc.setRemoteDescription(new RTCSessionDescription(message));
       } else if (message.type === 'candidate' && socketService.isStarted) {
-        console.log('I am running from client RTCIceCandidate - candidate');
         var candidate = new RTCIceCandidate({sdpMLineIndex:message.label,
           candidate:message.candidate});
-        console.log('Candidate on Client: ', candidate);
         socketService.pc.addIceCandidate(candidate);
       } else if (message === 'bye' && socketService.isStarted) {
         WebRtcService.handleRemoteHangup();
@@ -209,7 +199,6 @@ angular.module('speakerApp')
     });
 
     var doAnswer = function() {
-      console.log('Sending answer to peer.');
       $scope.liveAudioRequest = true;
       $scope.pendingRequest = false;
       socketService.pc.createAnswer(WebRtcService.setLocalAndSendMessage, null, WebRtcService.sdpConstraints);
@@ -358,5 +347,5 @@ angular.module('speakerApp')
     $scope.prev = function(){
       carousel.prev();
     };
-    
+
   });
