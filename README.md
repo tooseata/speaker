@@ -19,14 +19,14 @@ presentations and media on your mobile device via WebRTC
 
 Forever keeps Node app running. Check with: ```$ forever list```
 
-Check that Node is running: ```$ ps axl | grep node```
+Verify that Node is running: ```$ ps axl | grep node```
 
-Upstart deamonizes Nginx e.g. turns it into background process. Config file located at /etc/init/nginx.conf
+Upstart deamonizes Nginx e.g. turns it into background process. Config file located at ```/etc/init/nginx.conf```
 
 Verify that Nginx daemon is running: ```$ initctl list | grep nginx```
 
-Verifies that nginx is running: ```$ ps aux | grep nginx ```
+Verifies Nginx process is running: ```$ ps aux | grep nginx ```
 
-Check which port nginx is on: ```$ netstat -tulpn ```
+Check which port Nginx is on: ```$ netstat -tulpn ```
 
 Monit for monitoring: ```$ monit -d 60 -c /etc/monit/monitrc```
