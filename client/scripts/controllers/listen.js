@@ -5,7 +5,6 @@ angular.module('speakerApp')
   .controller('ListenCtrl', function ($scope, $location, User, Session, Room, socketService, socket, $http, WebRtcService, $window) {
 
     $scope.user = User.get();
-    var apiKey = "39238222";
     var sessionId = $scope.user.sessionId;
     var token = $scope.user.token;
     $scope.talker = Room.get().talker;
@@ -36,7 +35,7 @@ angular.module('speakerApp')
       $location.path('/admin/');
     };
 
-    socket.on('new:openTokStreaming', function() {
+    socket.on('new:openTokStreaming', function(apiKey) {
       $scope.talkerIsMobile = true;
       var sessionConnectedHandler = function(event) {
         // Subscribe to the stream
