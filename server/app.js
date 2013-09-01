@@ -158,7 +158,7 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:openTokStreaming', function(user) {
     var room = user.room;
     var socketId = rooms[room].adminSocketId;
-    app.io.sockets.sockets[socketId].emit('new:openTokStreaming');
+    app.io.sockets.sockets[socketId].emit('new:openTokStreaming', keys.key);
   });
 
   socket.on('broadcast:joinRoom', function(data){
