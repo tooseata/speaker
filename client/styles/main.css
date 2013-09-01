@@ -36,13 +36,14 @@ footer a:hover {
 .push2 {
     height: 25%;
 }
-
 .lead.nexa-light{
     font-family: nexa_lightregular;
     font-size:20px;
     color:#6b5140;
 }
-
+.question {
+  background-color: white;
+}
 .message_user_name{
   display: inline;
 }
@@ -65,18 +66,41 @@ footer a:hover {
   font-size:0px;
 
 }
-.message_container{
-}
+
 .nexa-bold{
     font-family: nexa_boldregular;
 }
 
+table.questions-table td:first-child { 
+  border-left: 1px solid gray;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+table.questions-table td:last-child { 
+  border-right: 1px solid gray;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+table.questions-table td{
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+table.questions-table tr:first-child td{
+  border-top: 1px solid gray !important;
+}
+.user-name-cell {
+  font-size: 20px;
+  width: 151px;
+}
+.upvote-cell {
+  font-size: 20px;
+  width: 70px;
+}
 .textLink-adminCreate{
     font-family: arial;
     font-size: 16px;
     color: #6b5140;
     margin-top:10px;
-    margin-top: 10px;
 }
 
 .textLink-adminCreate a{
@@ -251,7 +275,7 @@ video#localVideo{
   height: 400px;
   overflow-y: auto;
   border-top: 2px solid #fff;
-  padding: 30px 30px 30px 0px;;
+  padding: 30px;
 }
 #user-count {
     display: inline-block;
