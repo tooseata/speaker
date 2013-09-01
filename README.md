@@ -67,24 +67,20 @@ Similar to above, but opens a new instance of Chrome that includes a debugger in
 Great examples of tests in the repo for Ch. 4 of the Angular O'Reilly book:
 [https://github.com/shyamseshadri/angularjs-book/tree/master/chapter4/guthub/test/spec]
 
-#### [Site](http://192.241.231.123/) on Digital Ocean
+### [Site](http://192.241.231.123/) on Digital Ocean
 
-Forever keeps Node app running. Check with
-```forever list```
+Forever keeps Node app running. Check with: ```$ forever list```
 
-Check that Node is running:
-```ps axl | grep node```
+Check that Node is running: ```$ ps axl | grep node```
 
 Upstart deamonizes Nginx e.g. turns it into background process. Config file located at /etc/init/nginx.conf
 
-verify that Nginx daemon is running:
+Verify that Nginx daemon is running: ```$ initctl list | grep nginx```
 
-```initctl list | grep nginx```
+Verifies that nginx is running: ```$ ps aux | grep nginx ```
 
-``` netstat -tulpn ``` check which port nginx is running
-
-``` ps aux | grep nginx ``` checks running nginx processes
+Check which port nginx is on: ```$ netstat -tulpn ```
 
 Monit for monitoring
 
-```monit -d 60 -c /etc/monit/monitrc```
+```$ monit -d 60 -c /etc/monit/monitrc```
