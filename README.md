@@ -76,6 +76,7 @@ Start nginx (serves static content, protects Node app from malformed/evil HTTP r
 ``` netstat -tulpn ``` check which port nginx is running
 
 Forever persists the Node app ```forever start speaker/server/app.js```
+```ps axl | grep node```
 
 Upstart - deamonizes Node e.g. turns it into background process. Job file located at /etc/init/speaker.conf
 
