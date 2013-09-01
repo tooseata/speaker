@@ -77,7 +77,10 @@ Start nginx (serves static content, protects Node app from malformed/evil HTTP r
 
 Forever persists the Node app ```forever start speaker/server/app.js```
 
-Upstart - deamonizes Node. Configuration file located at /etc/init/speaker.conf
+Upstart - deamonizes Node e.g. turns it into background process. Job file located at /etc/init/speaker.conf
 
-grep Upstart job list for nginx:
+verify that Upstart job is running:
+```initctl list | grep INSERTPROCESSFILENAMEHERE```
+
+check if nginx is running:
 ```initctl list | grep nginx```
