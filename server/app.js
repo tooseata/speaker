@@ -12,6 +12,7 @@ var rooms = {};
 var sessions = {};
 var opentok = new OpenTok.OpenTokSDK(keys.key, keys.secret);
 
+// handles CORS
 var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
@@ -27,14 +28,20 @@ var allowCrossDomain = function(req, res, next) {
 };
 
 app.configure(function(){
+  app.use(express.favicon(path.join( __dirname, './../client/favicon.ico')));
   app.use(allowCrossDomain);
   app.set( 'views', path.join( __dirname, './../client' ) );
   app.set( 'view engine', 'html' );
   app.set('port', process.env.PORT || 3000);
   app.use(express.bodyParser());
-  app.use(express.favicon(path.join( __dirname, './../client/favicon.ico')));
   app.use( express.static( path.join( __dirname, './../client' ) ) );
   app.use(app.router);
+  app.use(function(err, req, res, next){
+    if(!err) return next();
+    console.error(err.stack);
+    res.send('error!');
+  });
+
   app.get('/rooms', function(req, res){
     res.send(rooms);
   });
@@ -89,7 +96,6 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 }));
 
 app.io.sockets.on('connection', function(socket){
-
   socket.on('message', function(message) {
     try{
       if (socket.store.data.userClient){

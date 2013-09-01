@@ -67,21 +67,24 @@ Similar to above, but opens a new instance of Chrome that includes a debugger in
 Great examples of tests in the repo for Ch. 4 of the Angular O'Reilly book:
 [https://github.com/shyamseshadri/angularjs-book/tree/master/chapter4/guthub/test/spec]
 
-#### (Site)[http://192.241.231.123/] on Digital Ocean
-```sudo start speaker```
-```monit -d 60 -c /etc/monit/monitrc```
-Start nginx (serves static content, protects Node app from malformed/evil HTTP requests) ```sudo nginx```
-<!-- ``` sudo /etc/init.d/nginx status ``` to check nginx status -->
-``` ps aux | grep nginx ``` checks running nginx processes
-``` netstat -tulpn ``` check which port nginx is running
+#### [Site](http://192.241.231.123/) on Digital Ocean
 
-Forever persists the Node app ```forever start speaker/server/app.js```
+Forever keeps Node app running. Check with
+```forever list```
+
+Check that Node is running:
 ```ps axl | grep node```
 
-Upstart - deamonizes Node e.g. turns it into background process. Job file located at /etc/init/speaker.conf
+Upstart deamonizes Nginx e.g. turns it into background process. Config file located at /etc/init/nginx.conf
 
-verify that Upstart job is running:
-```initctl list | grep INSERTPROCESSFILENAMEHERE```
+verify that Nginx daemon is running:
 
-check if nginx is running:
 ```initctl list | grep nginx```
+
+``` netstat -tulpn ``` check which port nginx is running
+
+``` ps aux | grep nginx ``` checks running nginx processes
+
+Monit for monitoring
+
+```monit -d 60 -c /etc/monit/monitrc```

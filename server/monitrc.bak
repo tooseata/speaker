@@ -1,0 +1,19 @@
+#!monit
+set logfile /var/log/monit.log
+
+#check process nginx with pidfile /var/run/nginx.pid
+#        start program = "start /usr/sbin/nginx"
+#        stop program = "stop /usr/sbin/nginx"
+#                if failed port 3000 protocol HTTP
+#                request /
+#                with timeout 10 seconds
+#                then restart
+#
+
+set httpd port 2812 and
+            use address 192.241.231.123  # only accept connection from localhost
+            allow 0.0.0.0/0.0.0.0        # allow localhost to connect to the server and
+            allow admin:monit            # require user 'admin' with password 'monit'
+
+
+
