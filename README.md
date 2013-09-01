@@ -11,13 +11,8 @@ presentations and media on your mobile device via WebRTC
 ## Installation
 * Clone the repository.
 * If you don't have Bower/Grunt command line tool installed, on the command line do: ```npm install -g yo grunt-cli bower```
-* Then, ```npm install``` in root dir.
+* Then, ```npm install``` and ```bower install``` in root dir.
 * ```npm start``` starts server. You can then view the app at http://localhost:3000
-
-_If you have port conflicts when running grunt try the following:_
-* ```lsof -iTCP:35729``` lists all processes using port 35729 (the default LiveReload port)
-* ```kill -9 PID#``` kills process at given ID#
-* Run grunt again.
 
 
 ### [Site](http://192.241.231.123/) on Digital Ocean
@@ -34,6 +29,4 @@ Verifies that nginx is running: ```$ ps aux | grep nginx ```
 
 Check which port nginx is on: ```$ netstat -tulpn ```
 
-Monit for monitoring
-
-```$ monit -d 60 -c /etc/monit/monitrc```
+Monit for monitoring: ```$ monit -d 60 -c /etc/monit/monitrc```
