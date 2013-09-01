@@ -28,7 +28,7 @@ angular.module('speakerApp')
         User.setProfile("webAudio", "true");
       } else {
         User.setProfile("webAudio", "false");
-      } 
+      }
       if (Modernizr.touch){
         User.setProfile("touchable", "true");
       } else{
@@ -39,4 +39,11 @@ angular.module('speakerApp')
       }
     };
     browserCheck();
+
+    var landings = [
+      'Let your audience be heard.', 'Revolutionizing Q&A.',
+      'A new kind of microphone.', 'Painless Q&A.',
+      'The world\'s first virtual microphone.', 'Let them speak.'
+    ];
+    $scope.splashPhrase = landings[Math.floor(Math.random()*(landings.length - 1))];
   });
