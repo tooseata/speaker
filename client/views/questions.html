@@ -2,8 +2,8 @@
   <div id="questions_list">
     <table class="questions-table table">
       <tr class ="question" ng-repeat="request in questions">
-        <td class="user-name-cell">{{request.user.name}}</td>
-        <td class=>{{request.question.message}}</td>
+        <td class="user-name-cell first-element" ng-show="!phone">{{request.user.name}}</td>
+        <td ng-class="phone">{{request.question.message}}</td>
         <td class="upvote-cell">
           <div>
             <b>{{request.question.upvotes}}</b>
@@ -15,7 +15,7 @@
     </table>
   </div>
   <form>
-    <input class="form-control" id="message_input"type="text" ng-model="question" maxLength="200" placeholder="Questions?"></input>
+    <input class="form-control" id="message_input"type="text" ng-model="question" maxLength="70" placeholder="Questions?"></input>
     <button id="message_submit" ng-click="submitQuestion()">Submit</button>
   </form>
 </div>
