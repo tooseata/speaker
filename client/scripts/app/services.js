@@ -38,6 +38,9 @@ app.service('User', function($http){
       user.room = '';
       user.mediaType = '';
       user.karma = 0;
+      user.sessionId = '';
+      user.token = '';
+      user.browserProfile = {};
     },
     incrementKarma: function(){
       user.karma++;
