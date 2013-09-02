@@ -14,7 +14,7 @@ angular.module('speakerApp')
     $scope.localstream;
     $scope.pendingRequest = false;
     $scope.liveAudioRequest = false;
-    $scope.updateMessage = 'Welcome to Speaker! Submit and upvote questions below, then when you\'re ready, request the floor.'; // TUHIN! CHANGE THIS APPROPRIATELY!
+    $scope.updateMessage = 'Welcome to Speaker! Submit and upvote questions below, then when you\'re ready, request the floor.';
     var localVideo;
 
     socket.on('new:clientIsChannelReady', function(){
