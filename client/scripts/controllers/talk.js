@@ -112,9 +112,11 @@ angular.module('speakerApp')
         $scope.pendingRequest = true;
         handleUserMedia(stream);
       };
+
       var onStreamError = function(e) {
         console.error('Error getting microphone', e);
       };
+
       getUserMedia({audio: true}, onStream, onStreamError);
     };
 
@@ -134,13 +136,20 @@ angular.module('speakerApp')
         socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
         var input = context.createMediaStreamSource(stream);
         var filter = context.createBiquadFilter();
+        var gainNode = context.createGainNode();
+        var analyser = context.createAnalyser();
+
         filter.frequency.value = 6600.0;
         filter.type = filter.NOTCH;
         filter.Q = 10.0;
+
         // Connect graph.
-        input.connect(filter);
-        // filter.connect(analyser);
-        // requestAnimFrame(visualize.bind(analyser));
+        input.connect(gainNode);
+        gainNode.connect(filter);
+        filter.connect(analyser);
+
+        requestAnimationFrame(visualize.bind(analyser));
+
         socket.emit('broadcast:talkRequest', $scope.user);
         $scope.sentAudioRequest = true;
         $scope.pendingRequest = true;
