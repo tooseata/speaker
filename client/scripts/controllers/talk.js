@@ -98,6 +98,7 @@ angular.module('speakerApp')
 
     $scope.checkAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
+      // $scope.localstream = stream;
       if($scope.user.browserProfile.webAudio){
         $scope.useWebAudio();
       } else{
@@ -128,9 +129,21 @@ angular.module('speakerApp')
         this._height = 480;
         this.canvas = document.querySelector('canvas');
       };
+
       var sample = new MicrophoneSample();
       var context = new webkitAudioContext();
       var analyser = context.createAnalyser();
+
+      var requestAnimFrame = (function(){
+        return  window.requestAnimationFrame       ||
+                window.webkitRequestAnimationFrame ||
+                window.mozRequestAnimationFrame    ||
+                window.oRequestAnimationFrame      ||
+                window.msRequestAnimationFrame     ||
+          function( callback ){
+          window.setTimeout(callback, 1000 / 60);
+          };
+      })();
 
       var getMicrophoneInput = function (source) {
         getUserMedia({audio: true}, onStream, onStreamError);
