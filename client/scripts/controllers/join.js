@@ -28,6 +28,6 @@ angular.module('speakerApp')
     };
 
     $scope.validateName = function(name){
-      return !$scope.existingRooms[$scope.room].members[name] && name;
+      return !$scope.existingRooms[$scope.room].members[name];
     };
   });
