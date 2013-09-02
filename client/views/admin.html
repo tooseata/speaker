@@ -13,7 +13,7 @@
   </div>
   <div id="questions_list">
     <table class="questions-table table">
-      <tr class ="question" ng-repeat="user in talkRequests">
+      <tr class ="question" ng-repeat="user in talkRequests" ng-click="fillRequest(user.name)">
         <td class='t-r-user-name first-element'>{{user.name}}</td>
         <td class="t-r-karma">
             <b>{{user.karma}}</b>
