@@ -51,12 +51,6 @@ angular.module('speakerApp')
       $scope.talkRequests = Room.getTalkRequests();
     });
 
-    socket.on('new:adminOpentokInfo', function(data) {
-      User.setSessionId(data.sessionId);
-      User.setToken(data.token);
-      $scope.user = User.get();
-    });
-
     socket.on('new:talkRequest', function (user) {
       Room.addTalkRequest(user);
       addUser($scope.talkRequests, user);
