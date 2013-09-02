@@ -3,6 +3,7 @@
       <span class="quetionPage">
         <div class="hero-unit">
           <div class="topControlBar">
+            <button ng-click="next()" class="btn btn-large btn-block btn-primary talkNavbtn" type="button">Request to Speak</button>
             <div class="span1 pull-left">
               <a class="btn btn-primary" ng-click="leaveRoom()">
                 <span><strong>Leave Room</strong></span>
@@ -15,11 +16,23 @@
             </div>
           </div>
           <questions ng-controller="QuestionsCtrl"></questions>
-          <button ng-click="next()" class="btn btn-large btn-block btn-primary talkNavbtn" type="button">Request to Speak</button>
         </div> <!-- Hero Close -->
       </span>
       <span class="talkPage">
         <div class="hero-unit">
+            <div class="topControlBar">
+              <button ng-click="prev()" class="btn btn-large btn-block btn-primary talkNavbtn" type="button">Ask a Questions</button>
+              <div class="span1 pull-left">
+                <a class="btn btn-primary" ng-click="leaveRoom()">
+                  <span><strong>Leave Room</strong></span>
+                </a>
+              </div>
+            </div>
+          <div id="message_center">
+            <div id="alert_message_container">
+              <p id="alert_message">{{updateMessage}}</p>
+          </div>
+          </div>
           <div id='media' ng-class="{true:'showMedia', false:'hideMedia', '':'hidden'}[sentRequest]">
             <!-- <p><canvas style="background: white;"></canvas></p> -->
             <video id='localVideo' autoplay muted></video>
@@ -28,7 +41,7 @@
           <!-- ng-show="canTalk && sentQuestion" -->
           <div id="request_button_container_wrapper">
             <div id="request_button_container" ng-switch on="sentAudioRequest" >
-              <div id="container_button" ng-switch-when="false" hm-tap="requestAudio()">
+              <div id="container_button" ng-switch-when="false" hm-tap="checkAudio()">
                 <div id="hole">
                   <div id="button">
                     <div id="mic"></div>
@@ -60,7 +73,6 @@
               </div>
           </div>
         </div>
-        <button ng-click="prev()" class="btn btn-large btn-block btn-primary talkNavbtn" type="button">Ask a Questions</button>
         </div> <!-- Hero Close -->
       </span>
     </div>
