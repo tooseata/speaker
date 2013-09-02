@@ -95,17 +95,10 @@ angular.module('speakerApp')
       getUserMedia(constraints, onVideoStream, onStreamError);
     };
 
-    $scope.checkAudio = function(){
+    $scope.requestAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
-      if($scope.user.browserProfile.webAudio){
-        $scope.useWebAudio();
-      } else{
-        $scope.useStreamAudio();
-      }
-    }
-
-    $scope.useStreamAudio = function(){
       var onStream = function(stream) {
+        $scope.localstream = stream;
         socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
         socket.emit('broadcast:talkRequest', $scope.user);
         $scope.sentAudioRequest = true;
@@ -116,42 +109,6 @@ angular.module('speakerApp')
         console.error('Error getting microphone', e);
       };
       getUserMedia({audio: true}, onStream, onStreamError);
-    };
-
-    $scope.useWebAudio = function(){
-      var MicrophoneSample = function() {
-        this._width = 640;
-        this._height = 480;
-      };
-      var sample = new MicrophoneSample();
-      var context = new webkitAudioContext();
-
-      var getMicrophoneInput = function (source) {
-        getUserMedia({audio: true}, onStream, onStreamError);
-      };
-
-      var onStream = function(stream) {
-        socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
-        var input = context.createMediaStreamSource(stream);
-        var filter = context.createBiquadFilter();
-        filter.frequency.value = 6600.0;
-        filter.type = filter.NOTCH;
-        filter.Q = 10.0;
-        // Connect graph.
-        input.connect(filter);
-        // filter.connect(analyser);
-        // requestAnimFrame(visualize.bind(analyser));
-        socket.emit('broadcast:talkRequest', $scope.user);
-        $scope.sentAudioRequest = true;
-        $scope.pendingRequest = true;
-        handleUserMedia(stream);
-      };
-
-      var onStreamError = function(e) {
-        console.error('Error getting microphone', e);
-      };
-
-      getMicrophoneInput(sample);
     };
 
     var handleUserMedia = function(stream, type) {
