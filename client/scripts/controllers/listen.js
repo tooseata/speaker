@@ -5,7 +5,6 @@ angular.module('speakerApp')
   .controller('ListenCtrl', function ($scope, $location, User, Session, Room, socketService, socket, $http, WebRtcService, $window) {
     $scope.user = User.get();
     $scope.talker = Room.get().talker;
-    $scope.talkerIsMobile = false;
     $scope.room = Room.get().talkRequests[$scope.talker].room;
     if ($scope.talker === ''){
       $location.path('/admin');
@@ -14,7 +13,7 @@ angular.module('speakerApp')
     Session.user($scope);
 
     $scope.closeRequest = function() {
-      if (!$scope.talkerIsMobile) {
+      if (socketService.remoteStream) {
         socketService.remoteStream.stop();
         $('#remoteVideo').hide();
         WebRtcService.stop();
@@ -29,7 +28,6 @@ angular.module('speakerApp')
       var apiKey = data.apiKey;
       var sessionId = data.sessionId;
       var token = data.token;
-      $scope.talkerIsMobile = true;
       var sessionConnectedHandler = function(event) {
         for (var i = 0; i < event.streams.length; i++) {
           session.subscribe(event.streams[i], 'opentok');
