@@ -163,9 +163,15 @@ app.io.sockets.on('connection', function(socket){
     socket.join(data.room);
   });
 
+  // Talker selected by admin
   socket.on('broadcast:setTalker', function(data) {
     var room = data.roomName;
     rooms[room]["talker"] = data.talker;
+
+    // Tell other clients a talker has been chosen
+    socket.broadcast.to(room).emit('new:talkerChosen', data.talker);
+
+    // Open an OpenTok or WebRTC connection, depending on whether or not the user isMobile
     var isMobile = rooms[room]["isMobile"][data.talker];
     var talkerSocketId = rooms[room]["socketIds"][data.talker];
     var adminSocketId = rooms[room].adminSocketId;

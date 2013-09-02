@@ -10,6 +10,7 @@ angular.module('speakerApp')
     Session.questions($scope);
 
     $scope.submitQuestion = function(){
+      console.log('omg');
       socket.emit('question:new', {question: $scope.question, user: $scope.user});
       $scope.question = '';
     };
