@@ -71,7 +71,7 @@ footer a:hover {
     font-family: nexa_boldregular;
 }
 
-table.questions-table td:first-child { 
+.first-element {
   border-left: 1px solid gray;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -90,11 +90,11 @@ table.questions-table tr:first-child td{
 }
 .user-name-cell {
   font-size: 20px;
-  width: 151px;
+  width: 100px;
 }
 .upvote-cell {
   font-size: 20px;
-  width: 70px;
+  width: 70px !important;
 }
 .textLink-adminCreate{
     font-family: arial;
