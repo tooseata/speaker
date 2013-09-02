@@ -24,7 +24,7 @@ angular.module('speakerApp')
     $scope.leaveRoom = function(){
       socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
-      $scope.sentRequest = false;
+      $scope.sentRequest = false;  
       $location.path('/');
     };
 
