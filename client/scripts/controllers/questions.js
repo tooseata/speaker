@@ -1,11 +1,12 @@
 'use.strict';
 
 angular.module('speakerApp')
-  .controller('QuestionsCtrl', function ($scope, socket, User, Session) {
+  .controller('QuestionsCtrl', function ($window, $scope, socket, User, Session) {
     Session.user($scope);
     $scope.user = User.get();
     $scope.questions = [];
     $scope.upVoted = {};
+    $scope.phone = $window.innerWidth < 520 ? 'first-element' : false;
     Session.questions($scope);
 
     $scope.submitQuestion = function(){
@@ -64,6 +65,7 @@ angular.module('speakerApp')
       $scope.upVoted[request.key] = false;
       sortQuestions();
     });
+
     var sortQuestions = function(){
       $scope.questions.sort(function(a,b){
         if (a.question.upvotes > b.question.upvotes){

@@ -11,5 +11,14 @@
     <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="openQueue()">Open Queue</a>
     <a class="btn btn-large btn-danger" ng-switch-when="true" ng-click="closeQueue()">Close Queue</a>
   </div>
-  <button ng-repeat="user in talkRequests" ng-show="queueStatus" ng-click="fillRequest(user.name)" class="btn btn-large btn-block btn-primary" type="button">{{user.name}} {{user.karma}}</button>
+  <div id="questions_list">
+    <table class="questions-table table">
+      <tr class ="question" ng-repeat="user in talkRequests" ng-click="fillRequest(user.name)">
+        <td class='t-r-user-name first-element'>{{user.name}}</td>
+        <td class="t-r-karma">
+            <b>{{user.karma}}</b>
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>

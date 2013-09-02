@@ -45,16 +45,32 @@ angular.module('speakerApp')
     var toggleQueueOnServer = function(bool){
       $http.post('/toggleQueue', JSON.stringify({room: $scope.user.room, bool: bool}));
     };
-
+    var sortTalkRequests = function(){
+      $scope.talkRequests.sort(function(a,b){
+        if (a.karma > b.karma){return -1;}
+        else if (a.karma < b.karma){return 1;}
+        else {return 0;}
+      });
+    };
+    socket.on('question:upVoted', function(data){
+      _.each($scope.talkRequests, function(value){
+        if (value.name === data.user.name){
+          value.karma++;
+        }
+      });
+      sortTalkRequests();
+    });
+    socket.on('question:downVoted', function(data){
+      _.each($scope.talkRequests, function(value){
+        if (value.name === data.user.name){
+          value.karma--;
+        }
+      });
+      sortTalkRequests();
+    });
     socket.on('new:cancelTalkRequest', function (username) {
       Room.removeTalkRequest(username);
       $scope.talkRequests = Room.getTalkRequests();
-    });
-
-    socket.on('new:adminOpentokInfo', function(data) {
-      User.setSessionId(data.sessionId);
-      User.setToken(data.token);
-      $scope.user = User.get();
     });
 
     socket.on('new:talkRequest', function (user) {

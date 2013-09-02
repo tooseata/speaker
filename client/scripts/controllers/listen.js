@@ -3,10 +3,7 @@
 angular.module('speakerApp')
 
   .controller('ListenCtrl', function ($scope, $location, User, Session, Room, socketService, socket, $http, WebRtcService, $window) {
-
     $scope.user = User.get();
-    var sessionId = $scope.user.sessionId;
-    var token = $scope.user.token;
     $scope.talker = Room.get().talker;
     $scope.talkerIsMobile = false;
     $scope.room = Room.get().talkRequests[$scope.talker].room;
@@ -14,13 +11,6 @@ angular.module('speakerApp')
       $location.path('/admin');
     }
 
-    // TODO :: Do we need these variables here?
-    // if (!$scope.talkerIsMobile) {
-    //   var pcConfig = WebRtcService.pcConfig;
-    //   var pcConstraints = WebRtcService.pcConstraints;
-    //   var sdpConstraints = WebRtcService.sdpConstraints;
-    //   var turnExists = WebRtcService.turnExists;
-    // }
     Session.user($scope);
 
     $scope.closeRequest = function() {
@@ -35,13 +25,16 @@ angular.module('speakerApp')
       $location.path('/admin/');
     };
 
-    socket.on('new:openTokStreaming', function(apiKey) {
+    socket.on('new:openTokStreaming', function(data) {
+      var apiKey = data.apiKey;
+      var sessionId = data.sessionId;
+      var token = data.token;
       $scope.talkerIsMobile = true;
       var sessionConnectedHandler = function(event) {
-        // Subscribe to the stream
-        session.subscribe(event.streams[0], 'opentok');
+        for (var i = 0; i < event.streams.length; i++) {
+          session.subscribe(event.streams[i], 'opentok');
+        }
       };
-      // Initialize session, set up event listeners, and connect
       var session = TB.initSession(sessionId);
       session.addEventListener('sessionConnected', sessionConnectedHandler);
       session.connect(apiKey, token);

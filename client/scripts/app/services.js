@@ -7,8 +7,6 @@ app.service('User', function($http){
     room:'',
     mediaType:'',
     karma: 0,
-    sessionId: '',
-    token: '',
     browserProfile: {}
   };
   return {
@@ -27,12 +25,6 @@ app.service('User', function($http){
     setType: function(type){
       user.type = type;
     },
-    setSessionId: function(string) {
-      user.sessionId = string;
-    },
-    setToken: function(string) {
-      user.token = string;
-    },
     set: function(userObj){
       user = userObj;
     },
@@ -46,6 +38,9 @@ app.service('User', function($http){
       user.room = '';
       user.mediaType = '';
       user.karma = 0;
+      user.sessionId = '';
+      user.token = '';
+      user.browserProfile = {};
     },
     incrementKarma: function(){
       user.karma++;
