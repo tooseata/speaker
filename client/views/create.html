@@ -1,8 +1,7 @@
 <div class="hero-unit">
-  <h2>Create a Room</h2>
   <form name="createForm" novalidate class="createForm" ng-controller="CreateCtrl">
-    Room: <input name="room" type="text" required ng-model="room" ui-validate="{occupied : 'validateRoom($value)' }"><br>
-    <span ng-show="createForm.room.$error.occupied">This room is occupied!</span><br>
+    <input name="room" type="text" required ng-model="room" placeholder="Room Name" ui-validate="{occupied : 'validateRoom($value)' }"><br>
+    <span ng-show="createForm.room.$error.occupied">Invalid room name, this room may be occupied.</span><br>
     <button ng-disabled="createForm.room.$error.occupied" class="btn btn-large btn-success" ng-click="update(room)">Create Room</button>
   </form>
 </div>

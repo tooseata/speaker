@@ -18,21 +18,16 @@ angular.module('speakerApp')
       console.log('error on room collection.');
     });
 
-    $scope.update = function(userName, room) {
+    $scope.update = function(userName) {
       User.setType('user');
       User.setName(userName);
       $scope.user = User.get();
-      room && User.setRoom(room);
       socket.emit('broadcast:joinRoom', $scope.user);
       $http.post('/session', JSON.stringify($scope.user));
       $location.path('/talk');
     };
 
-    $scope.validateRoom = function(room){
-      return $scope.existingRooms[room];
-    };
-
     $scope.validateName = function(name){
-      return !$scope.existingRooms[$scope.room].members[name];
+      return !$scope.existingRooms[$scope.room].members[name] && name;
     };
   });
