@@ -457,6 +457,7 @@ transition:all 1s ease-in-out;
 animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final iteration */
 }​
 
+
 .showMedia{visibility: visible}
 
 .hideMedia{visibility: hidden}
@@ -553,7 +554,19 @@ font-size: 16px;
 
 }
 
+a.talkToggle{
+  color:#6b5140;
+  cursor:pointer;
+  text-decoration: none;
+}
+
+a.talkToggle:hover{
+  text-decoration: underline;
+}
+
 .leaveRoomBtn{
+  height: 36px;
+  margin-top:5px;
   font-family: nexa_lightregular;
   color: #ffffff;
   background-color: #236068;
@@ -561,13 +574,18 @@ font-size: 16px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   border-radius: 20px;
-  padding: 15px 18px;
-  font-size: 16px;
+  padding: 10px 10px;
+  font-size: 13px;
   text-transform: uppercase;
 }
 
+.leaveRoomBtn:hover{
+  color: #236068;
+  background-color: #a9f8f5;
+}
+
 img.small-logo{
-  margin: 10px
+  margin: 5px
 }
 
 /*Footer*/
