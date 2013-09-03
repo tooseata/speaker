@@ -1,6 +1,6 @@
 'use strict';
 angular.module('speakerApp')
-  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http) {
+  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http, $modal) {
     if (!$cookies.session){
       $cookies.session = Math.floor(Math.random() * 100000000000000).toString();
     }
@@ -17,7 +17,16 @@ angular.module('speakerApp')
       } else {
         $scope.badInput = true;
       }
-    }
+    };
+    $scope.modal = {content: 'Hello Modal', saved: false};
+    $scope.modalService = function(){
+      var modal = $modal({
+        template: './../views/partials/joinModal.html',
+        show: true,
+        backdrop: 'static',
+        scope: $scope
+      });
+    };
     var browserCheck = function () {
       if(Modernizr.getusermedia){
         $location.path('/');
@@ -46,4 +55,25 @@ angular.module('speakerApp')
       'The world\'s first virtual microphone.', 'Let them speak.'
     ];
     $scope.splashPhrase = landings[Math.floor(Math.random()*(landings.length - 1))];
+
+    $scope.aboutUsScroll = function(){
+      document.getElementById("footer").scrollIntoView();
+    };
+
+    $(document).ready(function(){
+      $('.window').windows({
+          snapping: true,
+          snapSpeed: 100,
+          snapInterval: 999999999,
+          onScroll: function(scrollPos){
+              // console.log(scrollPos);
+          },
+          onSnapComplete: function($el){
+              // after window ($el) snaps into place
+          },
+          onWindowEnter: function($el){
+              // when new window ($el) enters viewport
+          }
+      })
+    });
   });
