@@ -1,0 +1,10 @@
+<div class="my-modal">
+  <a ng-click="dismiss()" class="close-button">x</a>
+  <div class="modal-form">
+    <form name="createForm" novalidate class="createForm">
+      <input name="room" class="modal-field" type="text" required ng-model="room" placeholder="Enter the room name." ui-validate="{occupied : 'validateRoom($value)' }"><br>
+      <span class="input-error" ng-show="createForm.room.$error.occupied">This room is already occupied!</span><br>
+      <button ng-disabled="createForm.room.$error.occupied || !room" class="btn btn-large btn-success landingJoinButton modal-button" ng-click="update(room)">Create Room</button>
+    </form>
+  </div>
+</div>

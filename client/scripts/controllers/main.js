@@ -33,7 +33,7 @@ angular.module('speakerApp')
       $scope.user = User.get();
       socket.emit('broadcast:joinRoom', $scope.user);
       $http.post('/session', JSON.stringify($scope.user));
-      $scope.dismiss();
+      $scope.dismiss()
       $location.path('/talk');
 
     };
