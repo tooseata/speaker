@@ -157,7 +157,7 @@ footer a:visited{
 
 }
 .join-modal{
-  background-color: white;
+  background-color: rgba(255, 255, 255, .85);
   width:400px;
   height:300px;
   margin-right: auto;
@@ -217,7 +217,30 @@ table.questions-table tr:first-child td{
 h1#logo{
   padding-top: 20px;
 }
-
+input.modal-field{
+  background-color: rgba(255,255,255,1) !important;
+    position: relative;
+    top: 30%;
+    left: 20%;
+    opacity: 1;
+    border: 1px solid #ccc;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    -moz-box-shadow: 2px 2px 3px #666;
+    -webkit-box-shadow: 2px 2px 3px #666;
+    box-shadow: 2px 2px 3px #666;
+    color:#236068;
+    font-size:arial;
+    font-style: italic;
+    font-size: 17px;
+    padding: 10px 15px;
+    outline: 0;
+    -webkit-appearance: none;
+}
+input.modal-field:focus{
+    border-color: #6b5140;
+}
 input#room.enterRoomFieldHome{
     border: 1px solid #ccc;
     -moz-border-radius: 20px;
