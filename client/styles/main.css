@@ -164,24 +164,10 @@ footer a:visited{
   border: 0px;
   width: 345px;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .toggle-queue-button-home {
-  position: relative;
-  left:45%;
+  width:115px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .toggle-queue-button {
   width: 115px;
