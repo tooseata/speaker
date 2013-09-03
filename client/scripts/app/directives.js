@@ -6,21 +6,17 @@ app.directive('questions', function(){
   return {
     restrict: 'E',
     require: 'ng-controller',
-    template: '<div id="question_container">\
-  <div id="questions_list">\
-    <table class="questions-table table">\
-      <tr class ="question" ng-repeat="request in questions">\
-        <td class="user-name-cell first-element" ng-show="!phone">{{request.user.name}}</td>\
-        <td ng-class="phone">{{request.question.message}}</td>\
-        <td class="upvote-cell">\
-          <div>\
-            <b>{{request.question.upvotes}}</b>\
-            <a ng-show="upVoted[request.key]" ng-click="vote(request)"><img src="./../images/upvote.png"></a>\
-            <a ng-show="!upVoted[request.key]" ng-click="vote(request)"><img src="./../images/downvote.png"></a>\
-          </div>\
-        </td>\
-      </tr>\
-    </table>\
+    template: '<div class="question-container">\
+  <div class="questions-list">\
+    <div class="question" ng-repeat="request in questions">\
+      <span class="question-name" ng-show="!phone">{{request.user.name}}</span>\
+      <span class="question-message">{{request.question.message}}</span>\
+      <span class="up-vote-button">\
+        <a ng-show="upVoted[request.key]" ng-click="vote(request)"><img src="./../images/upvote.png"></a>\
+        <a ng-show="!upVoted[request.key]" ng-click="vote(request)"><img src="./../images/downvote.png"></a>\
+      </span>\
+      <span class="question-karma">{{request.question.upvotes}}</span>\
+    </div>\
   </div>\
   <form>\
     <div class="question-field"><input class="question-field-input"type="text" ng-model="question" maxLength="70" placeholder="Questions?"></input></div>\

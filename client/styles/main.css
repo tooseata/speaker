@@ -192,7 +192,7 @@ footer a:visited{
 }
 
 #questions_list{
-  width: 50%;
+  width: 70%;
   margin-right: auto;
   margin-left: auto;
   height: 250px;
@@ -244,12 +244,17 @@ footer a:visited{
   position: relative;
   top: -10%;
 }
-
+.questions-list{
+  width:60%;
+  margin-left: auto;
+  margin-right: auto;
+}
 .question {
+  display: table;
   position: relative;
-  margin-bottom: 16px;
+  margin-bottom: 15px;
   font-weight: 100;
-  width: 230px;
+  width: 100%;
   height:52px;
   border: 1px solid #ccc;
   box-shadow: 2px 2px 3px #666;
@@ -257,6 +262,41 @@ footer a:visited{
   background-color: white;
   font-family: droid_serifbold;
   color: #236068;
+}
+
+.question > * {
+  display: table-cell;
+  vertical-align: middle;
+  float: none !important;
+}
+
+.question-name{
+  width: 100px;
+  white-space: nowrap;
+  font-size: 15px;
+  font-family: droid_serifbold;
+  padding-left: 20px;
+}
+.question-message{
+  font-family: droid_serifitalic;
+  font-size: 13px;
+  text-align: left;
+}
+.question-karma{
+  text-align: center;
+  width: 35px;
+  height: 20px;
+  padding-right: 5px;
+  outline: 1px solid #B6D7DB;
+  border-radius: 0 22px 22px 0;
+  background-color: #a9f8f5;
+}
+
+.up-vote-button{
+  width: 40px;
+  margin-right: 13px;
+  cursor: pointer;
+  text-align: center;
 }
 .message_user_name{
   display: inline;
@@ -316,31 +356,6 @@ footer a:visited{
     font-family: nexa_boldregular;
 }
 
-.first-element {
-  border-left: 1px solid gray;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-table.questions-table td:last-child { 
-  border-right: 1px solid gray;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-table.questions-table td{
-  border-top: 1px solid gray;
-  border-bottom: 1px solid gray;
-}
-table.questions-table tr:first-child td{
-  border-top: 1px solid gray !important;
-}
-.user-name-cell {
-  font-size: 20px;
-  width: 100px;
-}
-.upvote-cell {
-  font-size: 20px;
-  width: 70px !important;
-}
 .textLink-adminCreate{
     font-family: droid_serifregular;
     font-size: 14px;

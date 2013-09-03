@@ -6,7 +6,7 @@ angular.module('speakerApp')
     $scope.user = User.get();
     $scope.questions = [];
     $scope.upVoted = {};
-    $scope.phone = $window.innerWidth < 520 ? 'first-element' : false;
+    $scope.phone = $window.innerWidth < 539 ? 'first-element' : false;
     Session.questions($scope);
     console.log($scope.updateMessage);
 
