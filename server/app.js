@@ -91,20 +91,24 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 
 app.io.sockets.on('connection', function(socket){
   socket.on('message', function(message) {
-    if (socket.store.data.userClient){
-        console.log('Message from Client to Admin');
-        var clientRoomSource = socket.store.data.userClient.room;
-        // Get socket ID of Admin for the room that the client belongs to
-        var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
-        // Route the message to the admin of the room
-        app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
-    } else {
-        var room = socket.store.data.userAdmin.room;
-        var talker = rooms[room]['talker']
-        var talkerSocketId = rooms[room]["socketIds"][talker];
-        var adminRoomSource = socket.store.data.userAdmin.room;
-        // Send the message to the correct client that made the request
-        app.io.sockets.sockets[talkerSocketId] && app.io.sockets.sockets[talkerSocketId].emit('message', message);
+    try {
+        if (socket.store.data.userClient){
+          console.log('Message from Client to Admin');
+          var clientRoomSource = socket.store.data.userClient.room;
+          // Get socket ID of Admin for the room that the client belongs to
+          var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
+          // Route the message to the admin of the room
+          app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
+      } else {
+          var room = socket.store.data.userAdmin.room;
+          var talker = rooms[room]['talker']
+          var talkerSocketId = rooms[room]["socketIds"][talker];
+          var adminRoomSource = socket.store.data.userAdmin.room;
+          // Send the message to the correct client that made the request
+          app.io.sockets.sockets[talkerSocketId] && app.io.sockets.sockets[talkerSocketId].emit('message', message);
+      }
+    } catch (e) {
+      console.log(e);
     }
   });
 
