@@ -29,4 +29,8 @@ Verifies Nginx process is running: ```$ ps aux | grep nginx ```
 
 Check which port Nginx is on: ```$ netstat -tulpn ```
 
+To check Nginx status remotely, go to http://speak.re/nginx_status
+
 Monit for monitoring: ```$ monit -d 60 -c /etc/monit/monitrc```
+
+
