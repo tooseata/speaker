@@ -165,20 +165,6 @@ footer a:visited{
   width: 345px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .toggle-queue-button-home {
   position: relative;
   left:45%;
@@ -204,6 +190,15 @@ footer a:visited{
   height: 325px;
   overflow-y: auto;
 }
+
+#questions_list{
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
+  height: 250px;
+  overflow-y: auto;
+}
+
 .request-list-header{
   margin-left: auto;
   margin-right: auto;
@@ -226,6 +221,7 @@ footer a:visited{
   background-color: white;
   font-family: droid_serifbold;
   color: #236068;
+  cursor: pointer;
 }
 .request:hover {
   background-color: #a9f8f5;
@@ -247,6 +243,20 @@ footer a:visited{
   background-color: #a9f8f5;
   margin-left: 186px;
   margin-top: 15px;
+}
+
+.question {
+  position: relative;
+  margin-bottom: 16px;
+  font-weight: 100;
+  width: 230px;
+  height:52px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 3px #666;
+  border-radius: 500px;
+  background-color: white;
+  font-family: droid_serifbold;
+  color: #236068;
 }
 .message_user_name{
   display: inline;
@@ -452,7 +462,7 @@ input#room.enterRoomFieldHome:focus {
 #request_button_container_wrapper{
   margin-left: auto;
   margin-right: auto;
-  width: 400px;
+  width: 340px;
   height: 130px;
 }
 #message_center{
@@ -683,6 +693,10 @@ animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final ite
 
 .hideMedia{visibility: hidden}
 
+.videoMediacontainer{
+  height: 250px;
+}
+
 /*talk Page CSS*/
 
 .topControlBar{
@@ -803,52 +817,12 @@ font-size: 16px;
   color: #ffffff;
   background-color: #236068;
   border-color: none;
-  -moz-border-radius: 20px 0 0 20px;
-  -webkit-border-radius:20px 0 0 20px;
-  border-radius: 20px 0 0 20px;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
   padding: 10px 10px;
   font-size: 13px;
   text-transform: uppercase;
-  border-right: none;
-  padding-right: 0;
-  -moz-border-radius-topright: 2px;
-  -moz-border-radius-bottomright: 2px;
-  -webkit-border-top-right-radius: 2px;
-  -webkit-border-bottom-right-radius: 2px;
-}
-
-.talkToggle:after {
-position:absolute;
-    top:9.9%;
-    left:-5px;
-    -webkit-background-size : 22px 22px;
-    background-position :-2px -1.5px;
-    background-color: rgba(74,108,155,1);/*change to the same as the main element*/
-    background-image :  
-        -webkit-gradient(linear, left bottom, right top, 
-            from(rgba(0,0,0,0)), 
-            color-stop(0.5, rgba(0,0,0,0)), 
-            color-stop(0.5, rgba(255,255,255,0.1)), 
-            to(rgba(255,255,255,0.3))); 
-    height : 25px;
-    width: 25px;
-    -webkit-transform : rotate(-45deg) skew(-10deg, -10deg);
-    -webkit-border-top-right-radius : 100px 40px;
-    -webkit-border-top-left-radius : 30px 2px;
-    -webkit-border-bottom-right-radius : 2px 30px;
-    -webkit-border-bottom-left-radius : 40px 100px;
-    z-index : 1;
-    content : ' ';
-    border-left : 1.5px solid rgba(255,255,255,0.3);
-    box-shadow :  1px 1px 0 rgba(0,0,0,0.2) inset,
-        -1px 1px 1px rgba(0,0,0,0.5) inset;
-    -webkit-mask-image : 
-        -webkit-gradient(linear, left top, right bottom,
-            from(#000000), 
-            color-stop(0.33,#000000), 
-            color-stop(0.5, transparent), 
-            to(transparent));
-
 }
 
 img.small-logo{
