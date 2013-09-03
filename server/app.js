@@ -104,7 +104,7 @@ app.io.sockets.on('connection', function(socket){
       var talkerSocketId = rooms[room]["socketIds"][talker];
       var adminRoomSource = socket.store.data.userAdmin.room;
       // Send the message to the correct client that made the request
-      app.io.sockets.sockets[talkerSocketId].emit('message', message);
+      talkerSocketId && app.io.sockets.sockets[talkerSocketId].emit('message', message);
     }
   });
 
@@ -126,8 +126,7 @@ app.io.sockets.on('connection', function(socket){
     var user = data;
     var room = user.room;
     var roomAdminSocketId = rooms[room].adminSocketId;
-    console.log(roomAdminSocketId);
-    app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
+    roomAdminSocketId && app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
     delete rooms[room].talkRequests[user.name];
     delete rooms[room].talkRequests[user.id];
   });
@@ -179,10 +178,10 @@ app.io.sockets.on('connection', function(socket){
       opentok.createSession('192.241.231.123', function(result) {
         var token = opentok.generateToken({session_id:result});
         var roomAdminSocketId = rooms[room].adminSocketId;
-        app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream', {apiKey: keys.key, sessionId: result, token: token});
+        talkerSocketId && app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream', {apiKey: keys.key, sessionId: result, token: token});
       });
     } else {
-      app.io.sockets.sockets[adminSocketId].emit('new:beginWebRTC');
+      adminSocketId && app.io.sockets.sockets[adminSocketId].emit('new:beginWebRTC');
     }
   });
 
@@ -209,9 +208,18 @@ app.io.sockets.on('connection', function(socket){
     socket.broadcast.to(room).emit('new:closeRoom');
     socket.leave(room);
   });
+
+  socket.on('new:adminStreamAttached', function(room) {
+    var talker = rooms[room]["talker"];
+    var talkerSocketId = rooms[room]["socketIds"][talker];
+    talkerSocketId && app.io.sockets.sockets[talkerSocketId].emit('broadcast:adminStreamAttached', talker);
+  });
+
   socket.on('question:new', function(data){
     var user = data.user;
     var room = user.room;
+    var socketId = rooms[room]["socketIds"][user.name];
+    app.io.sockets.sockets[socketId].emit('new:questionSubmitted');
     var question = new Question(data.question);
     var key = randomKey();
     rooms[room].questions[key] = {key: key, question: question, user: user};
@@ -236,7 +244,7 @@ app.io.sockets.on('connection', function(socket){
       var roomName = data.room;
       var clientId = rooms[roomName].socketIds[user];
       console.log('clientId', clientId);
-      app.io.sockets.sockets[clientId].emit('new:closeRequest');
+      clientId && app.io.sockets.sockets[clientId].emit('new:closeRequest');
     }();
   });
 

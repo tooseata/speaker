@@ -8,12 +8,13 @@ angular.module('speakerApp')
     $scope.upVoted = {};
     $scope.phone = $window.innerWidth < 520 ? 'first-element' : false;
     Session.questions($scope);
+    console.log($scope.updateMessage);
 
     $scope.submitQuestion = function(){
-      console.log('omg');
       socket.emit('question:new', {question: $scope.question, user: $scope.user});
       $scope.question = '';
     };
+    
     $scope.vote = function(request){
       if ($scope.upVoted[request.key]){
         console.log('downvoted');

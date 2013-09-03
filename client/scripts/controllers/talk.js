@@ -21,6 +21,10 @@ angular.module('speakerApp')
       socketService.isChannelReady = true;
     });
 
+    socket.on('new:questionSubmitted', function() {
+      $scope.updateMessage = 'Thanks for submitting a question! Vote on some questions, then click above to request the floor.';
+    });
+
     socket.on('new:talkerChosen', function(talker) {
       $scope.updateMessage = talker + " has the floor!";
     });
@@ -53,6 +57,16 @@ angular.module('speakerApp')
       $scope.updateMessage = 'Thanks for using Speaker!';
       $scope.localstream.stop();
       $('#localVideo').hide();
+    });
+
+    socket.on('broadcast:adminStreamAttached', function(talker) {
+      var currentUser = User.get().name;
+      if (currentUser === talker) {
+        $scope.next();
+        $scope.updateMessage = "You have the floor! Please ask the presenter your most upvoted question.";
+      } else {
+        $scope.updateMessage = talker + " has the floor!";
+      }
     });
 
     socket.on('new:closeRoom', function() {
@@ -96,6 +110,7 @@ angular.module('speakerApp')
     $scope.requestAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
       var onStream = function(stream) {
+        $scope.updateMessage = 'You have been added to the queue of questions -- please wait for the presenter to call on you.';
         $scope.localstream = stream;
         socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
         socket.emit('broadcast:talkRequest', $scope.user);
