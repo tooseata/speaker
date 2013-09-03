@@ -1,6 +1,6 @@
 'use strict';
 angular.module('speakerApp')
-  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http, $modal) {
+  .controller('MainCtrl', function ($scope, $cookies, Session, socket, $location, User, $http, $modal) {
     if (!$cookies.session){
       $cookies.session = Math.floor(Math.random() * 100000000000000).toString();
     }
@@ -13,20 +13,35 @@ angular.module('speakerApp')
     };
     $scope.join = function(room){
       if ($scope.validateRoom(room)){
-        $location.path('/join/' + room);
+        var modal = $modal({
+          template: './../views/partials/joinModal.html',
+          show: true,
+          backdrop: 'static',
+          scope: $scope
+        });
+        User.setRoom(room);
       } else {
         $scope.badInput = true;
       }
     };
-    $scope.modal = {content: 'Hello Modal', saved: false};
     $scope.modalService = function(){
-      var modal = $modal({
-        template: './../views/partials/joinModal.html',
-        show: true,
-        backdrop: 'static',
-        scope: $scope
-      });
     };
+
+    $scope.update = function(userName) {
+      User.setType('user');
+      User.setName(userName);
+      $scope.user = User.get();
+      socket.emit('broadcast:joinRoom', $scope.user);
+      $http.post('/session', JSON.stringify($scope.user));
+      $scope.dismiss()
+      $location.path('/talk');
+
+    };
+
+    $scope.validateName = function(name){
+      return !$scope.existingRooms[$scope.room].members[name];
+    };
+
     var browserCheck = function () {
       if(Modernizr.getusermedia){
         $location.path('/');

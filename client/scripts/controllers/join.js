@@ -1,22 +1,10 @@
 'use strict';
 
 angular.module('speakerApp')
-  .controller('JoinCtrl', function ($scope, $location, $http, User, socket, Session) {
+  .controller('JoinCtrl', function ($scope, $location, $http, User, socket, $modal, Session) {
 
     // Scope variables.
     $scope.user = User.get();
-    var path = $location.path().replace('/join', '').slice(1);
-    $http.get('/rooms').success(function(data){
-      $scope.existingRooms = data;
-      if (path && !data[path]){
-        $location.path('/join');
-      } else {
-        $scope.room = path;
-        User.setRoom(path);
-      }
-    }).error(function(){
-      console.log('error on room collection.');
-    });
 
     $scope.update = function(userName) {
       User.setType('user');
@@ -29,5 +17,21 @@ angular.module('speakerApp')
 
     $scope.validateName = function(name){
       return !$scope.existingRooms[$scope.room].members[name];
+    };
+    $scope.validateRoom = function(room){
+      return $scope.existingRooms[room];
+    };
+    $scope.join = function(room){
+      if ($scope.validateRoom(room)){
+        var modal = $modal({
+          template: './../views/partials/joinModal.html',
+          show: true,
+          backdrop: 'static',
+          scope: $scope
+        });
+        User.setRoom(room);
+      } else {
+        $scope.badInput = true;
+      }
     };
   });
