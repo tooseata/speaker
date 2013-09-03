@@ -131,11 +131,29 @@ footer a:visited{
     font-size:20px;
     color:#6b5140;
 }
+.toggle-queue-button-home {
+  position: relative;
+  left:45%;
+}
+.toggle-queue-button {
+  width: 115px;
+  height: 35px;
+  background-color: #236068;
+  border-radius: 100px;
+}
+.toggle-queue-words{
+  position: relative;
+  top:25%;
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  font-weight: lighter;
+}
 .request-list{
   width: 235px;
   margin-right: auto;
   margin-left: auto;
-  height: 400px;
+  height: 325px;
   overflow-y: auto;
 }
 .request-list-header{
@@ -143,12 +161,15 @@ footer a:visited{
   margin-right: auto;
   width: 200px;
   margin-top: 65px;
-  font-size: 23px;
+  margin-bottom: 23px;
+  font-size: 28px;
   font-family: droid_serifbold;
   font-weight: 200;
 }
 .request {
+  position: relative;
   margin-bottom: 16px;
+  font-weight: 100;
   width: 230px;
   height:52px;
   border: 1px solid #ccc;
@@ -163,20 +184,21 @@ footer a:visited{
   box-shadow: inset 2px 2px 3px #666;
 }
 .request-name{
-  position: relative;
-  top:28%;
-  left: 11%;
+  display: inline-block;
+  position: fixed;
+  margin-top: 15px;
+  margin-left: 26px;
 }
 .request-karma{
-  position: relative;
+  position: fixed;
   display: inline-block;
   text-align: center;
   width: 19px;
   height: 19px;
   outline: 1px solid #B6D7DB;
-  top: 28%;
-  left: 36%;
   background-color: #a9f8f5;
+  margin-left: 186px;
+  margin-top: 15px;
 }
 .message_user_name{
   display: inline;

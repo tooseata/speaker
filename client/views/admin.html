@@ -1,31 +1,11 @@
 <div class="request-list-header">Talk Requests</div>
 <div class="request-list">
-  <div class="request">
-      <span class="request-name">Phil Connors</span>
-      <span class="request-karma">1</span>
+  <div ng-show="queueStatus" class="request" ng-repeat="user in talkRequests" ng-click="fillRequest(user.name)">
+      <span class="request-name">{{user.name}}</span>
+      <span class="request-karma">{{user.karma}}</span>
   </div>
 </div>
-
-
-
-<table class="questions-table table">
-  <tr class ="question" ng-repeat="user in talkRequests" ng-click="fillRequest(user.name)">
-    <td class='t-r-user-name first-element'>{{user.name}}</td>
-    <td class="t-r-karma">
-        <b>{{user.karma}}</b>
-    </td>
-  </tr>
-</table>
-<h3 id="request_list_header">Talk Requests</h3>
-<div id="queue_button_container" ng-switch on="queueStatus">
-  <a class="btn btn-large btn-success" ng-switch-when="false" ng-click="openQueue()">Open Queue</a>
-  <a class="btn btn-large btn-danger" ng-switch-when="true" ng-click="closeQueue()">Close Queue</a>
-</div>
-
-
-<div id="admin_header">
-  <div>
-    <h4 id="user-count">Room: {{user.room}}, {{memberCount}} users.</h4>
-  </div>
-  <button ng-click="closeRoom()" class="btn btn-medium btn-primary">Close room</button>
+<div class="toggle-queue-button-home" ng-switch on="queueStatus">
+  <div class="toggle-queue-button" ng-switch-when="false" ng-click="openQueue()"><div class="toggle-queue-words">OPEN QUEUE</div></div>
+  <div class="toggle-queue-button" ng-switch-when="true" ng-click="closeQueue()"><div class="toggle-queue-words">CLOSE QUEUE</div></div>
 </div>
