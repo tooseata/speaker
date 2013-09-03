@@ -101,7 +101,7 @@ app.io.sockets.on('connection', function(socket){
         app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
       }
     } else {
-      if (room) {
+      if (socket.store.data.userAdmin) {
         var room = socket.store.data.userAdmin.room;
         var talker = rooms[room]['talker']
         var talkerSocketId = rooms[room]["socketIds"][talker];
