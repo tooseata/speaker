@@ -92,25 +92,32 @@ app.io = io.listen( http.createServer(app).listen( app.get('port'), function() {
 app.io.sockets.on('connection', function(socket){
   socket.on('message', function(message) {
     if (socket.store.data.userClient){
-      console.log('Message from Client to Admin');
-      var clientRoomSource = socket.store.data.userClient.room;
-      // Get socket ID of Admin for the room that the client belongs to
-      var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
-      // Route the message to the admin of the room
-      app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
+      if (room) {
+        console.log('Message from Client to Admin');
+        var clientRoomSource = socket.store.data.userClient.room;
+        // Get socket ID of Admin for the room that the client belongs to
+        var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
+        // Route the message to the admin of the room
+        app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
+      }
     } else {
-      var room = socket.store.data.userAdmin.room;
-      var talker = rooms[room]['talker']
-      var talkerSocketId = rooms[room]["socketIds"][talker];
-      var adminRoomSource = socket.store.data.userAdmin.room;
-      // Send the message to the correct client that made the request
-      app.io.sockets.sockets[talkerSocketId] && app.io.sockets.sockets[talkerSocketId].emit('message', message);
+      if (room) {
+        var room = socket.store.data.userAdmin.room;
+        var talker = rooms[room]['talker']
+        var talkerSocketId = rooms[room]["socketIds"][talker];
+        var adminRoomSource = socket.store.data.userAdmin.room;
+        // Send the message to the correct client that made the request
+        app.io.sockets.sockets[talkerSocketId] && app.io.sockets.sockets[talkerSocketId].emit('message', message);
+      }
     }
   });
 
   socket.on('broadcast:talkRequest', function(data){
     var user = data;
     var room = user.room;
+    if (!room) {
+      return;
+    }
     rooms[room].talkRequests[user.name] = user;
     rooms[room].talkRequests[user.id] = socket.id;
     if (rooms[room].isOpen){
@@ -125,14 +132,19 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:cancelTalkRequest', function(data){
     var user = data;
     var room = user.room;
-    var roomAdminSocketId = rooms[room].adminSocketId;
-    app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
-    delete rooms[room].talkRequests[user.name];
-    delete rooms[room].talkRequests[user.id];
+    if (room) {
+      var roomAdminSocketId = rooms[room].adminSocketId;
+      app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
+      delete rooms[room].talkRequests[user.name];
+      delete rooms[room].talkRequests[user.id];
+    }
   });
 
   socket.on('broadcast:openTokStreaming', function(data) {
     var room = data.room;
+    if (!room) {
+      return;
+    }
     var token = opentok.generateToken({session_id: data.sessionId});
     var socketId = rooms[room].adminSocketId;
     app.io.sockets.sockets[socketId] && app.io.sockets.sockets[socketId].emit('new:openTokStreaming', {apiKey: keys.key, sessionId: data.sessionId, token: token});
@@ -141,6 +153,9 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:joinRoom', function(data){
     var user = data;
     var room = user.room;
+    if (!room) {
+      return;
+    }
     var isMobile = user.isMobile;
     if (user.type === 'admin'){
       console.log('******* AN ADMIN HAS JOINED THE ROOM ********')
@@ -165,6 +180,9 @@ app.io.sockets.on('connection', function(socket){
   // Talker selected by admin
   socket.on('broadcast:setTalker', function(data) {
     var room = data.roomName;
+    if (!room) {
+      return;
+    }
     rooms[room]["talker"] = data.talker;
 
     // Tell other clients a talker has been chosen
@@ -187,12 +205,18 @@ app.io.sockets.on('connection', function(socket){
 
   socket.on('question:upVote', function(data){
     var room = data.user.room;
+    if (!room) {
+      return;
+    }
     rooms[room].questions[data.key].question.upvotes++;
     socket.broadcast.to(room).emit('question:upVoted', data);
   });
 
   socket.on('question:downVote', function(data){
     var room = data.user.room;
+    if (!room) {
+      return;
+    }
     rooms[room].questions[data.key].question.upvotes--;
     socket.broadcast.to(room).emit('question:downVoted', data);
   });
@@ -204,6 +228,9 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:closeRoom', function(data){
     var user = data;
     var room = user.room;
+    if (!room) {
+      return;
+    }
     delete rooms[room];
     socket.broadcast.to(room).emit('new:closeRoom');
     socket.leave(room);
@@ -218,6 +245,9 @@ app.io.sockets.on('connection', function(socket){
   socket.on('question:new', function(data){
     var user = data.user;
     var room = user.room;
+    if (!room) {
+      return;
+    }
     var socketId = rooms[room]["socketIds"][user.name];
     app.io.sockets.sockets[socketId] && app.io.sockets.sockets[socketId].emit('new:questionSubmitted');
     var question = new Question(data.question);
@@ -235,6 +265,9 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:microphoneClickedOnClientSide', function(data) {
     var user = data;
     var room = user.room;
+    if (!room) {
+      return;
+    }
     socket.broadcast.to(room).emit('new:microphoneClickedOnClientSide', user.name);
   });
 
@@ -251,6 +284,9 @@ app.io.sockets.on('connection', function(socket){
   socket.on('broadcast:leaveRoom', function(data){
     var user = data;
     var room = user.room;
+    if (!room) {
+      return;
+    }
     if (user.type === 'admin'){
       delete rooms[room];
     } else {
