@@ -126,7 +126,6 @@ app.io.sockets.on('connection', function(socket){
     var user = data;
     var room = user.room;
     var roomAdminSocketId = rooms[room].adminSocketId;
-    console.log(roomAdminSocketId);
     app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
     delete rooms[room].talkRequests[user.name];
     delete rooms[room].talkRequests[user.id];

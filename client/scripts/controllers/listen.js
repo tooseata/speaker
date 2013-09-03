@@ -29,9 +29,10 @@ angular.module('speakerApp')
       var sessionId = data.sessionId;
       var token = data.token;
       var sessionConnectedHandler = function(event) {
-        for (var i = 0; i < event.streams.length; i++) {
-          session.subscribe(event.streams[i], 'opentok');
-        }
+        var subscription = session.subscribe(event.streams[0], 'opentok');
+        var element = document.getElementById(subscription.id);
+        element.width = 640;
+        element.height = 480;
       };
       var session = TB.initSession(sessionId);
       session.addEventListener('sessionConnected', sessionConnectedHandler);
