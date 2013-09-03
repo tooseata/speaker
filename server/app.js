@@ -97,14 +97,14 @@ app.io.sockets.on('connection', function(socket){
       // Get socket ID of Admin for the room that the client belongs to
       var roomAdminSocketId = rooms[clientRoomSource].adminSocketId;
       // Route the message to the admin of the room
-      app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
+      app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('message', message);
     } else {
       var room = socket.store.data.userAdmin.room;
       var talker = rooms[room]['talker']
       var talkerSocketId = rooms[room]["socketIds"][talker];
       var adminRoomSource = socket.store.data.userAdmin.room;
       // Send the message to the correct client that made the request
-      talkerSocketId && app.io.sockets.sockets[talkerSocketId].emit('message', message);
+      app.io.sockets.sockets[talkerSocketId] && app.io.sockets.sockets[talkerSocketId].emit('message', message);
     }
   });
 
@@ -126,7 +126,7 @@ app.io.sockets.on('connection', function(socket){
     var user = data;
     var room = user.room;
     var roomAdminSocketId = rooms[room].adminSocketId;
-    roomAdminSocketId && app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
+    app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
     delete rooms[room].talkRequests[user.name];
     delete rooms[room].talkRequests[user.id];
   });
@@ -135,7 +135,7 @@ app.io.sockets.on('connection', function(socket){
     var room = data.room;
     var token = opentok.generateToken({session_id: data.sessionId});
     var socketId = rooms[room].adminSocketId;
-    app.io.sockets.sockets[socketId].emit('new:openTokStreaming', {apiKey: keys.key, sessionId: data.sessionId, token: token});
+    app.io.sockets.sockets[socketId] && app.io.sockets.sockets[socketId].emit('new:openTokStreaming', {apiKey: keys.key, sessionId: data.sessionId, token: token});
   });
 
   socket.on('broadcast:joinRoom', function(data){
@@ -178,10 +178,10 @@ app.io.sockets.on('connection', function(socket){
       opentok.createSession('192.241.231.123', function(result) {
         var token = opentok.generateToken({session_id:result});
         var roomAdminSocketId = rooms[room].adminSocketId;
-        talkerSocketId && app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream', {apiKey: keys.key, sessionId: result, token: token});
+        app.io.sockets.sockets[talkerSocketId] && app.io.sockets.sockets[talkerSocketId].emit('new:beginOpenTokStream', {apiKey: keys.key, sessionId: result, token: token});
       });
     } else {
-      adminSocketId && app.io.sockets.sockets[adminSocketId].emit('new:beginWebRTC');
+      app.io.sockets.sockets[adminSocketId] && app.io.sockets.sockets[adminSocketId].emit('new:beginWebRTC');
     }
   });
 
@@ -212,14 +212,14 @@ app.io.sockets.on('connection', function(socket){
   socket.on('new:adminStreamAttached', function(room) {
     var talker = rooms[room]["talker"];
     var talkerSocketId = rooms[room]["socketIds"][talker];
-    talkerSocketId && app.io.sockets.sockets[talkerSocketId].emit('broadcast:adminStreamAttached', talker);
+    app.io.sockets.sockets[talkerSocketId] && app.io.sockets.sockets[talkerSocketId].emit('broadcast:adminStreamAttached', talker);
   });
 
   socket.on('question:new', function(data){
     var user = data.user;
     var room = user.room;
     var socketId = rooms[room]["socketIds"][user.name];
-    app.io.sockets.sockets[socketId].emit('new:questionSubmitted');
+    app.io.sockets.sockets[socketId] && app.io.sockets.sockets[socketId].emit('new:questionSubmitted');
     var question = new Question(data.question);
     var key = randomKey();
     rooms[room].questions[key] = {key: key, question: question, user: user};
@@ -244,7 +244,7 @@ app.io.sockets.on('connection', function(socket){
       var roomName = data.room;
       var clientId = rooms[roomName].socketIds[user];
       console.log('clientId', clientId);
-      clientId && app.io.sockets.sockets[clientId].emit('new:closeRequest');
+      app.io.sockets.sockets[clientId] && app.io.sockets.sockets[clientId].emit('new:closeRequest');
     }();
   });
 

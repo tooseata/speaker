@@ -97,8 +97,8 @@ angular.module('speakerApp')
       };
 
       var onVideoStream = function(stream) {
+        $scope.updateMessage = 'You are in line to ask a question! Please wait for the presenter to call on you.';
         socket.emit('broadcast:talkRequest', $scope.user);
-        $scope.updateMessage = 'what upppp.';
         $scope.sentVideoRequest = true;
         $scope.pendingRequest = true;
         $scope.localstream = stream;
@@ -110,7 +110,7 @@ angular.module('speakerApp')
     $scope.requestAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
       var onStream = function(stream) {
-        $scope.updateMessage = 'You have been added to the queue of questions -- please wait for the presenter to call on you.';
+        $scope.updateMessage = 'You are in line to ask a question! Please wait for the presenter to call on you.';
         $scope.localstream = stream;
         socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
         socket.emit('broadcast:talkRequest', $scope.user);
