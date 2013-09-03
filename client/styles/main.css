@@ -131,6 +131,54 @@ footer a:visited{
     font-size:20px;
     color:#6b5140;
 }
+.welcome{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 37px;
+  width: 200px;
+  font-size: 17px; 
+  font-family: droid_serifbold;
+}
+.alert-message {
+  margin-top: 5px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-family: droid_serifregular;
+}
+.question-field {
+  width: 375px;
+  background-color: rgba(255,255,255,1);
+  border: 1px solid #ccc;
+  border-radius: 30px;
+  box-shadow: inset 2px 2px 3px #666 !important;
+  color:#236068;
+  padding: 10px 15px;
+  outline: 0;
+  -webkit-appearance: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.question-field-input{
+  outline-style: none;
+  border: 0px;
+  width: 345px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .toggle-queue-button-home {
   position: relative;
   left:45%;
@@ -213,9 +261,7 @@ footer a:visited{
 .user_name_container{
   width:100px;
 }
-#message_input{
-  height:70px;
-}
+
 #message_submit{
   background-color: transparent;
   border: none !important;

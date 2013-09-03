@@ -23,7 +23,7 @@ app.directive('questions', function(){
     </table>\
   </div>\
   <form>\
-    <input class="form-control" id="message_input"type="text" ng-model="question" maxLength="70" placeholder="Questions?"></input>\
+    <div class="question-field"><input class="question-field-input"type="text" ng-model="question" maxLength="70" placeholder="Questions?"></input></div>\
     <button id="message_submit" ng-click="submitQuestion()">Submit</button>\
   </form>\
 </div>'
