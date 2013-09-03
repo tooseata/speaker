@@ -122,15 +122,16 @@ app.factory('WebRtcService', ['socketService', '$document', '$http', 'socket', '
   };
 
   var handleRemoteStreamAdded = function(event) {
+    var roomName = User.get().room;
     if (socketService.isAdmin) {
       remoteAudio = $document[0].getElementById('remoteAudio');
       remoteVideo = $document[0].getElementById('remoteVideo');
     }
     var type = (User.get().mediaType === 'video' ? remoteVideo : remoteAudio);
-    console.log('*********************************************type of media being set!', type);
     var localVideo = document.querySelector('#remoteVideo');
     adminLocalStream = event.stream;
     attachMediaStream(type, event.stream);
+    socket.emit('new:adminStreamAttached', roomName);
     socketService.remoteStream = event.stream;
   };
 

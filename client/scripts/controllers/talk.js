@@ -21,10 +21,18 @@ angular.module('speakerApp')
       socketService.isChannelReady = true;
     });
 
+    socket.on('new:questionSubmitted', function() {
+      $scope.updateMessage = 'Thanks for submitting a question! Vote on some questions, then click above to request the floor.';
+    });
+
+    socket.on('new:talkerChosen', function(talker) {
+      $scope.updateMessage = talker + " has the floor!";
+    });
+
     $scope.leaveRoom = function(){
       socket.emit('broadcast:leaveRoom', $scope.user);
       socket.emit('broadcast:cancelTalkRequest', $scope.user);
-      $scope.sentRequest = false;  
+      $scope.sentRequest = false;
       $location.path('/');
     };
 
@@ -39,16 +47,26 @@ angular.module('speakerApp')
     socket.on('new:queueIsClosed', function(user) {
       $scope.canTalk = false;
       alert('The presenter has not yet opened the floor for questions. Go back and vote!');
-      $scope.updateMessage = 'The presenter has not yet opened the floor for questions. Keep an eye up here and we\'ll keep you posted.';
+      $scope.updateMessage = 'The presenter has not yet opened the floor. Keep an eye up here and we\'ll keep you posted.';
     });
 
     // Event to notify the client that the admin closed their connection
     socket.on('new:closeRequest', function(){
       $scope.sentAudioRequest = false;
       $scope.sentVideoRequest = false;
-      $scope.updateMessage = 'Thanks for asking your question!';
+      $scope.updateMessage = 'Thanks for using Speaker!';
       $scope.localstream.stop();
       $('#localVideo').hide();
+    });
+
+    socket.on('broadcast:adminStreamAttached', function(talker) {
+      var currentUser = User.get().name;
+      if (currentUser === talker) {
+        $scope.next();
+        $scope.updateMessage = "You have the floor! Please ask the presenter your most upvoted question.";
+      } else {
+        $scope.updateMessage = talker + " has the floor!";
+      }
     });
 
     socket.on('new:closeRoom', function() {
@@ -59,12 +77,6 @@ angular.module('speakerApp')
       $location.path('/');
       window.alert('The admin closed the room.');
     });
-
-    $scope.submitQuestion = function(){
-      console.log($scope.question);
-      socket.emit('question:new', {question: $scope.question, user: $scope.user});
-      $scope.sentQuestion = true;
-    };
 
     $scope.requestVideo = function() {
       WebRtcService.sendMessage({type: 'media type', value: 'video'});
@@ -85,8 +97,8 @@ angular.module('speakerApp')
       };
 
       var onVideoStream = function(stream) {
+        $scope.updateMessage = 'You are in line to ask a question! Please wait for the presenter to call on you.';
         socket.emit('broadcast:talkRequest', $scope.user);
-        $scope.updateMessage = 'what upppp.';
         $scope.sentVideoRequest = true;
         $scope.pendingRequest = true;
         $scope.localstream = stream;
@@ -98,6 +110,7 @@ angular.module('speakerApp')
     $scope.requestAudio = function(){
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
       var onStream = function(stream) {
+        $scope.updateMessage = 'You are in line to ask a question! Please wait for the presenter to call on you.';
         $scope.localstream = stream;
         socket.emit('broadcast:microphoneClickedOnClientSide', $scope.user);
         socket.emit('broadcast:talkRequest', $scope.user);

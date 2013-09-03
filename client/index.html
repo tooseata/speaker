@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="styles/bootstrap.css">
         <link rel="stylesheet" href="styles/bootstrap-responsive.min.css">
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="styles/window.css">
         <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
         <!-- endbuild -->
 </head>
@@ -29,7 +30,7 @@
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container" ng-view=""></div>
+    <div class="main_container" ng-view=""></div>
 
     <script>
       var _gaq=[['_setAccount','UA-43671709-1'],['_trackPageview']];
@@ -44,6 +45,7 @@
     <script src="bower_components/modernizr/modernizr_custom.js"></script>
     <script src="bower_components/hammerjs/plugins/hammer.js"></script>
     <script src="bower_components/hammerjs/plugins/jquery.hammer.js"></script>
+
 
         <!-- build:js scripts/plugins.js -->
         <script src="bower_components/angular-socket-io/socket.js"></script>
@@ -73,7 +75,9 @@
         <script src="socket.io/socket.io.js"></script>
         <script src="scripts/lib/underscore.js"></script>
         <script src="scripts/lib/adapter.js"></script>
+        <script src="scripts/lib/window.js"></script>
         <script src="scripts/lib/validate.js"></script>
+        <script src="scripts/lib/angular-strap.js"></script>
         <script src="scripts/lib/opentok.js"></script>
         <script src="scripts/lib/angular-cookies.min.js"></script>
         <script src="scripts/app/app.js"></script>

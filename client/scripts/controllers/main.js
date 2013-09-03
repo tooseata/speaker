@@ -1,6 +1,6 @@
 'use strict';
 angular.module('speakerApp')
-  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http) {
+  .controller('MainCtrl', function ($scope, $cookies, Session, socket, $location, User, $http, $modal) {
     if (!$cookies.session){
       $cookies.session = Math.floor(Math.random() * 100000000000000).toString();
     }
@@ -13,11 +13,35 @@ angular.module('speakerApp')
     };
     $scope.join = function(room){
       if ($scope.validateRoom(room)){
-        $location.path('/join/' + room);
+        var modal = $modal({
+          template: './../views/partials/joinModal.html',
+          show: true,
+          backdrop: 'static',
+          scope: $scope
+        });
+        User.setRoom(room);
       } else {
         $scope.badInput = true;
       }
-    }
+    };
+    $scope.modalService = function(){
+    };
+
+    $scope.update = function(userName) {
+      User.setType('user');
+      User.setName(userName);
+      $scope.user = User.get();
+      socket.emit('broadcast:joinRoom', $scope.user);
+      $http.post('/session', JSON.stringify($scope.user));
+      $scope.dismiss();
+      $location.path('/talk');
+
+    };
+
+    $scope.validateName = function(name){
+      return !$scope.existingRooms[$scope.room].members[name];
+    };
+
     var browserCheck = function () {
       if(Modernizr.getusermedia){
         $location.path('/');
@@ -46,4 +70,25 @@ angular.module('speakerApp')
       'The world\'s first virtual microphone.', 'Let them speak.'
     ];
     $scope.splashPhrase = landings[Math.floor(Math.random()*(landings.length - 1))];
+
+    $scope.aboutUsScroll = function(){
+      document.getElementById("footer").scrollIntoView();
+    };
+
+    $(document).ready(function(){
+      $('.window').windows({
+          snapping: true,
+          snapSpeed: 100,
+          snapInterval: 999999999,
+          onScroll: function(scrollPos){
+              // console.log(scrollPos);
+          },
+          onSnapComplete: function($el){
+              // after window ($el) snaps into place
+          },
+          onWindowEnter: function($el){
+              // when new window ($el) enters viewport
+          }
+      })
+    });
   });
