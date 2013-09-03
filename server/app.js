@@ -249,6 +249,7 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:leaveRoom', function(data){
+    try{
     var user = data;
     var room = user.room;
     if (user.type === 'admin'){
@@ -261,6 +262,10 @@ app.io.sockets.on('connection', function(socket){
     socket.leave(room);
     socket.broadcast.to(room).emit('new:leaveRoom', user);
     console.log('someone just left the room!');
+
+    } catch(e){
+      console.log(e);
+    }
   });
 });
 
