@@ -55,4 +55,25 @@ angular.module('speakerApp')
       'The world\'s first virtual microphone.', 'Let them speak.'
     ];
     $scope.splashPhrase = landings[Math.floor(Math.random()*(landings.length - 1))];
+
+    $scope.aboutUsScroll = function(){
+      document.getElementById("footer").scrollIntoView();
+    };
+
+    $(document).ready(function(){
+      $('.window').windows({
+          snapping: true,
+          snapSpeed: 100,
+          snapInterval: 999999999,
+          onScroll: function(scrollPos){
+              // console.log(scrollPos);
+          },
+          onSnapComplete: function($el){
+              // after window ($el) snaps into place
+          },
+          onWindowEnter: function($el){
+              // when new window ($el) enters viewport
+          }
+      })
+    });
   });
