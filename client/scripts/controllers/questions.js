@@ -37,7 +37,7 @@ angular.module('speakerApp')
       }
       console.log($scope.user);
       sortQuestions();
-    }
+    };
     socket.on('question:upVoted', function(request){
       if (request.user.name === $scope.user.name){
         User.incrementKarma();
