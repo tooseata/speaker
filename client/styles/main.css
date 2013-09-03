@@ -228,13 +228,12 @@ footer a:visited{
   box-shadow: inset 2px 2px 3px #666;
 }
 .request-name{
-  display: inline-block;
-  position: fixed;
-  margin-top: 15px;
-  margin-left: 26px;
+  position: relative;
+  display: inline;
+  top: 30%;
+  left: 12%;
 }
 .request-karma{
-  position: fixed;
   display: inline-block;
   text-align: center;
   width: 19px;
@@ -242,7 +241,8 @@ footer a:visited{
   outline: 1px solid #B6D7DB;
   background-color: #a9f8f5;
   margin-left: 186px;
-  margin-top: 15px;
+  position: relative;
+  top: -10%;
 }
 
 .question {
