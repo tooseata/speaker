@@ -156,7 +156,30 @@ footer a:visited{
   font-size:0px;
 
 }
-.join-modal{
+.close-button{
+  font-size: 21px;
+  position: relative;
+  left: 95%;
+  top: -2px;
+  color: rgb(185, 185, 185);
+}
+.close-button:hover{
+  color: black;
+  text-decoration: none;
+  outline-style: none;
+}
+.input-error{
+  position: relative;
+  left: 20%;
+  font-weight: 200;
+  font-size: 18px;
+  box-sizing: border-box;
+  color: rgb(51, 51, 51);
+  display: inline;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 30px;
+}
+.my-modal {
   background-color: rgba(255, 255, 255, .85);
   width:400px;
   height:300px;
@@ -164,8 +187,7 @@ footer a:visited{
   margin-left: auto;
   position: relative;
   top: 100px;
-  border-radius: 40px;
-  opacity: .85;
+  border-radius: 17px;
   border: 2px solid gray; 
 }
 .nexa-bold{
@@ -213,16 +235,25 @@ table.questions-table tr:first-child td{
 .textLink-adminCreate a:hover{
   text-decoration: none;
 }
+.modal:focus{
+  outline-style: none;
+}
 
 h1#logo{
   padding-top: 20px;
 }
+.modal-form{
+  position: relative;
+  top:20%;
+}
+button.modal-button{
+  position: relative;
+  left:55%;
+}
 input.modal-field{
-  background-color: rgba(255,255,255,1) !important;
+    background-color: rgba(255,255,255,1);
     position: relative;
-    top: 30%;
     left: 20%;
-    opacity: 1;
     border: 1px solid #ccc;
     -moz-border-radius: 20px;
     -webkit-border-radius: 20px;
