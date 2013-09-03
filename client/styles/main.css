@@ -131,8 +131,52 @@ footer a:visited{
     font-size:20px;
     color:#6b5140;
 }
-.question {
+.request-list{
+  width: 235px;
+  margin-right: auto;
+  margin-left: auto;
+  height: 400px;
+  overflow-y: auto;
+}
+.request-list-header{
+  margin-left: auto;
+  margin-right: auto;
+  width: 200px;
+  margin-top: 65px;
+  font-size: 23px;
+  font-family: droid_serifbold;
+  font-weight: 200;
+}
+.request {
+  margin-bottom: 16px;
+  width: 230px;
+  height:52px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 3px #666;
+  border-radius: 500px;
   background-color: white;
+  font-family: droid_serifbold;
+  color: #236068;
+}
+.request:hover {
+  background-color: #a9f8f5;
+  box-shadow: inset 2px 2px 3px #666;
+}
+.request-name{
+  position: relative;
+  top:28%;
+  left: 11%;
+}
+.request-karma{
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  width: 19px;
+  height: 19px;
+  outline: 1px solid #B6D7DB;
+  top: 28%;
+  left: 36%;
+  background-color: #a9f8f5;
 }
 .message_user_name{
   display: inline;
@@ -380,20 +424,6 @@ video#localVideo{
   float: left;
 }
 
-#question_container{
-    margin: 0px 0;
-    text-align: center;
-    background-color: #eee;
-    border-radius: 6px;
-}
-#questions_list{ 
-  background: #ccc;
-  width: 100%;
-  height: 400px;
-  overflow-y: auto;
-  border-top: 2px solid #fff;
-  padding: 30px;
-}
 #user-count {
     display: inline-block;
     position: relative;

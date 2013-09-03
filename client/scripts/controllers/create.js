@@ -30,7 +30,6 @@ angular.module('speakerApp')
     };
 
     $scope.validateRoom = function(room){
-      console.log('I\'ve been consulted.');
       return !$scope.existingRooms[room];
     };
   });
