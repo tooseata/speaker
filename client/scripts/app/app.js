@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('speakerApp', ['ui.validate', 'ngCookies']);
+var app = angular.module('speakerApp', ['ui.validate', 'ngCookies', '$strap.directives']);
 
   app.config(function ($routeProvider, $httpProvider) {
     $routeProvider

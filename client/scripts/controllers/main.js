@@ -1,6 +1,6 @@
 'use strict';
 angular.module('speakerApp')
-  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http) {
+  .controller('MainCtrl', function ($scope, $cookies, Session, $location, User, $http, $modal) {
     if (!$cookies.session){
       $cookies.session = Math.floor(Math.random() * 100000000000000).toString();
     }
@@ -17,7 +17,16 @@ angular.module('speakerApp')
       } else {
         $scope.badInput = true;
       }
-    }
+    };
+    $scope.modal = {content: 'Hello Modal', saved: false};
+    $scope.modalService = function(){
+      var modal = $modal({
+        template: './../views/partials/joinModal.html',
+        show: true,
+        backdrop: 'static',
+        scope: $scope
+      });
+    };
     var browserCheck = function () {
       if(Modernizr.getusermedia){
         $location.path('/');
