@@ -79,6 +79,9 @@ angular.module('speakerApp')
     });
 
     $scope.requestVideo = function() {
+      if (!$scope.user.browserProfile.getusermedia){
+        alert('Your browser can not support making video talk requests');
+      }
       WebRtcService.sendMessage({type: 'media type', value: 'video'});
       localVideo = document.querySelector('#localVideo');
       // if (localVideo.src)
@@ -108,6 +111,9 @@ angular.module('speakerApp')
     };
 
     $scope.requestAudio = function(){
+      if (!$scope.user.browserProfile.getusermedia){
+        alert('Your browser can not support making talk requests');
+      }
       WebRtcService.sendMessage({type: 'media type', value: 'audio'});
       var onStream = function(stream) {
         $scope.updateMessage = 'You are in line to ask a question! Please wait for the presenter to call on you.';

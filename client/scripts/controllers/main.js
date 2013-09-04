@@ -44,24 +44,25 @@ angular.module('speakerApp')
 
     var browserCheck = function () {
       if(Modernizr.getusermedia){
-        $location.path('/');
+        User.setProfile("getusermedia", true);
       } else {
-        $location.path('/browsersupport');
+        User.setProfile("getusermedia", false);
       }
       if(Modernizr.audiodata && Modernizr.webaudio) {
-        User.setProfile("webAudio", "true");
+        User.setProfile("webAudio", true);
       } else {
-        User.setProfile("webAudio", "false");
+        User.setProfile("webAudio", false);
       }
       if (Modernizr.touch){
-        User.setProfile("touchable", "true");
+        User.setProfile("touchable", true);
       } else{
-        User.setProfile("touchable", "false");
+        User.setProfile("touchable", false);
       }
-      if (Modernizr.ipad || Modernizr.iphone || Modernizr.ipod || Modernizr.appleios){
-        alert("We have an application on the IOS store, Go there");
-      }
+      // if (Modernizr.ipad || Modernizr.iphone || Modernizr.ipod || Modernizr.appleios){
+      //   alert("We have an application on the IOS store, Go there");
+      // }
     };
+
     browserCheck();
 
     var landings = [
