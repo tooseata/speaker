@@ -1,5 +1,5 @@
-# speaker.
-presentations and media on your mobile device via WebRTC
+# Speaker.
+> Presentations and media on your mobile device via WebRTC. Speaker lets your audience collectively vote on questions, then hands winners a virtual microphone to ask them. All in the browser, no extra hardware. It just works.
 
 ## Purpose
 
