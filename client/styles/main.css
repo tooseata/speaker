@@ -105,9 +105,15 @@ footer a:visited{
   color: #fff;
 }
 
+.aboutPage{
+  background: #226169;
+  padding: 5px 30px 5px 30px;
+  top: 100%;
+  height: auto;
+}
+
 .wrapper {
-    min-height: 100%;
-    height: auto !important;
+    min-height: 500px;
     height: 100%;
     margin: 0 auto -63px;
     text-align: center;
@@ -182,6 +188,7 @@ footer a:visited{
   color: white;
   font-size: 12px;
   font-weight: lighter;
+  cursor: pointer;
 }
 .request-list{
   width: 235px;
@@ -202,12 +209,13 @@ footer a:visited{
 .request-list-header{
   margin-left: auto;
   margin-right: auto;
-  width: 200px;
+  width: 100%;
   margin-top: 65px;
   margin-bottom: 23px;
   font-size: 28px;
   font-family: droid_serifbold;
   font-weight: 200;
+  text-align: center;
 }
 .request {
   position: relative;
@@ -243,6 +251,7 @@ footer a:visited{
   margin-left: 186px;
   position: relative;
   top: -10%;
+  right: 4%;
 }
 .questions-list{
   width:60%;
@@ -367,6 +376,7 @@ footer a:visited{
   text-decoration: underline;
   font-family: droid_serifbold;
   color: #6b5140;
+  cursor:pointer;
 }
 
 .textLink-adminCreate a:hover{
@@ -385,7 +395,7 @@ h1#logo{
 }
 button.modal-button{
   position: relative;
-  left:55%;
+  left: 25%;
 }
 input.modal-field{
     background-color: rgba(255,255,255,1);
@@ -710,6 +720,10 @@ animation:blink normal 2s infinite ease-in-out; /* Opera and prob css3 final ite
 
 .videoMediacontainer{
   height: 250px;
+}
+
+video#remoteVideo{
+  width: 400px;
 }
 
 /*talk Page CSS*/

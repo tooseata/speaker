@@ -5,7 +5,7 @@
     <form name="joinForm" novalidate class="joinForm">
       <input name="name" class="modal-field" id="userName" type='text' maxLength="10" placeholder="Name" required ng-model='name' ui-validate="{inUse : 'validateName($value)' }"><br>
       <span class="input-error" ng-show="joinForm.name.$error.inUse">This name is already in use!</span><br>
-      <button ng-disabled="joinForm.name.$error.inUse || joinForm.room.$error.notOccupied || !name" class="btn btn-medium landingJoinButton modal-button" ng-click="update(name, room)">Enter</button>
+      <button ng-disabled="joinForm.name.$error.inUse || joinForm.room.$error.notOccupied || !name" class="btn btn-medium landingJoinButton modal-button" ng-click="update(name, room)">Enter Room</button>
     </form>
   </div>
 </div>

@@ -12,14 +12,17 @@
     <div class="push"><!--//--></div>
     <p class="textLink-adminCreate"> Creating a Room? <a ng-controller="CreateCtrl" ng-click="create()">Click here</a></p>
   </div>
-  <div class="footer-wrapper">
-    <footer>
+  <div class="footer-wrapper" ng-switch on="isMobile">
+    <footer ng-switch-when="false">
         <p ng-click="aboutUsScroll()"><a>What is Speaker?</a></p>
+    </footer>
+    <footer ng-switch-when="true">
+        <p ng-click="aboutRedirect()"><a>What is Speaker?</a></p>
     </footer>
   </div>
 </section>
-<section id="footer" class="window">
-  <div class="row">
+<section id="footer" class="window" ng-switch on="isMobile">
+  <div class="row" ng-switch-when="false">
     <div class="span12">
       <div class="page-header">
         <h2 class="aboutSpeaker">About Speaker</h2>
@@ -82,6 +85,8 @@
         <h2 class="aboutSpeaker">Tech Stack</h2>
         <p> Speaker was built on Angular.js, Node.js, Socket.io, and WebRTC. Here's how it works. When the presenter selects someone to talk our signaling server establishes a handshake between the audience member and presenter. Once the handshake is complete a peer-to-peer WebRTC connection is established  and the signaling server drops out of the equation. That's it! Either the presenter or audience member can choose to close the WebRTC connection at any time, at which point another peer must be selected for the process to begin again.</p>
       </div>
+    </div>
   </div>
-</div>
+  <div class="row" ng-switch-when="true">
+  </div>
 </section>

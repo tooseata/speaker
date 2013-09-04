@@ -127,12 +127,16 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:cancelTalkRequest', function(data){
+    try{
     var user = data;
     var room = user.room;
       var roomAdminSocketId = rooms[room].adminSocketId;
       app.io.sockets.sockets[roomAdminSocketId] && app.io.sockets.sockets[roomAdminSocketId].emit('new:cancelTalkRequest', user.name);
       delete rooms[room].talkRequests[user.name];
       delete rooms[room].talkRequests[user.id];
+    } catch(e){
+      //Admin closes room while talk requests are in queue
+    }
   });
 
   socket.on('broadcast:openTokStreaming', function(data) {
@@ -243,13 +247,16 @@ app.io.sockets.on('connection', function(socket){
   });
 
   socket.on('broadcast:closeRequest', function(data) {
-    data && function() {
+    try{
       var user = data.talker;
       var roomName = data.room;
       var clientId = rooms[roomName].socketIds[user];
       console.log('clientId', clientId);
       app.io.sockets.sockets[clientId] && app.io.sockets.sockets[clientId].emit('new:closeRequest');
-    }();
+    } catch(e){
+      console.log(e);
+    }
+
   });
 
   socket.on('broadcast:leaveRoom', function(data){

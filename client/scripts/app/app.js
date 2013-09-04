@@ -9,7 +9,7 @@ var app = angular.module('speakerApp', ['ui.validate', 'ngCookies', '$strap.dire
       .when('/admin', {templateUrl: 'views/admin.html', controller: 'AdminCtrl'})
       .when('/listen', {templateUrl: 'views/listen.html', controller: 'ListenCtrl'})
       .when('/questions', {templateUrl: 'views/questions.html', controller: 'QuestionsCtrl'})
-      .when('/browsersupport', {templateUrl: 'views/browsersupport.html',controller: 'BrowserSupport'})
+      .when('/about', {templateUrl: 'views/about.html',controller: 'AboutPage'})
       .otherwise({redirectTo: '/'});
     $httpProvider.defaults.withCredentials = true;
   });

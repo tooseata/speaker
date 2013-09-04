@@ -1,6 +1,7 @@
 'use strict';
 angular.module('speakerApp')
   .controller('MainCtrl', function ($scope, $cookies, Session, socket, $location, User, $http, $modal) {
+    $scope.isMobile = false;
     if (!$cookies.session){
       $cookies.session = Math.floor(Math.random() * 100000000000000).toString();
     }
@@ -38,6 +39,10 @@ angular.module('speakerApp')
 
     };
 
+    $scope.aboutRedirect = function(){
+      $location.path('/about/');
+    }
+
     $scope.validateName = function(name){
       return !$scope.existingRooms[$scope.room].members[name];
     };
@@ -58,9 +63,12 @@ angular.module('speakerApp')
       } else{
         User.setProfile("touchable", false);
       }
-      // if (Modernizr.ipad || Modernizr.iphone || Modernizr.ipod || Modernizr.appleios){
-      //   alert("We have an application on the IOS store, Go there");
-      // }
+      if (Modernizr.ipad || Modernizr.iphone || Modernizr.ipod || Modernizr.appleios){
+        $scope.isMobile = true;
+      }
+      if(Modernizr.mq('(max-width: 500px)')){
+        $scope.isMobile = true;
+      }
     };
 
     browserCheck();
