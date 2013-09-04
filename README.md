@@ -3,10 +3,7 @@
 
 ## Purpose
 
-## Stack
-* WebRTC
-* Angular
-* Node/Express
+Speaker was built on Angular.js, Node.js, Socket.io, and WebRTC. Here's how it works. The presenter has a computer plugged into the speakers. The audience members have laptops or smart phones. During the Q&A the presenter selects someone to talk and our signaling server establishes a handshake between the audience member and presenter. Once the handshake is complete a peer-to-peer WebRTC connection is established  and the signaling server drops out of the equation. That's it! Either the presenter or audience member can choose to close the WebRTC connection at any time, at which point another peer must be selected for the process to begin again.
 
 ## Installation
 * Clone the repository.
