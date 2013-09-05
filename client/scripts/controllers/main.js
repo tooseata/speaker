@@ -66,7 +66,7 @@ angular.module('speakerApp')
       if (Modernizr.ipad || Modernizr.iphone || Modernizr.ipod || Modernizr.appleios){
         $scope.isMobile = true;
       }
-      if(Modernizr.mq('(max-width: 500px)')){
+      if(Modernizr.mq('(max-width: 50000px)')){
         $scope.isMobile = true;
       }
     };
