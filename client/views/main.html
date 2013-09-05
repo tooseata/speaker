@@ -21,70 +21,73 @@
     </footer>
   </div>
 </section>
-<section id="footer" class="window" ng-switch on="isMobile">
-  <div class="row" ng-switch-when="false">
-    <div class="span12">
-      <div class="page-header">
-        <h2 class="aboutSpeaker">About Speaker</h2>
-        <p>Make your next presentation a contact sport. While you talk, your audience proposes and votes on questions. You pick the winners to speak. Speaker turns their device into a microphone, and like magic their voice plays out of your speakers.</p>
-      </div>
-      <div class="page-header bio-blocks">
-        <h2 class="aboutSpeaker">Speaker Team</h2>
-        <ul class="ch-grid">
-          <li>
-            <div class="ch-item ch-img-1">
-              <div class="ch-info">
-                <h3>Team Lead<br>Signaling Server<br>Client-Server Architecture<br>UX</h3>
-                <p>Tuhin Chakraborty <a href="http://github.com/tuhinc/" target="_blank">GitHub</a></p>
+<div ng-switch on="isMobile">
+  <section id="footer" class="window" ng-switch-when="false">
+    <div class="row">
+      <div class="span12">
+        <div class="page-header">
+          <h2 class="aboutSpeaker">About Speaker</h2>
+          <p>Make your next presentation a contact sport. While you talk, your audience proposes and votes on questions. You pick the winners to speak. Speaker turns their device into a microphone, and like magic their voice plays out of your speakers.</p>
+        </div>
+        <div class="page-header bio-blocks">
+          <h2 class="aboutSpeaker">Speaker Team</h2>
+          <ul class="ch-grid">
+            <li>
+              <div class="ch-item ch-img-1">
+                <div class="ch-info">
+                  <h3>Team Lead<br>Signaling Server<br>Client-Server Architecture<br>UX</h3>
+                  <p>Tuhin Chakraborty <a href="http://github.com/tuhinc/" target="_blank">GitHub</a></p>
+                </div>
               </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-2">
-              <div class="ch-info">
-                <h3>Client-Server Architecture<br>WebRTC<br>Front-end Design<br>UX</h3>
-                <p>Chris Sita <a href="http://www.chrissita.com" target="_blank">WebSite</a></p>
+            </li>
+            <li>
+              <div class="ch-item ch-img-2">
+                <div class="ch-info">
+                  <h3>Client-Server Architecture<br>WebRTC<br>Front-end Design<br>UX</h3>
+                  <p>Chris Sita <a href="http://www.chrissita.com" target="_blank">WebSite</a></p>
+                </div>
               </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-3">
-              <div class="ch-info">
-                <h3>Agile Coach<br>Client-Server Architecture<br>UX</h3>
-                <p>Kyle Geppert <a href="http://about.me/krgeppert" target="_blank">Website</a></p>
+            </li>
+            <li>
+              <div class="ch-item ch-img-3">
+                <div class="ch-info">
+                  <h3>Agile Coach<br>Client-Server Architecture<br>UX</h3>
+                  <p>Kyle Geppert <a href="http://about.me/krgeppert" target="_blank">Website</a></p>
+                </div>
               </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-4">
-              <div class="ch-info">
-                <h3>iOS App<br>Client-Server Architecture<br>WebRTC</h3>
-                <p>Max Malin <a href="http://www.linkedin.com/in/maxmalin" target="_blank">LinkedIn</a></p>
+            </li>
+            <li>
+              <div class="ch-item ch-img-4">
+                <div class="ch-info">
+                  <h3>iOS App<br>Client-Server Architecture<br>WebRTC</h3>
+                  <p>Max Malin <a href="http://www.linkedin.com/in/maxmalin" target="_blank">LinkedIn</a></p>
+                </div>
               </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-5">
-              <div class="ch-info">
-                <h3>Audio Engineer<br>Grunt<br>Network Ops<br>Deployment</h3>
-                <p>Zak Zibrat<a href="http://linkedin.com/in/zakzibrat" target="_blank">LinkedIn</a></p>
+            </li>
+            <li>
+              <div class="ch-item ch-img-5">
+                <div class="ch-info">
+                  <h3>Audio Engineer<br>Grunt<br>Network Ops<br>Deployment</h3>
+                  <p>Zak Zibrat<a href="http://linkedin.com/in/zakzibrat" target="_blank">LinkedIn</a></p>
+                </div>
               </div>
-            </div>
-          </li>
-          <li>
-            <div class="ch-item ch-img-6">
-              <div class="ch-info">
-                <h3>Graphic Design & Logo Design</h3>
-                <p>Ashley Willard <a href="http://www.ashleywillard.com/" target="_blank">WebSite</a></p>
+            </li>
+            <li>
+              <div class="ch-item ch-img-6">
+                <div class="ch-info">
+                  <h3>Graphic Design & Logo Design</h3>
+                  <p>Ashley Willard <a href="http://www.ashleywillard.com/" target="_blank">WebSite</a></p>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div class="page-header">
-        <h2 class="aboutSpeaker">Tech Stack</h2>
-        <p> Speaker was built on Angular.js, Node.js, Socket.io, and WebRTC. Here's how it works. When the presenter selects someone to talk our signaling server establishes a handshake between the audience member and presenter. Once the handshake is complete a peer-to-peer WebRTC connection is established  and the signaling server drops out of the equation. That's it! Either the presenter or audience member can choose to close the WebRTC connection at any time, at which point another peer must be selected for the process to begin again.</p>
+            </li>
+          </ul>
+        </div>
+        <div class="page-header">
+          <h2 class="aboutSpeaker">Tech Stack</h2>
+          <p> Speaker was built on Angular.js, Node.js, Socket.io, and WebRTC. Here's how it works. When the presenter selects someone to talk our signaling server establishes a handshake between the audience member and presenter. Once the handshake is complete a peer-to-peer WebRTC connection is established  and the signaling server drops out of the equation. That's it! Either the presenter or audience member can choose to close the WebRTC connection at any time, at which point another peer must be selected for the process to begin again.</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
+</div>
+
