@@ -39,10 +39,6 @@ angular.module('speakerApp')
 
     };
 
-    $scope.aboutRedirect = function(){
-      $location.path('/about/');
-    }
-
     $scope.validateName = function(name){
       return !$scope.existingRooms[$scope.room].members[name];
     };
@@ -66,9 +62,6 @@ angular.module('speakerApp')
       if (Modernizr.ipad || Modernizr.iphone || Modernizr.ipod || Modernizr.appleios){
         $scope.isMobile = true;
       }
-      if(Modernizr.mq('(max-width: 50000px)')){
-        $scope.isMobile = true;
-      }
     };
 
     browserCheck();
@@ -80,24 +73,5 @@ angular.module('speakerApp')
     ];
     $scope.splashPhrase = landings[Math.floor(Math.random()*(landings.length - 1))];
 
-    $scope.aboutUsScroll = function(){
-      document.getElementById("footer").scrollIntoView();
-    };
-
-    $(document).ready(function(){
-      $('.window').windows({
-          snapping: true,
-          snapSpeed: 100,
-          snapInterval: 999999999,
-          onScroll: function(scrollPos){
-              // console.log(scrollPos);
-          },
-          onSnapComplete: function($el){
-              // after window ($el) snaps into place
-          },
-          onWindowEnter: function($el){
-              // when new window ($el) enters viewport
-          }
-      })
-    });
+    
   });
